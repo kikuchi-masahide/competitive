@@ -1,0 +1,49 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <vector>
+#include <queue>
+#include <math.h>
+#include <algorithm>
+#include <numeric>
+#include <set>
+
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+
+int T;
+
+vector<int> ans;
+
+void solve() {
+	cin >> T;
+	for (int i = 0; i < T; i++){
+		string S;
+		cin >> S;
+		int sum = 0;
+		int l = 0;   //ç°å©ÇƒÇ¢ÇÈÇ∆Ç±ÇÎ
+		while (l <= S.size() - 5) {
+			if (equal(S.begin() + l, S.begin() + l + 5, "tokyo")) {
+				sum++;
+				l += 5;
+			}
+			else if (equal(S.begin() + l, S.begin() + l + 5, "kyoto")) {
+				sum++;
+				l += 5;
+			}
+			else l++;
+		}
+		ans.push_back(sum);
+	}
+	for (int i = 0; i < T; i++) cout << ans[i] << endl;
+	return;
+}

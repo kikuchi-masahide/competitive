@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+
+class pos {
+public:
+	int x, y;
+	pos(int _x, int _y):x(_x),y(_y){}
+};
+
+int H, W;
+pos start(0, 0), goal(0, 0);
+int map[50][50];
+void bfs();
+
+void solve() {
+	cin >> H >> W;
+	cin >> start.y >> start.x >> goal.y >> goal.x;
+	start.x--;
+	start.y--;
+	goal.x--;
+	goal.y--;
+	for (int y = 0; y < H; y++) {
+		string s;
+		cin >> s;
+		for (int x = 0; x < W; x++) {
+			if (s[x] == '#')map[x][y] = -1;   //カベ
+			else map[x][y] = 50 * 50;
+		}
+	}
+	bfs();
+	cout << map[goal.x][goal.y] << endl;
+	return;
+}
+
+bool isIn(pos p) {
+	if (p.x >= 0 && p.x < W && p.y >= 0 && p.y < H)return true;
+	return false;
+}
+
+pos operator+(pos a,pos b) {
+	return pos(a.x+b.x,a.y+b.y);
+}
+
+void bfs() {
+	queue<pair<pos,int>> q;
+	q.push(pair<pos,int>(start,0));   //startを距離0で追加
+	while (!q.empty()) {
+		pair<pos, int> p = q.front();
+		q.pop();
+		pos n = p.first;
+		if (map[n.x][n.y] <= p.second)continue;   //更新済み
+		map[n.x][n.y] = p.second;
+		pos vecs[4] = {pos(1,0),pos(0,1),pos(-1,0),pos(0,-1)};
+		for (int v = 0; v < 4; v++) {
+			pos nn = n + vecs[v];
+			if (!isIn(nn))continue;
+			if (map[nn.x][nn.y] == -1)continue;
+			if (map[nn.x][nn.y] > p.second + 1) {
+				q.push(pair<pos, int>(nn, p.second + 1));
+			}
+		}
+	}
+}

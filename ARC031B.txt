@@ -1,0 +1,94 @@
+#include <iostream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+
+bool map[10][10];
+
+bool look(int, int);   //指定座標を埋め立てて一つの島になるか確かめる
+bool isIn(int, int);
+
+void solve() {
+	for (int y = 0; y < 10; y++) {
+		string s;
+		cin >> s;
+		for (int x = 0; x < 10; x++) {
+			map[x][y] = (s[x] == 'o') ? true : false;
+		}
+	}
+	if (look(-1, -1)) {
+		cout << "YES" << endl;
+		return;
+	}
+	for (int x = 0; x < 10; x++) {
+		for (int y = 0; y < 10; y++) {
+			if (map[x][y])continue;
+			if (look(x, y)) {
+				cout << "YES" << endl;
+				return;
+			}
+		}
+	}
+	cout << "NO" << endl;
+	return;
+}
+
+bool isIn(int x, int y) {
+	if (x >= 0 && x < 10 && y >= 0 && y < 10)return true;
+	return false;
+}
+
+class pos {
+public:
+	int x, y;
+	pos(int _x,int _y):x(_x),y(_y){}
+};
+
+pos operator+(pos a, pos b) {
+	return pos(a.x+b.x,a.y+b.y);
+}
+
+bool look(int _x, int _y) {
+	if (_x != -1) {
+		map[_x][_y] = true;
+	}
+	bool dmap[10][10];   //塗る必要があったらfalse
+	for (int x = 0; x < 10; x++) {
+		for (int y = 0; y < 10; y++) {
+			dmap[x][y] = !map[x][y];
+		}
+	}
+	stack<pos> s;
+	s.push(pos(_x,_y));
+	pos vector[4] = {pos(1,0),pos(0,1),pos(-1,0),pos(0,-1)};
+	while (!s.empty()) {
+		pos p = s.top();
+		s.pop();
+		if (dmap[p.x][p.y])continue;   //すでに塗られてる
+		dmap[p.x][p.y] = true;
+		for (int v = 0; v < 4; v++) {
+			pos n = p + vector[v];
+			if (!isIn(n.x, n.y))continue;
+			if (!dmap[n.x][n.y])s.push(n);   //陸、かつ塗られていない
+		}
+	}
+	if(_x != -1)map[_x][_y] = false;
+	//全部の陸が濡れているかチェック
+	for (int x = 0; x < 10; x++) {
+		for (int y = 0; y < 10; y++) {
+			if (!dmap[x][y])return false;
+		}
+	}
+	return true;
+}

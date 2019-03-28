@@ -1,0 +1,22 @@
+#include <iostream>
+
+using namespace std;
+
+int N, Y;
+
+int main() {
+	cin >> N >> Y;
+	int a, b, c;   //10000,5000,1000
+	for (int a = 0; a <= N; a++) {
+		for (int b = 0; b <= N - a; b++) {
+			c = N - a - b;
+			if (c < 0)continue;
+			if (10000 * a + 5000 * b + 1000 * c == Y) {
+				cout << a << " " << b << " " << c << endl;
+				return 0;
+			}
+		}
+	}
+	cout << "-1 -1 -1" << endl;
+	return 0;
+}

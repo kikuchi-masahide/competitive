@@ -1,0 +1,80 @@
+#include iostream
+#include string
+#include stack
+
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+
+
+
+int H, W;
+bool map[500][500];   true-’Ê‚ê‚é
+bool rmap[500][500];   start‚©‚ç‚Ì‹ß‚³‚Ìƒ}ƒbƒv
+class pos {
+public
+	int x, y;
+	pos(int _x, int _y) x(_x), y(_y) {}
+	bool operator==(pos p) {
+		if (x == p.x && y == p.y)return true;
+		else return false;
+	}
+};
+pos start(0,0), goal(0,0);
+void bfs();   •—Dæ’Tõ
+bool isIn(pos);   pos‚ªmap“à‚É“ü‚Á‚Ä‚¢‚é‚©
+
+void solve() {
+	cin  H  W;
+	for (int y = 0; y  H; y++) {
+		string s;
+		cin  s;
+		for (int x = 0; x  W; x++) {
+			if (s[x] == 's') {
+				start = pos(x, y);
+				map[x][y] = true;
+			}
+			else if (s[x] == 'g') {
+				goal = pos(x, y);
+				map[x][y] = true;
+			}
+			else if (s[x] == '.')map[x][y] = true;
+			else map[x][y] = false;
+			rmap[x][y] = false;
+		}
+	}
+	bfs();
+	if (!rmap[goal.x][goal.y]) cout  No;
+	else cout  Yes;
+	return;
+}
+
+bool isIn(pos p) {
+	if (p.x = 0 && p.x  W && p.y = 0 && p.y  H)return true;
+	else false;
+}
+
+void bfs() {
+	stackpos q;
+	q.push(start);
+	while (!q.empty()) {
+		pos p = q.top();
+		q.pop();
+		if (rmap[p.x][p.y])continue;
+		rmap[p.x][p.y] = true;
+		pos vect[4] = {pos(1,0),pos(0,1),pos(-1,0),pos(0,-1)};
+		for (int v = 0; v  4; v++) {
+			pos n(p.x+vect[v].x,p.y+vect[v].y);
+			if (!isIn(n))continue;
+			if (!map[n.x][n.y])continue;
+			q.push(n);
+		}
+	}
+	return;
+}

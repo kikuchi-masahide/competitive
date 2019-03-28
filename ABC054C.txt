@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <vector>
+#include <queue>
+#include <math.h>
+#include <algorithm>
+#include <numeric>
+
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+
+int N, M;
+bool con[8][8];
+
+void solve() {
+	cin >> N >> M;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++)con[i][j] = false;
+	}
+	for (int i = 0; i < M; i++) {
+		int a, b;
+		cin >> a >> b;
+		con[--a][--b] = true;
+		con[b][a] = true;
+	}
+	vector<int> v(N);
+	iota(v.begin(),v.end(),0);
+	int sum = 0;
+	do {
+		if (v[0] != 0)continue;
+		bool flag = true;
+		for (int i = 0; i < v.size() - 1; i++) {
+			if (!con[v[i]][v[i + 1]]) {
+				flag = false;
+				break;
+			}
+		}
+		if (flag)sum++;
+	} while (next_permutation(v.begin(),v.end()));
+	cout << sum;
+	return;
+}
