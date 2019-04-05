@@ -1,0 +1,29 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+
+int N;
+
+int call(int);
+
+void solve() {
+	cin >> N;
+	cout << call(N) << endl;
+	return;
+}
+
+int call(int n) {
+	if (n == 1)return 0;
+	int a = ceil((double)n / 3);
+	return call(ceil((double)n/3))+1;
+}
