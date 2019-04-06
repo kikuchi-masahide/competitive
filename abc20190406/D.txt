@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <vector>
+#include <queue>
+#include <math.h>
+#include <algorithm>
+#include <numeric>
+#include <set>
+
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+
+int X, Y, Z, K;
+vector<long long> A, B, C;
+vector<long long> AB;
+vector<long long> ABC;
+
+
+void solve() {
+	cin >> X >> Y >> Z >> K;
+	A.resize(X);
+	B.resize(Y);
+	C.resize(Z);
+	for (int x = 0; x < X; x++)cin >> A[x];
+	for (int y = 0; y < Y; y++)cin >> B[y];
+	for (int z = 0; z < Z; z++)cin >> C[z];
+	sort(A.begin(), A.end(), greater<long long>());
+	sort(B.begin(), B.end(), greater<long long>());
+	sort(C.begin(), C.end(), greater<long long>());
+	for (int x = 0; x < X; x++) {
+		for (int y = 0; y < Y; y++)AB.push_back(A[x]+B[y]);
+	}
+	sort(AB.begin(),AB.end(),greater<long long>());
+	for (int xy = 0; xy < min(K, X*Y); xy++) {
+		for (int z = 0; z < Z; z++) {
+			ABC.push_back(AB[xy]+C[z]);
+		}
+	}
+	sort(ABC.begin(),ABC.end(),greater<long long>());
+	for (int a = 0; a < min(X*Y*Z, K); a++) cout << ABC[a] << endl;
+	return;
+}

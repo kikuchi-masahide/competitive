@@ -1,0 +1,29 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <vector>
+#include <queue>
+#include <math.h>
+#include <algorithm>
+#include <numeric>
+#include <set>
+
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+
+void solve() {
+	int a, b, c, d, e, k;
+	cin >> a >> b >> c >> d >> e >> k;
+	if (e - a <= k)cout << "Yay!" << endl;
+	else cout << ":(" << endl;
+	return;
+}
