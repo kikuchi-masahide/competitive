@@ -1,0 +1,34 @@
+#include iostream
+#include math.h
+#include algorithm
+#include vector
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+
+
+
+int N;
+int arr[1000001];
+
+void solve() {
+	cin  N;
+	for (int i = 0; i = 1000000; i++)arr[i] = 0;
+	for (int n = 0; n  N; n++) {
+		int a, b;
+		cin  a  b;
+		arr[a] += 1;
+		if(b+1 = 1000000)arr[b + 1] += -1;
+	}
+	for (int n = 1; n = 1000000; n++) arr[n] += arr[n - 1];
+	int m = 0;
+	for (int n = 0; n = 1000000; n++)m = max(m,arr[n]);
+	cout  m  endl;
+	return;
+}
