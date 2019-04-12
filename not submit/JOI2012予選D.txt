@@ -1,0 +1,50 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+
+int D, N;
+int T[200], A[200], B[200], C[200];
+int dp[200][200];
+
+void solve() {
+	cin >> D >> N;
+	for (int d = 0; d < D; d++)cin >> T[d];
+	for (int n = 0; n < N; n++) {
+		cin >> A[n] >> B[n] >> C[n];
+	}
+	for (int d = 1; d < D; d++) {
+		for (int n = 0; n < N; n++)dp[d][n] = 0;
+	}
+	for (int n = 0; n < N; n++) {
+		if (A[n] <= T[0] && T[0] <= B[n])dp[0][n] = 0;
+		else dp[0][n] = -1;
+	}
+	for (int d = 1; d < D; d++) {
+		for (int n = 0; n < N; n++) {
+			if (A[n] > T[d] || T[d] > B[n]) {
+				dp[d][n] = -1;
+				continue;
+			}
+			for (int nn = 0; nn < N; nn++) {
+				if(dp[d-1][nn] != -1)dp[d][n] = max(dp[d][n], dp[d - 1][nn] + abs(C[nn] - C[n]));
+			}
+		}
+	}
+	int m = 0;
+	for (int n = 0; n < N; n++)m = max(m,dp[D-1][n]);
+	cout << m << endl;
+	return;
+}

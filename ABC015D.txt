@@ -1,0 +1,44 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+int W, N, K;
+int A[50], B[50];
+int dp[51][51][10001];
+
+void solve() {
+	cin >> W >> N >> K;
+	for (int n = 0; n < N; n++) cin >> A[n] >> B[n];
+	for (int n = 0; n <= N; n++) {
+		for (int k = 0; k <= n && k <= K; k++) {
+			for (int w = 0; w <= W; w++)dp[n][k][w] = 0;
+		}
+	}
+	for (int n = 1; n <= N; n++) {
+		for (int k = 0; k <= n && k <= K; k++) {
+			for (int w = 0; w <= W; w++) {
+				if (n >= 1 && k >= 1 && w >= A[n-1])
+					dp[n][k][w] = max(dp[n - 1][k - 1][w - A[n-1]] + B[n-1], dp[n - 1][k][w]);
+				else dp[n][k][w] = dp[n - 1][k][w];
+			}
+		}
+	}
+	int m = 0;
+	for (int k = 0; k <= K; k++) {
+		for (int w = 0; w <= W; w++) {
+			m = max(m, dp[N][k][w]);
+		}
+	}
+	cout << m << endl;
+}
