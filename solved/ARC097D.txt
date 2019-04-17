@@ -1,0 +1,80 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+using namespace std;
+
+class unionFind {
+private:
+	int* p;   //親配列のポインタ
+	int N;   //要素数
+public:
+	unionFind(int);   //コンストラクタ
+	int parent(int);   //親要素を返す
+	void unit(int, int);   //2要素をつなぐ
+	int operator[](int);   //parentの省略形
+	~unionFind();
+	int size();   //要素数を返す
+};
+
+unionFind::unionFind(int n) {
+	N = n;
+	p = new int[N];
+	for (int i = 0; i < N; i++)p[i] = i;
+	return;
+}
+
+int unionFind::parent(int n) {
+	if (n < 0 || n >= N)return -1;
+	if (p[n] == n)return n;   //自分が一番上の親
+	return p[n] = parent(p[n]);   //つなぎ直しと上にたどる操作
+}
+
+int unionFind::operator[](int n) {
+	return parent(n);
+}
+
+void unionFind::unit(int x, int y) {
+	int X = parent(x), Y = parent(y);
+	if (X == Y)return;   //根が同じだから何もせずに帰る
+	p[X] = Y;
+	return;
+}
+
+unionFind::~unionFind() {
+	delete(p);
+	return;
+}
+
+int unionFind::size() {
+	return N;
+}
+
+int N, M;
+int P[100000];
+void solve() {
+	cin >> N >> M;
+	for (int n = 0; n < N; n++) {
+		cin >> P[n];
+		P[n]--;
+	}
+	unionFind u(N);
+	for (int m = 0; m < M; m++) {
+		int x, y;
+		cin >> x >> y;
+		u.unit(--x, --y);
+	}
+	int ans = 0;
+	for (int n = 0; n < N; n++) {
+		if (P[n] == n)ans++;
+		else if (u[P[n]] == u[n])ans++;
+	}
+	cout << ans << endl;
+	return;
+}

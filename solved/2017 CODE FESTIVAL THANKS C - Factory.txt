@@ -1,0 +1,35 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <queue>
+using namespace std;
+
+
+int N, K;
+int A[100000], B[100000];
+typedef pair<long long, int> lli;
+priority_queue<lli,vector<lli>,greater<lli>> q;
+
+void solve() {
+	cin >> N >> K;
+	for (int n = 0; n < N; n++) {
+		cin >> A[n] >> B[n];
+		q.push(lli(A[n], n));
+	}
+	long long ans = 0;
+	for (int k = 0; k < K; k++) {
+		lli e = q.top();
+		ans += e.first;
+		q.pop();
+		q.push(lli(e.first+B[e.second],e.second));
+	}
+	cout << ans << endl;
+	return;
+}
