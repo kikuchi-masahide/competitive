@@ -1,0 +1,55 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <math.h>
+using namespace std;
+
+int N;
+int A[300];
+int dp[45001][301];
+int sum = 0;
+int pow2[301];   //2^n‚ðmod M‚µ‚½’l
+int M = 998244353;
+
+void solve() {
+	cin >> N;
+	for (int r = 0; r <= 45001; r++) {
+		for (int k = 0; k <= N; k++)dp[r][k] = 0;
+	}
+	dp[0][0] = 1;
+	for (int n = 1; n <= N; n++) {
+		cin >> A[n-1];
+		sum += A[n-1];
+		for (int r = sum; r >= 0; r--) {
+			for (int k = n; k >= 0; k--) {
+				if (r - A[n-1] >= 0)dp[r][k] = (dp[r][k] + dp[r - A[n-1]][k-1]) % M;
+			}
+		}
+	}
+	pow2[0] = 1;
+	for (int n = 1; n <= N; n++)pow2[n] = (2 * pow2[n - 1]) % M;
+	int ans = 0;
+	for (int r = floor((double)sum/3+1); r <= (double)sum/2; r++) {
+		for (int k = 0; k <= N; k++) {
+			ans = (ans + (dp[r][k]*pow2[N-k])) % M;
+		}
+	}
+	if (sum % 3 == 0) {
+		int temp = 0;
+		for (int k = 0; k <= N; k++) {
+			temp = (temp+dp[sum/3][k]*pow2[N-k])%M;
+		}
+		ans = (ans+3*temp) % M;
+	}
+	cout << ans << endl;
+	return;
+}
