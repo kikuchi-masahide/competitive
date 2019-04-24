@@ -35,8 +35,5 @@ JOI 2012 予選 D 暑い日々
 AOJ Course Longest Common Subsequence
 ATC 001 B Union Find
 AOJ Course Edit Distance (Levenshtein Distance)
-<<<<<<< HEAD
 Maximum-Cup 2018 C 嘘つきな天使たち
-=======
 ABC 062 D - 3N Numbers
->>>>>>> d8c26cc5a0fc7ac30e5b060d60055b77161e4042
