@@ -1,0 +1,20 @@
+//与えられた重みなしグラフが二部グラフか判定する
+//(unionFindが必要)
+//O( a(N)+N )
+bool isBGraph(graph* g) {
+	unionFind* u = new unionFind(2*g->N);
+	for (int s = 0; s < g->N; s++) {
+		for (auto itr = g->E->at(s).begin(); itr != g->E->at(s).end(); itr++) {
+			u->unit(s,*itr+g->N);
+			u->unit(s+g->N,*itr);
+		}
+	}
+	for (int s = 0; s < g->N; s++) {
+		if (u->parent(s) == u->parent(s + g->N)) {
+			delete u;
+			return false;
+		}
+	}
+	delete u;
+	return true;
+}

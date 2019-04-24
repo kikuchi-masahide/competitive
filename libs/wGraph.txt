@@ -1,0 +1,33 @@
+//重み付きグラフ
+class wGraph {
+public:
+	int N;
+	vector<map<int, long double>>* E;
+	wGraph(int);
+	~wGraph();
+	void addEdge(int, int,long double);
+	void removeEdge(int, int);
+	bool isConnected(int, int);
+};
+
+wGraph::wGraph(int n) {
+	N = n;
+	E = new vector<map<int, long double>>;
+}
+
+wGraph::~wGraph() {
+	delete E;
+}
+
+void wGraph::addEdge(int a,int b,long double c) {
+	E->at(a).insert(ild(b,c));
+}
+
+void wGraph::removeEdge(int a,int b){
+	auto itr = E->at(a).find(b);
+	if (itr != E->at(a).end())E->at(a).erase(itr);
+}
+
+bool wGraph::isConnected(int a, int b) {
+	return (E->at(a).find(b) != E->at(a).end());
+}

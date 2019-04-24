@@ -1,0 +1,155 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+
+using namespace std;
+typedef pair<int, int> pii;
+typedef pair<int, long double> ild;
+typedef pair<long double, int> ldi;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+//unionFind
+class unionFind {
+private:
+	int* p;   //親配列のポインタ
+	int* rank;
+	int N;   //要素数
+public:
+	unionFind(int);   //コンストラクタ
+	int parent(int);   //親要素を返す
+	void unit(int, int);   //2要素をつなぐ
+	int operator[](int);   //parentの省略形
+	~unionFind();
+	int size();   //要素数を返す
+};
+
+unionFind::unionFind(int n) {
+	N = n;
+	p = new int[N];
+	rank = new int[N];
+	for (int i = 0; i < N; i++) {
+		p[i] = i;
+		rank[i] = 0;
+	}
+	return;
+}
+
+int unionFind::parent(int n) {
+	if (n < 0 || n >= N)return -1;
+	if (p[n] == n)return n;   //自分が一番上の親
+	return p[n] = parent(p[n]);   //つなぎ直しと上にたどる操作
+}
+
+int unionFind::operator[](int n) {
+	return parent(n);
+}
+
+void unionFind::unit(int x, int y) {
+	x = parent(x), y = parent(y);
+	if (x == y)return;   //根が同じだから何もせずに帰る
+	if (rank[x] < rank[y])p[x] = y;
+	else {
+		p[y] = x;
+		if (rank[x] == rank[y])rank[x]++;
+	}
+	return;
+}
+
+unionFind::~unionFind() {
+	delete(p);
+	delete(rank);
+	return;
+}
+
+int unionFind::size() {
+	return N;
+}
+
+//重み付きグラフ
+class wGraph {
+public:
+	int N;
+	vector<map<int, long int> >* E;
+	wGraph(int);
+	~wGraph();
+	void addEdge(int, int,long int);
+	void removeEdge(int, int);
+	bool isConnected(int, int);
+};
+
+wGraph::wGraph(int n) {
+	N = n;
+	E = new vector<map<int, long int> >;
+	E->resize(N);
+}
+
+wGraph::~wGraph() {
+	delete E;
+}
+
+void wGraph::addEdge(int a,int b,long int c) {
+	E->at(a).insert(ild(b,c));
+}
+
+void wGraph::removeEdge(int a,int b){
+	map<int,long int>::iterator itr = E->at(a).find(b);
+	if (itr != E->at(a).end())E->at(a).erase(itr);
+}
+
+bool wGraph::isConnected(int a, int b) {
+	return (E->at(a).find(b) != E->at(a).end());
+}
+
+//最小全域木問題(クラスカル法)
+//最小全域木自体と、重み和
+//unionFind必要
+//O( ElogV )
+long int minimumSpanningTree(wGraph* g0) {
+	typedef pair<long int, pii> ldii;
+	priority_queue<ldii,vector<ldii>,greater<ldii> >* q = new priority_queue<ldii, vector<ldii>, greater<ldii> >;
+	for (int i = 0; i < g0->N; i++) {
+		for (map<int,long int>::iterator itr = g0->E->at(i).begin(); itr != g0->E->at(i).end(); itr++) 
+			q->push(ldii((*itr).second,pii(i,(*itr).first)));
+	}
+	unionFind* u = new unionFind(g0->N);
+	long int ans = 0;
+	while (!q->empty()) {
+		ldii e = q->top();
+		q->pop();
+		int s = e.second.first, t = e.second.second;
+		if (u->parent(s) != u->parent(t)) {
+			u->unit(s, t);
+			ans += e.first;
+		}
+	}
+	delete u;
+	delete q;
+	return ans;
+}
+
+wGraph* g;
+int V,E;
+
+void solve() {
+	cin >> V >> E;
+	g = new wGraph(V);
+	for (int e = 0; e < E; e++) {
+		int s, t, w;
+		cin >> s >> t >> w;
+		g->addEdge(s,t,w);
+		g->addEdge(t, s, w);
+	}
+	cout << minimumSpanningTree(g) << endl;
+	delete g;
+}
