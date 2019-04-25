@@ -1,0 +1,43 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <math.h>
+
+using namespace std;
+typedef pair<int, int> pii;
+typedef pair<int, long double> pild;
+typedef pair<long double, int> pldi;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <boost/multiprecision/cpp_int.hpp>
+
+using namespace boost::multiprecision;
+
+int N, K;
+cpp_int A[100000];
+
+void solve() {
+	cin >> N >> K;
+	string s;
+	for (int n = 0; n < N; n++) {
+		cin >> s;
+		A[n] = cpp_int(s);
+	}
+	//ó›êœÇÌ
+	for (int n = 1; n < N; n++)A[n] += A[n - 1];
+	cpp_int ans = A[K-1];
+	for (int n = K; n < N; n++)ans += A[n] - A[n - K];
+	cout << ans << endl;
+	return;
+}

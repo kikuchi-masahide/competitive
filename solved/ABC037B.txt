@@ -1,0 +1,37 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <math.h>
+
+using namespace std;
+typedef pair<int, int> pii;
+typedef pair<int, long double> pild;
+typedef pair<long double, int> pldi;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+int N, A[100];
+
+void solve() {
+	cin >> N;
+	for (int n = 0; n < N; n++)A[n] = 0;
+	int Q;
+	cin >> Q;
+	for (int q = 0; q < Q; q++) {
+		int l, r, t;
+		cin >> l >> r >> t;
+		for (int i = l - 1; i < r; i++)A[i] = t;
+	}
+	for (int n = 0; n < N; n++)cout << A[n] << endl;
+	return;
+}
