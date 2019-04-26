@@ -1,0 +1,16 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main(){
+  string S;
+  cin >> S;
+  int _0 = 0,_1 = 0;
+  for(int n = 0;n < S.size();n++){
+    if(S[n] == '0')_0++;
+    else _1++;
+  }
+  cout << 2*min(_1,_0) << endl;
+  return 0;
+}
