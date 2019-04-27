@@ -1,0 +1,75 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <math.h>
+
+using namespace std;
+typedef pair<int, int> pii;
+typedef pair<int, long double> pild;
+typedef pair<long double, int> pldi;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+//素数判定
+//O(√n)
+bool isPrime(int n) {
+	for (int i = 2; i <= floor(sqrt(n)); i++) {
+		if (n%i == 0)return false;
+	}
+	return true;
+}
+
+//n未満の自然数のでのエラトステネスの篩
+//arr[n]=true -> 素数
+//O(nlog(logn)) , 実質O(n)
+bool* eratosthenes(int n) {
+	bool* array = new bool[n];
+	for (int i = 0; i < n; i++)array[i] = true;
+	for (int i = 2; i < n; i++) {
+		if (!array[i])continue;
+		int t = 2*i;
+		while (t < n) {
+			array[t] = false;
+			t += i;
+		}
+	}
+	array[0] = false;
+	array[1] = false;
+	return array;
+}
+
+int c[100000 + 1];
+vector<int> v;
+
+void solve() {
+	bool* arr = eratosthenes(100000+1);
+	for (int n = 0; n <= 100000; n++) {
+		if (n % 2 == 0)c[n] = 0;
+		else {
+			if (arr[n] && arr[(n + 1) / 2])c[n] = 1;
+			else c[n] = 0;
+		}
+	}
+	for (int n = 1; n <= 100000; n++) c[n] += c[n - 1];
+	int Q;
+	cin >> Q;
+	v.resize(Q);
+	for (int q = 0; q < Q; q++) {
+		int l, r;
+		cin >> l >> r;
+		v[q] = c[r] - c[l - 1];
+	}
+	for (auto itr = v.begin(); itr != v.end(); itr++)cout << *itr << endl;
+	delete arr;
+	return;
+}

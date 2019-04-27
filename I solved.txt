@@ -48,4 +48,8 @@ ABC 070 C Multiple Clocks
 ABC 125 A Biscuit Generator
 ABC 125 B Resale
 ABC 125 C GCD on Blackboard
-ABC 125 D Flipping Signs
+ARC 017 A 素数、コンテスト、素数
+ABC 052 C Factors of Factorial
+天下一プログラマーコンテスト2012 予選C A 与えられた数より小さい素数の個数について
+ABC 084 D 2017-like Number
+AOJ 0009 素数
