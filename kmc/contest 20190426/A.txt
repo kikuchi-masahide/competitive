@@ -1,0 +1,31 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+using namespace std;
+
+int N, T, K, D;
+
+void solve() {
+	cin >> N >> T >> K >> D;
+	int time1 = (ceil((double)N / K)) * T;   //ƒI[ƒuƒ“1‚Ì‚İ
+	int count = (ceil((double)N / K));   //‰ñ”
+	int time2 = 0;
+	int build = ceil((double)D / T);   //Œšİ‚Í‰½‰ñ•ª?
+	count += build;
+	if (count % 2 == 1)time2 = (count - 1) / 2 * T+(D%T == 0?T:D%T);
+	else time2 = T * count / 2 + (D % T);
+	if (time1 <= time2)cout << "NO" << endl;
+	else cout << "YES" << endl;
+	return;
+}

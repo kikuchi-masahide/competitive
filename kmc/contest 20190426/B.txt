@@ -1,0 +1,72 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+using namespace std;
+
+int N;
+vector<pair<long int,int>> P;
+int M, C[200000];
+int A[200000], B[200000];
+int ans[200000];
+queue<int> q[3];
+
+void solve() {
+	cin >> N;
+	for (int n = 0; n < N; n++) {
+		long int p;
+		cin >> p;
+		P.push_back(pair<long int, int>(p, n));
+	}
+	int a;
+	for (int n = 0; n < N; n++) {
+		cin >> A[n];
+		A[n]--;
+	}
+	for (int n = 0; n < N; n++) {
+		cin >> B[n];
+		B[n]--;
+	}
+	cin >> M;
+	for (int m = 0; m < M; m++) {
+		cin >> C[m];
+		C[m]--;
+		q[C[m]].push(m);
+		ans[m] = -1;
+	}
+	sort(P.begin(), P.end());
+	for (int n = 0; n < N; n++) {
+		int a, b;   //F
+		a = A[P[n].second];
+		b = B[P[n].second];
+		if (q[a].empty() && q[b].empty())continue;
+		else if (q[a].empty()) {
+			ans[q[b].front()] = P[n].first;
+			q[b].pop();
+		}
+		else if (q[b].empty()) {
+			ans[q[a].front()] = P[n].first;
+			q[a].pop();
+		}
+		else if (q[a].front() < q[b].front()) {
+			ans[q[a].front()] = P[n].first;
+			q[a].pop();
+		}
+		else {
+			ans[q[b].front()] = P[n].first;
+			q[b].pop();
+		}
+	}
+	for (int n = 0; n < M; n++)cout << ans[n] << " ";
+	return;
+}
