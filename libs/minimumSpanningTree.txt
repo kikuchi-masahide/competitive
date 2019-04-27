@@ -1,25 +1,29 @@
 //最小全域木問題(クラスカル法)
 //最小全域木自体と、重み和
+//wGraphに追加する感じで
 //O( ElogV )
-pair<wGraph*,int> minimumSpanningTree(wGraph* g0) {
-	typedef pair<long double, pii> ldii;
-	priority_queue<ldii,vector<ldii>,greater<ldii>>* q;
-	for (int i = 0; i < g0->N; i++) {
-		for (auto itr = g0->E->at(i).begin(); itr != g0->E->at(i).end(); itr++) 
-			q->push(ldii((*itr).second,pii(i,(*itr).first)));
-	}
-	wGraph* g = new wGraph(g0->N);
-	unionFind* u = new unionFind(g0->N);
-	long double ans = 0;
-	while (!q->empty()) {
-		ldii e = q->top();
-		q->pop();
-		int s = e.second.first, t = e.second.second;
-		if (u->parent(s) != u->parent(t)) {
-			u->unit(s, t);
-			ans += e.first;
+	T minimumSpanningTree() {
+		typedef pair<T, pii> ldii;
+		priority_queue<ldii, vector<ldii>, greater<ldii> >* q;
+		q = new priority_queue<ldii, vector<ldii>, greater<ldii> >;
+		for (int i = 0; i < this->N; i++) {
+			for (auto itr = this->E->at(i).begin(); itr != this->E->at(i).end(); itr++) {
+				q->push(ldii((*itr).second, pii(i, (*itr).first)));
+			}
 		}
+		wGraph<T>* g = new wGraph<T>(this->N);
+		unionFind* u = new unionFind(this->N);
+		T ans = 0;
+		while (!q->empty()) {
+			ldii e = q->top();
+			q->pop();
+			int s = e.second.first, t = e.second.second;
+			if (u->parent(s) != u->parent(t)) {
+				u->unit(s, t);
+				ans += e.first;
+			}
+		}
+		delete u;
+		delete g;
+		return ans;
 	}
-	delete u;
-	return pair<wGraph*, int>(g,ans);
-}

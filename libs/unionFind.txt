@@ -35,8 +35,8 @@ int unionFind::operator[](int n) {
 }
 
 void unionFind::unit(int x, int y) {
-	int X = parent(x), Y = parent(y);
-	if (X == Y)return;   //ª‚ª“¯‚¶‚¾‚©‚ç‰½‚à‚¹‚¸‚É‹A‚é
+	x = parent(x), y = parent(y);
+	if (x == y)return;   //ª‚ª“¯‚¶‚¾‚©‚ç‰½‚à‚¹‚¸‚É‹A‚é
 	if (rank[x] < rank[y])p[x] = y;
 	else {
 		p[y] = x;

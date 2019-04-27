@@ -1,33 +1,22 @@
 //重み付きグラフ
+//距離の部分をテンプレートに
+template<class T>
 class wGraph {
 public:
 	int N;
-	vector<map<int, long double>>* E;
-	wGraph(int);
-	~wGraph();
-	void addEdge(int, int,long double);
-	void removeEdge(int, int);
-	bool isConnected(int, int);
+	vector<map<int, T> >* E;
+	wGraph(int n) {
+		N = n;
+		E = new vector<map<int,T> >;
+		E->resize(N);
+	}
+	~wGraph() {
+		delete E;
+	}
+	void addEdge(int a, int b, T c) {
+		E->at(a).insert(pair<int,T>(b, c));
+	}
+	bool isConnected(int a, int b) {
+		return (E->at(a).find(b) != E->at(a).end());
+	}
 };
-
-wGraph::wGraph(int n) {
-	N = n;
-	E = new vector<map<int, long double>>;
-}
-
-wGraph::~wGraph() {
-	delete E;
-}
-
-void wGraph::addEdge(int a,int b,long double c) {
-	E->at(a).insert(ild(b,c));
-}
-
-void wGraph::removeEdge(int a,int b){
-	auto itr = E->at(a).find(b);
-	if (itr != E->at(a).end())E->at(a).erase(itr);
-}
-
-bool wGraph::isConnected(int a, int b) {
-	return (E->at(a).find(b) != E->at(a).end());
-}

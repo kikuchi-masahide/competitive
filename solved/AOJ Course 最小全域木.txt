@@ -4,11 +4,12 @@
 #include <set>
 #include <vector>
 #include <queue>
+#include <math.h>
 
 using namespace std;
 typedef pair<int, int> pii;
-typedef pair<int, long double> ild;
-typedef pair<long double, int> ldi;
+typedef pair<int, long double> pild;
+typedef pair<long double, int> pldi;
 
 void solve();
 
@@ -19,6 +20,8 @@ int main() {
 
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
+
+
 //unionFind
 class unionFind {
 private:
@@ -76,80 +79,71 @@ int unionFind::size() {
 	return N;
 }
 
+
+
+
 //重み付きグラフ
+//距離の部分をテンプレートに
+template<class T>
 class wGraph {
 public:
 	int N;
-	vector<map<int, long int> >* E;
-	wGraph(int);
-	~wGraph();
-	void addEdge(int, int,long int);
-	void removeEdge(int, int);
-	bool isConnected(int, int);
-};
-
-wGraph::wGraph(int n) {
-	N = n;
-	E = new vector<map<int, long int> >;
-	E->resize(N);
-}
-
-wGraph::~wGraph() {
-	delete E;
-}
-
-void wGraph::addEdge(int a,int b,long int c) {
-	E->at(a).insert(ild(b,c));
-}
-
-void wGraph::removeEdge(int a,int b){
-	map<int,long int>::iterator itr = E->at(a).find(b);
-	if (itr != E->at(a).end())E->at(a).erase(itr);
-}
-
-bool wGraph::isConnected(int a, int b) {
-	return (E->at(a).find(b) != E->at(a).end());
-}
-
+	vector<map<int, T> >* E;
+	wGraph(int n) {
+		N = n;
+		E = new vector<map<int,T> >;
+		E->resize(N);
+	}
+	~wGraph() {
+		delete E;
+	}
+	void addEdge(int a, int b, T c) {
+		E->at(a).insert(pair<int,T>(b, c));
+	}
+	bool isConnected(int a, int b) {
+		return (E->at(a).find(b) != E->at(a).end());
+	}
 //最小全域木問題(クラスカル法)
 //最小全域木自体と、重み和
-//unionFind必要
 //O( ElogV )
-long int minimumSpanningTree(wGraph* g0) {
-	typedef pair<long int, pii> ldii;
-	priority_queue<ldii,vector<ldii>,greater<ldii> >* q = new priority_queue<ldii, vector<ldii>, greater<ldii> >;
-	for (int i = 0; i < g0->N; i++) {
-		for (map<int,long int>::iterator itr = g0->E->at(i).begin(); itr != g0->E->at(i).end(); itr++) 
-			q->push(ldii((*itr).second,pii(i,(*itr).first)));
-	}
-	unionFind* u = new unionFind(g0->N);
-	long int ans = 0;
-	while (!q->empty()) {
-		ldii e = q->top();
-		q->pop();
-		int s = e.second.first, t = e.second.second;
-		if (u->parent(s) != u->parent(t)) {
-			u->unit(s, t);
-			ans += e.first;
+	T minimumSpanningTree() {
+		typedef pair<T, pii> ldii;
+		priority_queue<ldii, vector<ldii>, greater<ldii> >* q;
+		q = new priority_queue<ldii, vector<ldii>, greater<ldii> >;
+		for (int i = 0; i < this->N; i++) {
+			for (auto itr = this->E->at(i).begin(); itr != this->E->at(i).end(); itr++) {
+				q->push(ldii((*itr).second, pii(i, (*itr).first)));
+			}
 		}
+		wGraph<T>* g = new wGraph<T>(this->N);
+		unionFind* u = new unionFind(this->N);
+		T ans = 0;
+		while (!q->empty()) {
+			ldii e = q->top();
+			q->pop();
+			int s = e.second.first, t = e.second.second;
+			if (u->parent(s) != u->parent(t)) {
+				u->unit(s, t);
+				ans += e.first;
+			}
+		}
+		delete u;
+		delete g;
+		return ans;
 	}
-	delete u;
-	delete q;
-	return ans;
-}
-
-wGraph* g;
-int V,E;
+};
 
 void solve() {
+	int V, E;
 	cin >> V >> E;
-	g = new wGraph(V);
+	wGraph<long int>* g = new wGraph<long int>(V);
 	for (int e = 0; e < E; e++) {
 		int s, t, w;
 		cin >> s >> t >> w;
-		g->addEdge(s,t,w);
+		g->addEdge(s, t, w);
 		g->addEdge(t, s, w);
 	}
-	cout << minimumSpanningTree(g) << endl;
+	cout << g->minimumSpanningTree() << endl;
 	delete g;
+	return;
 }
