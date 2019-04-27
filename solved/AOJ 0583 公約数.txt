@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <math.h>
+
+using namespace std;
+typedef pair<int, int> pii;
+typedef pair<int, long double> pild;
+typedef pair<long double, int> pldi;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+template<class T>
+T GCD(T a, T b) {
+	if (b == 0)return a;
+	return GCD(b,a%b);
+}
+
+int a[3];
+
+void solve() {
+	int N;
+	cin >> N;
+	for (int n = 0; n < N; n++)cin >> a[n];
+	int m = 0;
+	for (int n = 0; n < N; n++)m = max(m,a[n]);
+	for (int i = 1; i <= m; i++) {
+		bool flag = true;
+		for (int n = 0; n < N; n++) {
+			if (a[n] % i != 0) {
+				flag = false;
+				break;
+			}
+		}
+		if (flag)cout << i << endl;
+	}
+	return;
+}
