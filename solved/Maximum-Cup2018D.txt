@@ -1,0 +1,51 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <math.h>
+
+using namespace std;
+typedef pair<int, int> pii;
+typedef pair<int, long double> pild;
+typedef pair<long double, int> pldi;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+int mod(int a, int b) {
+	return (a%b < 0) ? a % b + a : a % b;
+}
+
+int N, M, L, X;
+int A[10000];
+int dp[10000][1000];
+
+void solve() {
+	cin >> N >> M >> L >> X;
+	for (int n = 0; n < N; n++)cin >> A[n];
+	for (int n = 0; n < N; n++) {
+		for (int m = 0; m < M; m++)dp[n][m] = -1;
+	}
+	dp[0][0] = 0;
+	dp[0][mod(A[0],M)] = A[0] / M;
+	for (int n = 1; n < N; n++) {
+		for (int m = 0; m < M; m++) {
+			if (dp[n - 1][m] == -1)continue;
+			if (dp[n][m] == -1)dp[n][m] = dp[n - 1][m];
+			else dp[n][m] = min(dp[n][m],dp[n-1][m]);
+			if (dp[n][mod(m + A[n], M)] == -1)
+				dp[n][mod(m + A[n], M)] = dp[n - 1][m] + (A[n] + m) / M;
+			else dp[n][mod(m + A[n], M)] = min(dp[n][mod(m + A[n], M)],dp[n - 1][m] + (A[n] + m) / M);
+		}
+	}
+	cout << (dp[N-1][L] == -1 || dp[N - 1][L] >= X ? "No" : "Yes") << endl;
+	return;
+}

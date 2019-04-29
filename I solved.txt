@@ -53,3 +53,5 @@ ABC 052 C Factors of Factorial
 天下一プログラマーコンテスト2012 予選C A 与えられた数より小さい素数の個数について
 ABC 084 D 2017-like Number
 AOJ 0009 素数
+ABC 032 D ナップサック問題
+Maximum-Cup 2018 D Many Go Round
