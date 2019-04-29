@@ -1,0 +1,143 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <math.h>
+
+using namespace std;
+typedef pair<int, int> pii;
+typedef pair<int, long double> pild;
+typedef pair<long double, int> pldi;
+
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <boost/multiprecision/cpp_int.hpp>
+
+using namespace boost::multiprecision;
+
+typedef pair<long int, long int> plili;
+typedef pair<cpp_int, cpp_int> pcici;
+
+bool comp1(pcici a1,pcici a2){
+	if (a1.first == a2.first)return a1.second < a2.second;
+	return a1.first < a2.first;
+}
+
+bool comp2(pcici a1, pcici a2) {
+	if (a1.second == a2.second)return a1.first < a2.first;
+	return a1.second < a2.second;
+}
+
+long int N,WMAX;
+vector<long int> V,W;
+vector<pcici> v1, v2;
+vector<vector<long int>> dp1;
+
+void solve() {
+	cin >> N >> WMAX;
+	V.resize(N);
+	W.resize(N);
+	long int vm = 0, wm = 0;
+	long int ws = 0, vs = 0;
+	for (int n = 0; n < N; n++) {
+		cin >> V[n] >> W[n];
+		vm = max(vm,V[n]);
+		wm = max(wm,W[n]);
+		vs += V[n];
+		ws += W[n];
+	}
+	if (N <= 30) {
+		for (int i = 0; i < pow(2, N / 2); i++) {
+			cpp_int a = 0,b = 0;
+			for (int t = 1,c = 0; t <= i; t *= 2,c++) {
+				if ((i & t) != 0) {
+					a = a+V[c];
+					b = b + W[c];
+				}
+			}
+			if (b > WMAX)continue;
+			v1.push_back(pcici(a,b));
+		}
+		sort(v1.begin(), v1.end(),comp1);
+		for (int i = 0; i < pow(2, N - N / 2); i++) {
+			cpp_int a = 0, b = 0;
+			for (int t = 1, c = N / 2; t <= i; t *= 2, c++) {
+				if ((i & t) != 0) {
+					a = a + V[c];
+					b = b + W[c];
+				}
+			}
+			if (b > WMAX)continue;
+			v2.push_back(pcici(a,b));
+		}
+		sort(v2.begin(),v2.end(),comp2);
+		cpp_int vmax = 0;
+		for (auto itr = v1.begin(); itr != v1.end(); itr++) {
+			int s = 0, e = v2.size();
+			while (e - s > 1) {
+				int m = (e + s) / 2;
+				if (v2[m].second <= WMAX - (*itr).second)s = m;
+				else e = m;
+			}
+			sort(v2.begin(),v2.begin()+s+1,comp1);
+			if (vmax < (*itr).first + v2[s].first)vmax = (*itr).first + v2[s].first;
+			sort(v2.begin(), v2.begin() + s + 1, comp2);
+		}
+		cout << vmax << endl;
+	}else if(wm <= 1000){
+		dp1.resize(N);
+		for (int n = 0; n < N; n++) {
+			dp1[n].resize(min(WMAX,ws)+1);
+			fill(dp1[n].begin(),dp1[n].end(),-1);
+		}
+		dp1[0][0] = 0;
+		dp1[0][W[0]] = V[0];
+		for (int n = 1; n < N; n++) {
+			for (int w = 0; w <= min(WMAX, ws); w++) {
+				if (dp1[n - 1][w] != -1)dp1[n][w] = dp1[n - 1][w];
+				if (w - W[n] < 0)continue;
+				if (dp1[n - 1][w - W[n]] != -1) {
+					if(dp1[n][w]< dp1[n - 1][w - W[n]] + V[n])
+						dp1[n][w] = dp1[n - 1][w - W[n]] + V[n];
+				}
+			}
+		}
+		long int m = 0;
+		for (int w = 0; w <= min(WMAX, ws); w++)m = max(m,dp1[N-1][w]);
+		cout << m << endl;
+	}
+	else {
+		dp1.resize(N);
+		for (int n = 0; n < N; n++) {
+			dp1[n].resize(vs + 1);
+			fill(dp1[n].begin(), dp1[n].end(), ws);
+		}
+		dp1[0][0] = 0;
+		dp1[0][V[0]] = W[0];
+		for (int n = 1; n < N; n++) {
+			for (int v = 0; v <= vs; v++) {
+				if (dp1[n - 1][v] != -1)dp1[n][v] = dp1[n - 1][v];
+				if (v - V[n] < 0)continue;
+				if (dp1[n - 1][v - V[n]] != -1) {
+					if(dp1[n][v] > dp1[n - 1][v - V[n]] + W[n])
+						dp1[n][v] = dp1[n - 1][v - V[n]] + W[n];
+				}
+			}
+		}
+		cpp_int m = 0;
+		for (int v = 0; v <= vs; v++) {
+			if(dp1[N-1][v] <= WMAX)m = v;
+		}
+		cout << m << endl;
+	}
+	return;
+}
