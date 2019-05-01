@@ -1,4 +1,4 @@
-//Å¬Œö”{”
+//Å‘åŒö–ñ”
 //O(log max(a,b))
 template<class T>
 T GCD(T a, T b) {
