@@ -56,3 +56,4 @@ AOJ 0009 素数
 ABC 032 D ナップサック問題
 Maximum-Cup 2018 D Many Go Round
 TDPC I イゥイ
+ABC 065 D Built?^
