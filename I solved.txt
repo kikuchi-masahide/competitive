@@ -57,3 +57,4 @@ ABC 032 D ナップサック問題
 Maximum-Cup 2018 D Many Go Round
 TDPC I イゥイ
 ABC 065 D Built?^
+ABC 006 D トランプ挿入ソート
