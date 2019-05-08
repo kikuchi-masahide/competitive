@@ -1,0 +1,17 @@
+//分割数求める
+//和S以下、n分割、M剰余
+//保存用空vector<int>指定
+//もうめんどくさいから全部long intで(適当)
+//O(nS)
+void divisionNumber(long int S, long int n, long int M,vector<long int>& v) {
+	v.resize(S+1);
+	for (int n = 0; n <= S; n++)v[n] = 0;
+	v[0] = 1;
+	for (int i = 1; i <= n; i++) {   //i分割
+		for (int j = 0; j <= S; j++) {   //和j
+			if (j - i >= 0)v[j] += v[j - i];
+			if (v[j] >= M)v[j] -= M;
+		}
+	}
+	return;
+}
