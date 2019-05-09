@@ -1,0 +1,69 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+int N;
+long long A[300001];
+long long sumA[300001];
+long long sum = 0;
+
+int find(int n,long long K) {
+	int s = n-1, e = 3 * N;
+	while (e - s > 1) {
+		int m = (s + e) / 2;
+		if (sumA[m] - sumA[n - 1] < K)s = m;
+		else e = m;
+	}
+	return e;
+}
+
+void solve() {
+	cin >> N;
+	A[0] = 0;
+	for (int n = 1; n <= N; n++) {
+		cin >> A[n];
+		A[n + N] = A[n];
+		A[n + 2 * N] = A[n];
+		sum += A[n];
+	}
+	sumA[0] = 0;
+	sumA[1] = A[1];
+	for (int n = 2; n <= 3 * N; n++)
+		sumA[n] = A[n]+sumA[n - 1];
+	long long s = 0, e = sum/3;
+	while (e - s > 1) {
+		bool flag = false;
+		long long K = (s + e) / 2;
+		for (int n = 1; n <= N; n++) {
+			int n1 = find(n, K);
+			int n2 = find(n1+1, K);
+			int n3 = find(n2+1, K);
+			if (n3 < n + N) {
+				flag = true;
+				break;
+			}
+		}
+		if (flag)s = K;
+		else e = K;
+	}
+	cout << s << endl;
+	return;
+}

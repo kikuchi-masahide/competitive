@@ -1,0 +1,48 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+int N;
+int A[100000];
+set<int> iset;
+
+void solve() {
+	cin >> N;
+	for (int n = 0; n < N; n++)cin >> A[n];
+	int m = 1;
+	int s = 0, e = 0;
+	iset.insert(A[0]);
+	while (e < N) {
+		if (e == N - 1)break;
+		if (iset.find(A[e+1]) == iset.end()) {
+			e++;
+			iset.insert(A[e]);
+		}
+		else {
+			iset.erase(iset.find(A[s]));
+			s++;
+		}
+		m = max(e-s+1,m);
+	}
+	cout << m << endl;
+	cin >> N;
+	return;
+}
