@@ -5,18 +5,28 @@ class wGraph {
 public:
 	int N;
 	vector<multimap<int, T> >* E;
-	wGraph(int n) {
+	wGraph(int n,T i) {
 		N = n;
-		E = new vector<multimap<int,T> >;
+		E = new vector<multimap<int, T> >;
 		E->resize(N);
+		INF = i;
+	}
+	wGraph() {
+	}
+	void constructor(int n, T i) {
+		N = n;
+		E = new vector<multimap<int, T> >;
+		E->resize(N);
+		INF = i;
 	}
 	~wGraph() {
 		delete E;
 	}
 	void addEdge(int a, int b, T c) {
-		E->at(a).emplace(b,c);
+		E->at(a).emplace(b, c);
 	}
 	bool isConnected(int a, int b) {
 		return (E->at(a).find(b) != E->at(a).end());
 	}
+	T INF;
 };

@@ -1,0 +1,64 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+int N, C;
+int D[500][500];
+int a[3][30];
+
+void solve() {
+	cin >> N >> C;
+	for (int i = 0; i < C; i++) {
+		for (int j = 0; j < C; j++) {
+			cin >> D[i][j];
+		}
+	}
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < C; j++) {
+			a[i][j] = 0;
+		}
+	}
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			int c;
+			cin >> c;
+			c--;
+			a[(i + j) % 3][c]++;
+		}
+	}
+	int ans = INT_MAX;
+	for (int p = 0; p < C; p++) {
+		for (int q = 0; q < C; q++) {
+			for (int r = 0; r < C; r++) {
+				if (p == q || q == r || r == p)continue;
+				int temp = 0;
+				for (int c0 = 0; c0 < C; c0++)temp += D[c0][p] * a[0][c0];
+				for (int c1 = 0; c1 < C; c1++)temp += D[c1][q] * a[1][c1];
+				for (int c2 = 0; c2 < C; c2++)temp += D[c2][r] * a[2][c2];
+				ans = min(ans, temp);
+			}
+		}
+	}
+	cout << ans << endl;
+	return;
+}

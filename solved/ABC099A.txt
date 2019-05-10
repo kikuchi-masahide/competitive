@@ -1,0 +1,29 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+void solve() {
+	int N;
+	cin >> N;
+	cout << (N >= 1000 ? "ABD" : "ABC") << endl;
+	return;
+}

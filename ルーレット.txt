@@ -5,7 +5,7 @@ https://atcoder.jp/contests/jag2012autumn/tasks/icpc2012autumn_c
 https://indeednow-finalb-open.contest.atcoder.jp/tasks/indeednow_2015_finalb_d
 
 https://atcoder.jp/contests/wupc2012-closed/tasks/wupc2012_5
-https://abc035.contest.atcoder.jp/tasks/abc035_d
+#https://abc035.contest.atcoder.jp/tasks/abc035_d
 https://atcoder.jp/contests/abc085/tasks/abc085_b
 https://atcoder.jp/contests/abc091/tasks/abc091_b
 https://atcoder.jp/contests/joi2019yo/tasks/joi2019_yo_f
@@ -42,7 +42,7 @@ https://abc061.contest.atcoder.jp/tasks/abc061_d
 
 https://ttpc2015.contest.atcoder.jp/tasks/ttpc2015_n
 https://atcoder.jp/contests/abc012/tasks/abc012_4
-https://abc073.contest.atcoder.jp/tasks/abc073_d
+#https://abc073.contest.atcoder.jp/tasks/abc073_d
 https://atcoder.jp/contests/abc079/tasks/abc079_d
 https://agc001.contest.atcoder.jp/tasks/agc001_b
 

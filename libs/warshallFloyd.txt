@@ -1,0 +1,28 @@
+//ワーシャルフロイド、全点対最短路
+//グラフと結果保存用
+//到達不可能はg.INF
+//O(|V|^3)
+template<class T>
+void warshallFloyd(wGraph<T>& g,vector<vector<T>>& array) {
+	array.resize(g.N);
+	for (auto itr = array.begin(); itr != array.end(); itr++) {
+		(*itr).resize(g.N);
+		fill((*itr).begin(),(*itr).end(),g.INF);
+	}
+	for (int n = 0; n < g.N; n++)array[n][n] = 0;
+	for (int n = 0; n < g.N; n++) {
+		for (auto itr = g.E->at(n).begin(); itr != g.E->at(n).end(); itr++) {
+			array[n][(*itr).first] = min(array[n][(*itr).first],(*itr).second);
+		}
+	}
+	for (int k = 0; k < g.N; k++) {
+		for (int i = 0; i < g.N; i++) {
+			for (int j = 0; j < g.N; j++) {
+				if (array[i][k] != g.INF && array[k][j] != g.INF) {
+					array[i][j] = min(array[i][j],array[i][k]+array[k][j]);
+				}
+			}
+		}
+	}
+	return;
+}
