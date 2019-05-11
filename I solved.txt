@@ -69,3 +69,9 @@ ABC 099 A ABD
 ABC 099 B Stone Monument
 ABC 099 C Strange Bank
 ABC 099 D Good Grid
+ABC 073 D joisino's travel
+JOI 2007 —\‘I E ‚¨‚¹‚ñ‚×‚¢
+diverta 2019 programming contest A Consecutive Integers
+diverta 2019 programming contest B RGB Boxes
+diverta 2019 programming contest C AB Substrings
+diverta 2019 programming contest D DivRem Number

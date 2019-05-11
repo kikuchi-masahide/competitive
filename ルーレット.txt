@@ -86,7 +86,7 @@ http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0603
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0540
 https://onlinejudge.u-aizu.ac.jp/beta/room.html#RitsCamp18Day1/problems/C
 https://atcoder.jp/contests/kupc2012/tasks/kupc2012_8
-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0525
+#http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0525
 
 https://atcoder.jp/contests/abc018/tasks/abc018_4
 https://yukicoder.me/problems/no/226

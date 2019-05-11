@@ -1,0 +1,55 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+int R, C;
+bool M[10000][10];   //true�̍ő剻
+vector<int> V;
+
+void solve() {
+	while (true) {
+		cin >> R >> C;
+		if (R == 0 && C == 0)break;
+		for (int y = 0; y < R; y++) {
+			for (int x = 0; x < C; x++) {
+				int i;
+				cin >> i;
+				M[x][y] = (i == 0);
+			}
+		}
+		int ans = 0;
+		for (int yc = 0; yc < pow(2, R); yc++) {
+			int tempans = 0;
+			for (int x = 0; x < C; x++) {
+				int temp = 0;
+				for (int y = 0; y < R; y++) {
+					if ((M[x][y] && ((yc >> y) % 2 == 1)) || (!M[x][y] && !((yc >> y) % 2 == 1)))temp++;
+				}
+				tempans += max(temp, R - temp);
+			}
+			ans = max(ans, tempans);
+		}
+		V.push_back(ans);
+	}
+	for (auto itr = V.begin(); itr != V.end(); itr++)cout << *itr << endl;
+	return;
+}
