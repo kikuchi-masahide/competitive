@@ -1,0 +1,3 @@
+#include <iomanip>
+
+std::cout << std::setprecision(2) << showpoint << 3.141;

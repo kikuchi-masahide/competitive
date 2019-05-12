@@ -75,3 +75,4 @@ diverta 2019 programming contest A Consecutive Integers
 diverta 2019 programming contest B RGB Boxes
 diverta 2019 programming contest C AB Substrings
 diverta 2019 programming contest D DivRem Number
+ABC 026 D ‚‹´ŒNƒ{[ƒ‹1†

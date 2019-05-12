@@ -1,0 +1,67 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+const long double PI = 3.1415926535;
+
+long double A, B, C;
+long double p1, p2;
+
+long double f(long double x) {
+	return A * x + B * sin(C*PI*x)-100;
+}
+
+long double g(long double x) {
+	return A + B * C*PI*cos(C*PI*x);
+}
+
+long double find(long double s,long double e) {   //íPí≤Ç»ãÊä‘Ç≈ìÒï™íTçı
+	if (f(s) < f(e)) {   //íPí≤ëùâ¡
+		while (f(e) - f(s) > 0.000001 / 2) {
+			long double m = (e + s) / 2;
+			if (f(m) < 0)s = m;
+			else e = m;
+		}
+		return (e+s)/2;
+	}
+	else {
+		while (f(e) - f(s) > 0.0000001 / 2) {
+			long double m = (e + s) / 2;
+			if (f(m) > 0)e = m;
+			else s = m;
+		}
+		return (e+s)/2;
+	}
+}
+
+void solve() {
+	cin >> A >> B >> C;
+	long double s = 0, e = 200;
+	while (abs(f(e) - f(s)) > 0.0000000001 / 2) {
+		long double m = (e+s)/2;
+		if (f(m) < 0)s = m;
+		else e = m;
+	}
+	cout << std::setprecision(20) << showpoint << s << endl;
+	return;
+}
