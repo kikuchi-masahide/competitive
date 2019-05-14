@@ -4,92 +4,31 @@ public:
 	int N;
 	vector<set<int>>* E;
 	graph(int);
+	graph();
+	void construct(int);
 	~graph();
-	void addEdge(int,int);
-	void removeEdge(int,int);
-	bool isConnected(int,int);
+	void addEdge(int, int);
+	void removeEdge(int, int);
+	bool isConnected(int, int);
 };
 
 graph::graph(int n) {
-	N = n;
-	E = new vector<set<int>>;
-	E->resize(N);
+	construct(n);
+}
+
+graph::graph() {
+	N = 0;
 }
 
 graph::~graph() {
 	delete E;
 }
 
-
-void graph::addEdge(int a, int b) {
-	E->at(a).insert(b);
-}
-
-void graph::removeEdge(int a, int b) {
-	auto itr = E->at(a).find(b);
-	if (itr != E->at(a).end())E->at(a).erase(itr);
-}
-
-bool graph::isConnected(int a, int b) {
-	return (E->at(a).find(b) != E->at(a).end());
-}
-//重みなしのグラフのクラス
-class graph {
-public:
-	int N;
-	vector<set<int>>* E;
-	graph(int);
-	~graph();
-	void addEdge(int,int);
-	void removeEdge(int,int);
-	bool isConnected(int,int);
-};
-
-graph::graph(int n) {
+void graph::construct(int n) {
 	N = n;
 	E = new vector<set<int>>;
 	E->resize(N);
 }
-
-graph::~graph() {
-	delete E;
-}
-
-
-void graph::addEdge(int a, int b) {
-	E->at(a).insert(b);
-}
-
-void graph::removeEdge(int a, int b) {
-	auto itr = E->at(a).find(b);
-	if (itr != E->at(a).end())E->at(a).erase(itr);
-}
-
-bool graph::isConnected(int a, int b) {
-	return (E->at(a).find(b) != E->at(a).end());
-}
-//重みなしのグラフのクラス
-class graph {
-public:
-	int N;
-	vector<set<int>>* E;
-	graph(int);
-	~graph();
-	void addEdge(int,int);
-	void removeEdge(int,int);
-	bool isConnected(int,int);
-};
-
-graph::graph(int n) {
-	N = n;
-	E = new vector<set<int>>;
-	E->resize(N);
-}
-
-graph::~graph() {
-	delete E;
-}
-
 
 void graph::addEdge(int a, int b) {
 	E->at(a).insert(b);

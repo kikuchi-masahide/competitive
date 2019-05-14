@@ -28,7 +28,7 @@ https://tdpc.contest.atcoder.jp/tasks/tdpc_eel
 https://tdpc.contest.atcoder.jp/tasks/tdpc_tree
 https://abc070.contest.atcoder.jp/tasks/abc070_d
 
-https://abc036.contest.atcoder.jp/tasks/abc036_d
+#https://abc036.contest.atcoder.jp/tasks/abc036_d
 https://atcoder.jp/contests/arc085/tasks/arc085_b
 https://abc025.contest.atcoder.jp/tasks/abc025_c
 https://tdpc.contest.atcoder.jp/tasks/tdpc_game
