@@ -77,4 +77,4 @@ diverta 2019 programming contest C AB Substrings
 diverta 2019 programming contest D DivRem Number
 ABC 026 D 高橋君ボール1号
 ABC 036 D 塗り絵
-
+JOI 2012 本選 A 電飾
