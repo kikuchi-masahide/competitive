@@ -1,0 +1,39 @@
+void topologicalVisit(graph& g0, int n, vector<char>& check, stack<int>& q, bool& flag) {
+	if (check.at(n) == 1) {
+		flag = true;
+		return;
+	}
+	if (check.at(n) == 0) {
+		check.at(n) = 1;
+		for (auto itr = g0.E->at(n).begin(); itr != g0.E->at(n).end(); itr++) {
+			topologicalVisit(g0, *itr, check, q, flag);
+			if (flag)return;
+		}
+		check[n] = 2;
+		q.push(n);
+	}
+}
+
+//与えられたグラフにトポロジカル順序?をつけたい
+//(i->j => n(i) < n(j))
+//グラフ、結果保存用空vector 木か木じゃないか返す
+bool topologicalSort(graph& g0, vector<int>& deck) {
+	vector<char>* check = new vector<char>;   //初期->0 一時的->1 恒久的-> 2
+	check->resize(g0.N);
+	for (int i = 0; i < g0.N; i++)check->at(i) = 0;
+
+	stack<int>* qans = new stack<int>;
+	bool cflag = false;
+	for (int i = 0; i < g0.N; i++) {
+		if (check->at(i) != 0)continue;
+		topologicalVisit(g0, i, *check, *qans, cflag);
+	}
+	if (cflag)return false;
+	while (!qans->empty()) {
+		deck.push_back(qans->top());
+		qans->pop();
+	}
+	delete qans;
+	delete check;
+	return true;
+}

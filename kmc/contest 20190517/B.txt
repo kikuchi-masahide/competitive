@@ -1,0 +1,68 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <stack>
+
+using namespace std;
+string M[50];
+int H, W;
+typedef pair<int, int> pii;
+bool isUsed[50][50];
+class p {
+public:
+	pii cur;
+	pii prev;
+	p(pii p1, pii p0) :cur(p1), prev(p0){}
+	p():cur(pii(-1,-1)),prev(pii(-1,-1)){}
+};
+stack<p> st;
+
+void solve() {
+	cin >> H >> W;
+	for (int y = 0; y < H; y++)cin >> M[y];
+	bool flag = false;   //存在->true
+	for (int X = 0; X < W && !flag; X++) {
+		for (int Y = 0; Y < H && !flag; Y++) {   //各ますについて、その点に戻ってくる閉路があるか探索
+			for (int x = 0; x < W; x++) {
+				for (int y = 0; y < H; y++)isUsed[x][y] = false;
+			}
+			while (!st.empty())st.pop();
+			st.push(p(pii(X,Y),pii(X,Y)));
+			while (!st.empty() && !flag) {
+				p p0 = st.top();
+				st.pop();
+				isUsed[p0.cur.first][p0.cur.second] = true;
+				int x0 = p0.cur.first, y0 = p0.cur.second;
+				int vect[4][2] = { {1,0},{0,1},{-1,0},{0,-1} };
+				for (int v = 0; v < 4; v++) {
+					int x1 = x0 + vect[v][0], y1 = y0 + vect[v][1];
+					if (pii(x1, y1) == p0.prev)continue;   //逆戻り
+					if (x1 == X && y1 == Y) {
+						flag = true;
+						break;
+					}
+					if (x1 < 0 || x1 >= W || y1 < 0 || y1 >= H)continue;   //範囲外
+					if (M[y1].at(x1) != M[Y].at(X))continue;   //文字違い
+					if (isUsed[x1][y1])continue;   //使用済み
+					st.push(p(pii(x1, y1),p0.cur));
+				}
+			}
+		}
+	}
+	if (flag) cout << "Yes" << endl;
+	else cout << "No" << endl;
+	return;
+}
