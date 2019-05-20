@@ -1,0 +1,105 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+//重みなしのグラフのクラス
+class graph {
+public:
+	int N;
+	vector<set<int>>* E;
+	graph(int);
+	graph();
+	void constructor(int);
+	~graph();
+	void addEdge(int, int);
+	void removeEdge(int, int);
+	bool isConnected(int, int);
+};
+
+graph::graph(int n) {
+	constructor(n);
+}
+
+graph::graph() {
+	N = 0;
+}
+
+graph::~graph() {
+	delete E;
+}
+
+void graph::constructor(int n) {
+	N = n;
+	E = new vector<set<int>>;
+	E->resize(N);
+}
+
+void graph::addEdge(int a, int b) {
+	E->at(a).insert(b);
+}
+
+void graph::removeEdge(int a, int b) {
+	auto itr = E->at(a).find(b);
+	if (itr != E->at(a).end())E->at(a).erase(itr);
+}
+
+bool graph::isConnected(int a, int b) {
+	return (E->at(a).find(b) != E->at(a).end());
+}
+
+int N, M;
+graph G;
+vector<int> res;
+int m = 0;   //次の連結成分を何の数で塗るか
+queue<int> q;
+
+void solve() {
+	cin >> N >> M;
+	G.constructor(N);
+	for (int m = 0; m < M; m++) {
+		int x, y, z;
+		cin >> x >> y >> z;
+		x--; y--;
+		G.addEdge(x, y);
+		G.addEdge(y, x);
+	}
+	res.resize(N);
+	for (int n = 0; n < N; n++)res[n] = -1;   //未決定
+	for (int n = 0; n < N; n++) {
+		if (res[n] != -1)continue;
+		q.push(n);
+		while (!q.empty()) {
+			int e = q.front();
+			q.pop();
+			if (res[e] != -1)continue;
+			res[e] = m;
+			for (auto itr = G.E->at(e).begin(); itr != G.E->at(e).end(); itr++) {
+				q.push(*itr);
+			}
+		}
+		m++;
+	}
+	cout << m << endl;
+	return;
+}

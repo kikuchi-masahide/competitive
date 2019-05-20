@@ -1,0 +1,113 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+//重み付きグラフ
+//距離の部分をテンプレートに
+template<class T>
+class wGraph {
+public:
+	int N;
+	vector<multimap<int, T> >* E;
+	wGraph(int n, T i) {
+		N = n;
+		E = new vector<multimap<int, T> >;
+		E->resize(N);
+		INF = i;
+	}
+	wGraph() {
+	}
+	void constructor(int n, T i) {
+		N = n;
+		E = new vector<multimap<int, T> >;
+		E->resize(N);
+		INF = i;
+	}
+	~wGraph() {
+		delete E;
+	}
+	void addEdge(int a, int b, T c) {
+		E->at(a).emplace(b, c);
+	}
+	bool isConnected(int a, int b) {
+		return (E->at(a).find(b) != E->at(a).end());
+	}
+	T INF;
+};
+
+//ベルマンフォード　O(|V|*|E|)
+//グラフ、始点、保存用ベクトル(空)
+template<class T>
+void bellmanFord(wGraph<T>& G, int s, vector<T>& vect,vector<T>& par) {
+	vect.resize(G.N);
+	par.resize(G.N);
+	int E = 0;
+	for (int i = 0; i < G.N; i++) {
+		vect[i] = G.INF;
+		par[i] = -1;
+		E += G.E->at(i).size();
+	}
+	vect[s] = 0;
+	par[s] = -1;
+	while (true) {
+		bool update = false;
+		for (int i = 0; i < G.N; i++) {
+			for (auto itr = G.E->at(i).begin(); itr != G.E->at(i).end(); itr++) {
+				if (vect[i] != G.INF && vect[(*itr).first] > vect[i] + (*itr).second) {
+					vect[(*itr).first] = vect[i] + (*itr).second;
+					par[(*itr).first] = i;
+					update = true;
+				}
+			}
+		}
+		if (!update)return;
+	}
+}
+
+int N, M;
+wGraph<int> G0;
+vector<bool> check;
+
+void solve() {
+	cin >> N >> M;
+	check.resize(N);
+	G0.constructor(N, 2);
+	for (int i = 0; i < N; i++)check[i] = true;
+	for (int n = 0; n < N - 1 + M; n++) {
+		int a, b;
+		cin >> a >> b;
+		a--; b--;
+		G0.addEdge(a, b, -1);
+		check[b] = false;
+	}
+	int m = 0;
+	for (; m < N; m++) {
+		if (check[m])break;
+	}
+	vector<int> vect;
+	vector<int> parent;
+	bellmanFord(G0, m, vect, parent);
+	for (int i = 0; i < N; i++)cout << parent[i] + 1 << endl;
+	return;
+}

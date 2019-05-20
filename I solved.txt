@@ -78,3 +78,9 @@ diverta 2019 programming contest D DivRem Number
 ABC 026 D 高橋君ボール1号
 ABC 036 D 塗り絵
 JOI 2012 本選 A 電飾
+ABC 121 D XOR World
+ABC 126 A Chaging a Character
+ABC 126 B YYMM or MMYY
+ABC 126 C Dice and Coin
+ABC 126 D Even Relation
+ABC 126 E 1 or 2

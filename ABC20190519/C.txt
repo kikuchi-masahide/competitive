@@ -1,0 +1,40 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+int N, K;
+void solve() {
+	cin >> N >> K;
+	long double p = 0;
+	for (int n = 1; n <= N; n++) {
+		int t = N;
+		int tn = n;
+		while (tn < K) {
+			t *= 2;
+			tn *= 2;
+		}
+		p += 1 / (long double)t;
+	}
+	cout << setprecision(10) << showpoint << p;
+}

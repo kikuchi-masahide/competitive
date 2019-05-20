@@ -1,0 +1,24 @@
+//ベルマンフォード　O(|V|*|E|)
+//グラフ、始点、保存用ベクトル(空)
+template<class T>
+void bellmanFord(wGraph<T>& G, int s, vector<T>& vect) {
+	vect.resize(G.N);
+	int E = 0;
+	for (int i = 0; i < G.N; i++) {
+		vect[i] = G.INF;
+		E += G.E->at(i).size();
+	}
+	vect[s] = 0;
+	while (true) {
+		bool update = false;
+		for (int i = 0; i < G.N; i++) {
+			for (auto itr = G.E->at(i).begin(); itr != G.E->at(i).end(); itr++) {
+				if (vect[i] != G.INF && vect[(*itr).first] > vect[i] + (*itr).second) {
+					vect[(*itr).first] = vect[i] + (*itr).second;
+					update = true;
+				}
+			}
+		}
+		if (!update)return;
+	}
+}

@@ -1,0 +1,117 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+//重みなしのグラフのクラス
+class graph {
+public:
+	int N;
+	vector<set<int>>* E;
+	graph(int);
+	graph();
+	void constructor(int);
+	~graph();
+	void addEdge(int, int);
+	void removeEdge(int, int);
+	bool isConnected(int, int);
+};
+
+graph::graph(int n) {
+	constructor(n);
+}
+
+graph::graph() {
+	N = 0;
+}
+
+graph::~graph() {
+	delete E;
+}
+
+void graph::constructor(int n) {
+	N = n;
+	E = new vector<set<int>>;
+	E->resize(N);
+}
+
+void graph::addEdge(int a, int b) {
+	E->at(a).insert(b);
+}
+
+void graph::removeEdge(int a, int b) {
+	auto itr = E->at(a).find(b);
+	if (itr != E->at(a).end())E->at(a).erase(itr);
+}
+
+bool graph::isConnected(int a, int b) {
+	return (E->at(a).find(b) != E->at(a).end());
+}
+
+int N;
+graph G;
+class ele {
+public:
+	int cur, col;
+	ele(int c1,int c2):cur(c1),col(c2){}
+};
+
+vector<int> res;
+queue<ele> q;
+void solve() {
+	cin >> N;
+	G.constructor(2*N);
+	int next = N;   //次追加する頂点番号
+	for (int n = 0; n < N-1; n++) {
+		int u, v, w;
+		cin >> u >> v >> w;
+		u--; v--;
+		if (w % 2 == 0) {
+			G.addEdge(u, next);
+			G.addEdge(next, u);
+			G.addEdge(v, next);
+			G.addEdge(next, v);
+			next++;
+		}
+		else {
+			G.addEdge(u, v);
+			G.addEdge(v, u);
+		}
+	}
+	res.resize(next);
+	for (int i = 0; i < next; i++)res[i] = -1;   //未決定
+	q.push(ele(0,0));
+	while (!q.empty()) {
+		ele e = q.front();
+		q.pop();
+		if (res[e.cur] == 1-e.col)
+			return;
+		if (res[e.cur] != -1) continue;
+		res[e.cur] = e.col;
+		for (auto itr = G.E->at(e.cur).begin(); itr != G.E->at(e.cur).end(); itr++) {
+			q.push(ele(*itr, 1 - e.col));
+		}
+	}
+	for (int n = 0; n < N; n++)cout << res[n] << endl;
+	return;
+}

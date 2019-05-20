@@ -1,0 +1,41 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+void solve() {
+	long long a, b;
+	cin >> a >> b;
+	long long c = 1;
+	long long ans = 0;
+	a--;
+	while (c <= b) {
+		long long bb = floor((b) / (2 * c))*c + (b%(2*c)>=c? (b% (2 * c)) - c+1:0);
+		long long aa = 0;
+		if(a >= 0)aa = floor((a) / (2 * c))*c + (a % (2 * c) >= c ? (a % (2 * c)) - c +1: 0);
+		ans += ((bb - aa) % 2)*c;
+		c *= 2;
+	}
+	cout << ans << endl;
+	return;
+}
