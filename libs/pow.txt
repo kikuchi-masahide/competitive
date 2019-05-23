@@ -2,15 +2,20 @@
 //Š|‚¯ŽZ‚ª’è‹`‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ª•K—v
 //O(log n)
 template<class T>
-T pow(T base,int p) {
+T pow(T base, int p,T mod = -1) {
+	if (p == 0)return 1;
+	if (p == 1)return mod==-1?base%mod:base;
 	int b = 1, c = 0;
-	while (b < p) {
+	while (b <= p) {
 		b *= 2;
 		c++;
 	}
-	T* arr2 = new T[c];   //T[n] = T^(2^c)
-	arr2[0] = base;
-	for (int n = 1; n < c; n++)arr2[n] = arr2[n - 1] * arr2[n - 1];
+	T* arr2 = new T[c];   //T[n] = T^(2^n)
+	arr2[0] = mod == -1 ? base % mod : base;
+	for (int n = 1; n < c; n++) {
+		if (mod != -1)arr2[n] = (arr2[n - 1] * arr2[n - 1]) % mod;
+		else arr2[n] = arr2[n - 1] * arr2[n - 1];
+	}
 	c--;
 	T ans = arr2[c];
 	b /= 2;
@@ -19,7 +24,8 @@ T pow(T base,int p) {
 		c--;
 		b /= 2;
 		if (p >= b) {
-			ans *= arr2[c];
+			if (mod != -1)ans = (ans * arr2[c]) % mod;
+			else ans = ans * arr2[c];
 			p -= b;
 		}
 	}

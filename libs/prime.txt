@@ -24,21 +24,18 @@ bool* eratosthenes(int n) {
 }
 
 //Osa_k–@
-//arr[n] := n‚ÌÅ¬‚Ì‘fˆö”‚ğ0‚©‚çn-1‚Ü‚Å
+//arr[n] := n‚ÌÅ¬‚Ì‘fˆö”‚ğ0‚©‚çn‚Ü‚Å
 //‘fˆö”•ª‰ğ‚ªO(ln(N))‚Å‚Å‚«‚é‚Á‚Û‚¢
-int* Osa_k(int N) {
-	bool* parr = eratosthenes(N);
-	int* array = new int[N];
-	for (int n = 0; n < N; n++)array[n] = -1;
+void Osa_k(int N,vector<int> vect) {
+	vect.resize(N + 1);
+	for (int n = 0; n < N; n++)vect[n] = n;
 	for (int n = 2; n < N; n++) {
-		if (!parr[n])continue;   //‘f”‚¶‚á‚È‚¢ê‡
-		array[n] = n;
+		if (vect[n] != n)continue;   //‘f”‚¶‚á‚È‚¢ê‡
 		int t = 2 * n;
 		while (t < N) {
-			if (array[t] == -1)array[t] = n;
+			if (vect[t] == t)vect[t] = n;
 			t += n;
 		}
 	}
-	delete parr;
-	return array;
+	return;
 }
