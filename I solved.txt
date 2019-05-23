@@ -84,3 +84,5 @@ ABC 126 B YYMM or MMYY
 ABC 126 C Dice and Coin
 ABC 126 D Even Relation
 ABC 126 E 1 or 2
+ABC 126 F XOR Matching
+ARC 004 D •\Œ»‚ÌŽ©—R
