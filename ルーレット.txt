@@ -78,7 +78,7 @@ https://atcoder.jp/contests/abc098/tasks/arc098_b
 
 https://atcoder.jp/contests/abc017/tasks/abc017_4
 https://abc033.contest.atcoder.jp/tasks/abc033_d
-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0646
+-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0646
 https://abc048.contest.atcoder.jp/tasks/arc064_a
 https://atcoder.jp/contests/abc083/tasks/arc088_b
 
