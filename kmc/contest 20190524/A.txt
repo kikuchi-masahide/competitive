@@ -1,0 +1,47 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <stack>
+
+using namespace std;
+long long N, K, V;
+vector<int> vec;
+vector<long long> ans;
+
+void solve() {
+	int T;
+	cin >> T;
+	for (; T > 0; T--) {
+		cin >> N >> K >> V;
+		vec.clear();
+		vec.resize(N);
+		long long sum = 0;
+		for (int n = 0; n < N; n++) {
+			cin >> vec[n];
+			sum += vec[n];
+		}
+		bool flag = false;
+		if (V * (N + K) - sum > 0) {
+			if ((V * (N + K) - sum) % K == 0) {
+				ans.push_back((V * (N + K) - sum) / K);
+				flag = true;
+			}
+		}
+		if (!flag)ans.push_back(-1);
+	}
+	for (int i = 0; i < ans.size(); i++)cout << ans[i] << endl;
+	return;
+}

@@ -1,0 +1,48 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <stack>
+
+using namespace std;
+vector<long long> D1;
+vector<long long> D2;
+
+void solve() {
+	int T;
+	cin >> T;
+	for (; T > 0; T--) {
+		long long A;
+		cin >> A;
+		long long m = 0;   //ç≈ëÂíl
+		int d2 = 0;
+		long long pay = 0;   //ï•Ç§Ç®ã‡
+		int i = 1;
+		for (;; i++) {   //iì˙ñ⁄
+			pay = 2 * pay + 1;
+			if (m < A * i - pay) {
+				m = A * i - pay;
+				d2 = i;
+			}
+			if (A*i-pay < 0)break;
+		}
+		D1.push_back(i - 1);
+		D2.push_back(d2);
+	}
+	for (int i = 0; i < D1.size(); i++) {
+		cout << D1[i] << " " << D2[i] << endl;
+	}
+	return;
+}
