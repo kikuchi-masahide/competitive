@@ -1,0 +1,61 @@
+//N!‚ğ‹‚ß‚é(O(N))
+long long stair(int N, int mod = 1000000007) {
+	long long temp = 1;
+	if (mod != -1) {
+		for (int i = 2; i <= N; i++) {
+			temp = (temp*i) % mod;
+		}
+	}
+	else {
+		for (int i = 2; i <= N; i++) {
+			temp = temp*i;
+		}
+	}
+	return temp;
+}
+
+//0!,1!,...,N!‚ğ‹‚ß‚é(O(N))
+void stairs(int N, vector<long long>& vec,int mod = 1000000007) {
+	long long temp = 1;
+	vec.resize(N+1);
+	vec[0] = 1;
+	vec[1] = 1;
+	for (int i = 2; i <= N; i++) {
+		if(mod != -1)temp = (temp*i) % mod;
+		else temp *= i;
+		vec[i] = temp;
+	}
+	return;
+}
+
+//0!,1!,...,N!‚Ì‹tŒ³(modè—])‚ğ‹‚ß‚é
+//O(log(mod)+N)
+void stairInv(int N, vector<long long>& vect,int mod = 1000000007) {
+	vect.resize(N+1);
+	long long temp = stair(N, mod);
+	temp = pow(temp, mod - 2, (long long)mod);
+	vect[N] = temp;
+	for (long long n = N - 1; n >= 1; n--) {
+		temp = (vect[n + 1] * (n + 1)) % mod;
+		vect[n] = temp;
+	}
+	return;
+}
+
+//nCk‚ğ‹‚ß‚é(modè—])
+//O(N+log(mod)+max(n-k,k))
+long long C(int n, int k,int mod = 1000000007) {
+	long long temp = stair(n,mod);
+	vector<long long>* vect = new vector<long long>;
+	stairInv(max(n-k,k), *vect, mod);
+	temp = (temp*vect->at(n - k))%mod;
+	temp = (temp*vect->at(k)) % mod;
+	delete vect;
+	return temp;
+}
+
+//nHk(d•¡‡˜)‚ğ‹‚ß‚é
+//
+long long H(int n, int k,int mod = 1000000007) {
+	return C(n - 1 + k, n - 1,mod);
+}

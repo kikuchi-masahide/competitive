@@ -1,0 +1,163 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+//重み付きグラフ
+//距離の部分をテンプレートに
+template<class T>
+class wGraph {
+public:
+	int N;
+	vector<multimap<int, T> >* E;
+	wGraph(int n, T i) {
+		N = n;
+		E = new vector<multimap<int, T> >;
+		E->resize(N);
+		INF = i;
+	}
+	wGraph() {
+	}
+	void constructor(int n, T i) {
+		N = n;
+		E = new vector<multimap<int, T> >;
+		E->resize(N);
+		INF = i;
+	}
+	~wGraph() {
+		delete E;
+	}
+	void addEdge(int a, int b, T c) {
+		E->at(a).emplace(b, c);
+	}
+	bool isConnected(int a, int b) {
+		return (E->at(a).find(b) != E->at(a).end());
+	}
+	T INF;
+};
+
+//ダイクストラする
+//条件:重み>0
+//グラフ本体、始点、保存用vector
+//到達不可能はg.INF
+//O(ElogV)
+template<class T>
+void  dijkstra(wGraph<T>& g, int s, vector<T>& v) {
+	v.resize(g.N);
+	for (int i = 0; i < g.N; i++) {
+		v[i] = g.INF;
+	}
+	typedef pair<T, int> t;
+	priority_queue<t, vector<t>, greater<t>> q;
+	q.push(t(0, s));
+	while (!q.empty()) {
+		t e = q.top();
+		q.pop();
+		if (v[e.second] != g.INF && v[e.second] <= e.first)continue;
+		v[e.second] = e.first;
+		for (auto itr = g.E->at(e.second).begin(); itr != g.E->at(e.second).end(); itr++) {
+			q.push(t(e.first + (*itr).second, (*itr).first));
+		}
+	}
+	return;
+}
+
+vector<string> ans;
+vector<vector<bool>> vmap;
+int M, N, X0, Y0;
+vector<int> dijkans;
+
+bool isValid(int x, int y) {
+	if (x < 0 || x >= M || y < 0 || y >= N)return false;
+	return vmap[x][y];
+}
+
+int A(int x, int y) {
+	return y * M + x;
+}
+
+int B(int x, int y) {
+	return y * M + x + M * N;
+}
+
+int C(int x, int y) {
+	return y * M + x + 2 * M * N;
+}
+
+void solve() {
+	int T;
+	cin >> T;
+	for (; T > 0; T--) {
+		cin >> N >> M >> X0 >> Y0;
+		X0--; Y0--;
+		vmap.clear();
+		vmap.resize(M);
+		for (int x = 0; x < M; x++)vmap[x].resize(N);
+		for (int y = 0; y < N; y++) {
+			string S;
+			cin >> S;
+			for (int x = 0; x < M; x++)vmap[x][y] = (S[x] == '1');
+		}
+		wGraph<int> G(3 * M*N, LLONG_MAX);
+		for (int x = 0; x < M; x++) {
+			for (int y = 0; y < N; y++) {
+				if (!isValid(x, y))continue;
+				if (isValid(x + 1, y) && isValid(x + 2, y)) {
+					G.addEdge(A(x, y), B(x + 1, y), 1);
+					G.addEdge(B(x + 1, y), A(x, y), 1);
+				}
+				if (isValid(x - 1, y) && isValid(x - 2, y)) {
+					G.addEdge(A(x, y), B(x - 2, y), 1);
+					G.addEdge(B(x - 2, y), A(x, y), 1);
+				}
+				if (isValid(x, y + 1) && isValid(x, y + 2)) {
+					G.addEdge(A(x, y), C(x, y + 1), 1);
+					G.addEdge(C(x, y + 1), A(x, y), 1);
+				}
+				if (isValid(x, y - 1) && isValid(x, y - 2)) {
+					G.addEdge(A(x, y), C(x, y - 2), 1);
+					G.addEdge(C(x, y - 2), A(x, y), 1);
+				}
+			}
+		}
+		dijkans.clear();
+		dijkstra(G, A(X0, Y0), dijkans);
+		for (int y = 0; y < N; y++) {
+			string temp("");
+			if (dijkans[A(0, y)] == G.INF)temp += string("-1");
+			else temp += to_string(dijkans[A(0, y)]);
+			for (int x = 1; x < M; x++) {
+				if (dijkans[A(x, y)] == G.INF)temp += string(" -1");
+				else {
+					temp += string(" ");
+					temp += to_string(dijkans[A(x, y)]);
+				}
+			}
+			ans.push_back(temp);
+		}
+	}
+	for (int i = 0; i < ans.size(); i++) {
+		cout << ans[i] << endl;
+	}
+	return;
+}
