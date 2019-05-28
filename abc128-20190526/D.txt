@@ -1,0 +1,57 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+int dp[51][51][101];
+int N, K;
+int V[50];
+
+void solve() {
+	cin >> N >> K;
+	for (int n = 0; n < N; n++)cin >> V[n];
+	for (int l = 0; l < N; l++) {
+		for (int r = l + 1; r <= N; r++) {
+			dp[l][r][0] = 0;
+		}
+	}
+	for (int k = 1; k <= K; k++) {
+		for (int l = 0; l < N; l++) {
+			dp[l][l + 1][k] = V[l] * (k%2);
+			for (int r = l + 2; r <= N; r++) {
+				dp[l][r][k] = max(V[l]+dp[l+1][r][k-1],
+								  V[r-1]+dp[l][r-1][k-1]);
+				if (k - 2 >= 0) {
+					dp[l][r][k] = max(dp[l][r][k],
+						dp[l + 1][r][k - 2]);
+					dp[l][r][k] = max(dp[l][r][k],
+						dp[l][r-1][k - 2]);
+				}
+			}
+		}
+	}
+	int m = 0;
+	for (int k = 0; k <= K; k++)m = max(m, dp[0][N][k]);
+	cout << m << endl;
+	return;
+}

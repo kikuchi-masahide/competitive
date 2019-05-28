@@ -1,0 +1,63 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+vector<vector<int>> S;
+int N, M;
+vector<int> K;
+vector<int> P;
+int ans = 0;
+
+void solve() {
+	cin >> N >> M;
+	K.resize(M);
+	S.resize(M);
+	for (int m = 0; m < M; m++) {
+		cin >> K[m];
+		S[m].resize(K[m]);
+		for (int s = 0; s < K[m]; s++) {
+			cin >> S[m][s];
+			S[m][s]--;
+		}
+	}
+	P.resize(M);
+	for (int m = 0; m < M; m++)cin >> P[m];
+	vector<int> tempv;
+	for (int st = 0; st < pow(2, N); st++) {
+		tempv.clear();
+		tempv.resize(N);
+		for (int n = 0; n < N; n++)tempv[n] = (st >> n) % 2;
+		int m = 0;
+		for (; m < M; m++) {
+			int counter = 0;   //つけてるスイッチの数
+			for (auto itr = S[m].begin(); itr != S[m].end(); itr++) {
+				counter += tempv[*itr];
+			}
+			if (counter % 2 != P[m])break;
+		}
+		if (m == M)ans++;
+	}
+	cout << ans << endl;
+	return;
+}

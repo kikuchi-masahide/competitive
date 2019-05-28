@@ -1,0 +1,32 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+int A, P;
+
+void solve() {
+	cin >> A >> P;
+	cout << (3 * A + P) / 2 << endl;
+	return;
+}

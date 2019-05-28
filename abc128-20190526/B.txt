@@ -1,0 +1,58 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+class T {
+public:
+	string first;
+	int second;
+	int num;
+	T(string s, int i1, int i2) :first(s), second(i1), num(i2) {};
+};
+bool operator<(T a, T b) {
+	for (int i = 0; i < min(a.first.size(), b.first.size()); i++) {
+		if (a.first[i] < b.first[i])return true;
+		else if (a.first[i] > b.first[i])return false;
+	}
+	if (a.first.size() != b.first.size())return a.first.size() < b.first.size();
+	return a.second > b.second;
+}
+
+int N;
+vector<T> vec;
+
+void solve() {
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		string s;
+		int p;
+		cin >> s >> p;
+		vec.push_back(T(s,p,i));
+	}
+	sort(vec.begin(), vec.end());
+	for (int i = 0; i < N; i++) {
+		cout << vec[i].num + 1 << endl;
+	}
+	return;
+}
