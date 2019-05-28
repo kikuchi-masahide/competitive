@@ -1,0 +1,110 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+//重み付きグラフ
+//距離の部分をテンプレートに
+template<class T>
+class wGraph {
+public:
+	int N;
+	vector<multimap<int, T> >* E;
+	wGraph(int n, T i) {
+		N = n;
+		E = new vector<multimap<int, T> >;
+		E->resize(N);
+		INF = i;
+	}
+	wGraph() {
+	}
+	void constructor(int n, T i) {
+		N = n;
+		E = new vector<multimap<int, T> >;
+		E->resize(N);
+		INF = i;
+	}
+	~wGraph() {
+		delete E;
+	}
+	void addEdge(int a, int b, T c) {
+		E->at(a).emplace(b, c);
+	}
+	bool isConnected(int a, int b) {
+		return (E->at(a).find(b) != E->at(a).end());
+	}
+	T INF;
+};
+
+//ダイクストラする
+//条件:重み>0
+//グラフ本体、始点、保存用vector
+//到達不可能はg.INF
+//O(ElogV)
+template<class T>
+void  dijkstra(wGraph<T>& g, int s, vector<T>& v) {
+	v.resize(g.N);
+	for (int i = 0; i < g.N; i++) {
+		v[i] = g.INF;
+	}
+	typedef pair<T, int> t;
+	priority_queue<t, vector<t>, greater<t>> q;
+	q.push(t(0, s));
+	while (!q.empty()) {
+		t e = q.top();
+		q.pop();
+		if (v[e.second] != g.INF && v[e.second] <= e.first)continue;
+		v[e.second] = e.first;
+		for (auto itr = g.E->at(e.second).begin(); itr != g.E->at(e.second).end(); itr++) {
+			q.push(t(e.first + (*itr).second, (*itr).first));
+		}
+	}
+	return;
+}
+
+wGraph<long long> G;
+int N, K,Q;
+vector<long long> vec,ans;
+
+void solve() {
+	cin >> N;
+	G.constructor(N, LLONG_MAX);
+	for (int n = 0; n < N-1; n++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		a--; b--;
+		G.addEdge(a, b, c);
+		G.addEdge(b, a, c);
+	}
+	cin >> Q >> K;
+	K--;
+	dijkstra(G, K, vec);
+	for (int q = 0; q < Q; q++) {
+		int a, b;
+		cin >> a >> b;
+		a--; b--;
+		ans.push_back(vec[a]+vec[b]);
+	}
+	for (auto itr = ans.begin(); itr != ans.end(); itr++)cout << *itr << endl;
+	return;
+}
