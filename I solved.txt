@@ -88,3 +88,5 @@ ABC 126 F XOR Matching
 ARC 004 D 表現の自由
 ABC 070 D Transit Tree Path
 JOI 2006 本選 D 最悪の記者
+JOI 2006 予選 F 通学経路
+Range Minimum Query (RMQ)
