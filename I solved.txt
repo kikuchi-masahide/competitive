@@ -90,3 +90,4 @@ ABC 070 D Transit Tree Path
 JOI 2006 本選 D 最悪の記者
 JOI 2006 予選 F 通学経路
 Range Minimum Query (RMQ)
+ARC 008 D タコヤキオイシクナール

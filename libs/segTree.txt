@@ -1,51 +1,46 @@
 template<class T>
 class segTree {
 public:
-	int N;   //中身のある要素数
-	int RN;   //2の累乗数にするために合わせた、ゴミデータ含めた要素数
-	T* array;
-	pair<int, int>* range;
-	std::function<T(T,T)> f;
+	long long N;   //中身のある要素数
+	long long RN;   //2の累乗数にするために合わせた、ゴミデータ含めた要素数
+	vector<T>* array;
+	std::function<T(T, T)> f;
+	T e;   //単位元
 	//コンストラクタ:要素数、計算用ラムダ、初期化用の数
-	segTree(int n, function<T(T,T)> F,T z) {
+	segTree(long long n, function<T(T, T)> F, T z) {
 		N = n;
 		RN = 1;
+		e = z;
 		while (RN < N)RN *= 2;
-		array = new T[2 * RN];
-		for (int i = 0; i < 2 * RN; i++)array[i] = z;
-		range = new pair<int, int>[2 * RN];
-		range[1] = pair<int, int>(0,RN);
-		for (int i = 1; i < RN; i++) {
-			range[2 * i] = pair<int, int>(range[i].first,(range[i].first+range[i].second)/2);
-			range[2 * i + 1] = pair<int, int>((range[i].first + range[i].second) / 2,range[i].second);
-		}
+		array = new vector<T>;
+		array->resize(2 * RN - 1, e);
 		f = F;
 	}
 	~segTree() {
 		delete array;
-		delete range;
 	}
 	void set(int n, T t) {   //n番目の要素にtを設定
-		n = RN + n;
-		array[n] = t;
-		while (n != 1) {
-			n = n / 2;
-			array[n] = f(array[2*n],array[2*n+1]);
+		n = RN + n-1;
+		array->at(n) = t;
+		while (n > 0) {
+			n = (n-1) / 2;
+			array->at(n) = f(array->at(2*n+1), array->at(2*n+2));
 		}
-	}
-	T call(int l, int r, int id) {
-		if (l == range[id].first && r == range[id].second)return array[id];
-		int m = (range[id].first + range[id].second) / 2;
-		if (r <= m)return call(l,r,2*id);
-		if (m <= l)return call(l, r, 2 * id + 1);
-		else if (l < m && m < r) {
-			return f(call(l,m,2*id),call(m,r,2*id+1));
-		}
-	}
-	T get(int l, int r) {   //[a_l,a_r)
-		return call(l,r,1);
 	}
 	T operator[](int a) {
-		return get(a,a+1);
+		return array->at(RN+a-1);
+	}
+	inline T get(int a, int b) {
+
+		T vl = e, vr = e;
+
+		for (int l = a + RN, r = b + RN; l < r; l >>= 1, r >>= 1) {
+		
+			if (l & 1) vl = f(vl, array->at((l++) - 1));
+	
+			if (r & 1) vr = f(array->at((--r) - 1), vr);
+		}
+			return f(vl, vr);
+
 	}
 };

@@ -1,0 +1,116 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+template<class T>
+class segTree {
+public:
+	long long N;   //中身のある要素数
+	long long RN;   //2の累乗数にするために合わせた、ゴミデータ含めた要素数
+	vector<T>* array;
+	std::function<T(T, T)> f;
+	T e;   //単位元
+	//コンストラクタ:要素数、計算用ラムダ、初期化用の数
+	segTree(long long n, function<T(T, T)> F, T z) {
+		N = n;
+		RN = 1;
+		e = z;
+		while (RN < N)RN *= 2;
+		array = new vector<T>;
+		array->resize(2 * RN - 1, e);
+		f = F;
+	}
+	~segTree() {
+		delete array;
+	}
+	void set(int n, T t) {   //n番目の要素にtを設定
+		n = RN + n-1;
+		array->at(n) = t;
+		while (n > 0) {
+			n = (n-1) / 2;
+			array->at(n) = f(array->at(2*n+1), array->at(2*n+2));
+		}
+	}
+	T operator[](int a) {
+		return array->at(RN+a-1);
+	}
+	inline T get(int a, int b) {
+		T vl = e, vr = e;
+		for (int l = a + RN, r = b + RN; l < r; l >>= 1, r >>= 1) {
+			if (l & 1) vl = f(vl, array->at((l++) - 1));
+			if (r & 1) vr = f(array->at((--r) - 1), vr);
+		}
+		return f(vl, vr);
+	}
+};
+
+long long N, M;
+typedef pair<double, double> pll;
+class input {
+public:
+	long long ind;
+	double x, y;
+	input() :ind(0), x(0), y(0) {};
+	input(long long i, double _x, double _y) :ind(i), x(_x), y(_y) {};
+};
+vector<input> inputvect;
+set<long long> indexset;
+vector<long long> indexvect;
+
+void solve() {
+	cin >> N >> M;
+	double m1 = 1, m2 = 1;   //最小値、最大値
+	long long p;
+	double a, b;
+	inputvect.resize(M);
+	for (int m = 0; m < M; m++) {
+		cin >> p >> a >> b;
+		p--;
+		inputvect[m] = input(p, a, b);
+		indexset.insert(p);
+	}
+	for (auto itr = indexset.begin(); itr != indexset.end(); itr++)indexvect.push_back(*itr);
+	sort(indexvect.begin(), indexvect.end());
+	segTree<pll> seg(indexset.size(), [](pll a, pll b) {
+		return pll(a.first*b.first, a.second*b.first + b.second);
+	},pll(1,0));
+	for (int m = 0; m < M; m++) {
+		input cur = inputvect[m];
+		//cur.indをindexvectで探しseg木上でのインデックスにする
+		int s = 0, e = indexvect.size();
+		while (e - s > 1) {
+			int m = (e + s) / 2;
+			if (indexvect[m] <= cur.ind)s = m;
+			else e = m;
+		}
+		cur.ind = s;
+		seg.set(cur.ind,pll(cur.x,cur.y));
+		pll ele = seg.get(0, seg.N);
+		m1 = min(m1,ele.first+ele.second);
+		m2 = max(m2,ele.first+ele.second);
+	}
+	cout << std::setprecision(7) << m1 << endl;
+	cout << std::setprecision(7) << m2 << endl;
+	return;
+}
