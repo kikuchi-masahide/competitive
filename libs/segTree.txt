@@ -1,46 +1,49 @@
-template<class T>
+class segmentTreeElement {
+public:
+	int ele;
+	segmentTreeElement(int a) :ele(a) {};
+	segmentTreeElement() :ele(0) {};
+};
+
+segmentTreeElement operator*(segmentTreeElement& a, segmentTreeElement& b) {
+	return segmentTreeElement(min(a.ele, b.ele));
+}
+
 class segTree {
 public:
 	long long N;   //中身のある要素数
 	long long RN;   //2の累乗数にするために合わせた、ゴミデータ含めた要素数
-	vector<T>* array;
-	std::function<T(T, T)> f;
-	T e;   //単位元
-	//コンストラクタ:要素数、計算用ラムダ、初期化用の数
-	segTree(long long n, function<T(T, T)> F, T z) {
+	vector<segmentTreeElement>* array;
+	segmentTreeElement e;   //単位元
+	//コンストラクタ:要素数、初期化用の数
+	segTree(long long n, segmentTreeElement z) {
 		N = n;
 		RN = 1;
 		e = z;
 		while (RN < N)RN *= 2;
-		array = new vector<T>;
+		array = new vector<segmentTreeElement>;
 		array->resize(2 * RN - 1, e);
-		f = F;
 	}
 	~segTree() {
 		delete array;
 	}
-	void set(int n, T t) {   //n番目の要素にtを設定
+	void set(int n, segmentTreeElement t) {   //n番目の要素にtを設定
 		n = RN + n-1;
 		array->at(n) = t;
 		while (n > 0) {
 			n = (n-1) / 2;
-			array->at(n) = f(array->at(2*n+1), array->at(2*n+2));
+			array->at(n) = array->at(2*n+1)*array->at(2*n+2);
 		}
 	}
-	T operator[](int a) {
+	inline segmentTreeElement operator[](int a) {
 		return array->at(RN+a-1);
 	}
-	inline T get(int a, int b) {
-
-		T vl = e, vr = e;
-
+	inline segmentTreeElement get(int a, int b) {
+		segmentTreeElement vl = e, vr = e;
 		for (int l = a + RN, r = b + RN; l < r; l >>= 1, r >>= 1) {
-		
-			if (l & 1) vl = f(vl, array->at((l++) - 1));
-	
-			if (r & 1) vr = f(array->at((--r) - 1), vr);
+			if (l & 1) vl = vl*array->at((l++) - 1);
+			if (r & 1) vr = array->at((--r) - 1)*vr;
 		}
-			return f(vl, vr);
-
+		return vl*vr;
 	}
 };

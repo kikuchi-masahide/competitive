@@ -91,3 +91,11 @@ JOI 2006 本選 D 最悪の記者
 JOI 2006 予選 F 通学経路
 Range Minimum Query (RMQ)
 ARC 008 D タコヤキオイシクナール
+ABC 127 A Ferris Wheel
+ABC 127 B Algae
+ABC 127 C Prison
+ABC 127 D Integer Cards
+ABC 128 A Apple Pie
+ABC 128 B Guidebook
+ABC 128 C Switches
+ABC 128 D equeue
