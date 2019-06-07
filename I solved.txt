@@ -99,3 +99,18 @@ ABC 128 A Apple Pie
 ABC 128 B Guidebook
 ABC 128 C Switches
 ABC 128 D equeue
+JOI 2007 本選 C ダーツ
+Chokudai SpeedRun 002 A 長方形α
+Chokudai SpeedRun 002 B あまりα
+Chokudai SpeedRun 002 C 和の最大値α
+Chokudai SpeedRun 002 D 和の最大値β
+Chokudai SpeedRun 002 E カツサンドくんα
+Chokudai SpeedRun 002 F 種類数α
+Chokudai SpeedRun 002 G GCDα
+Chokudai SpeedRun 002 H あまりβ
+Chokudai SpeedRun 002 L 長方形β
+M-SOLUTIONS プロコンオープン A Sum of Interior Angles
+M-SOLUTIONS プロコンオープン B Sumo
+M-SOLUTIONS プロコンオープン D Maximum Sum of Minimum
+
+
