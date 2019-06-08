@@ -1,0 +1,51 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <queue>
+#include <functional>
+#include <map>
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <limits.h>
+#include <iomanip>
+#include <stack>
+
+using namespace std;
+using namespace boost::multiprecision;
+
+string S;
+
+void solve() {
+	cin >> S;
+	int N = S.size();   //Œ³•¶Žš—ñ’·‚³
+	S += string("DE");
+	long long ans = 0;
+	int counter = 0;
+	int pos = 0;
+	while (pos <= N) {
+		if (S[pos] == 'A') {
+			counter++;
+			pos++;
+		}
+		else if (S[pos] == 'B' && S[pos + 1] == 'C') {
+			ans += (long long)counter;
+			pos += 2;
+		}
+		else {
+			counter = 0;
+			pos++;
+		}
+	}
+	cout << ans << endl;
+	return;
+}

@@ -22,3 +22,31 @@ void bellmanFord(wGraph<T>& G, int s, vector<T>& vect) {
 		if (!update)return;
 	}
 }
+
+//負閉路検出(ベルマンフォード)
+//O(E*V)
+template<class T>
+bool hasNegativeLoop(wGraph<T>& G) {
+	vector<T>* d = new vector<T>;
+	d->resize(G.N, G.INF);
+	d->at(0) = 0;
+	for (int i = 0; i < G.N; i++) {
+		bool isRenewed = false;
+		for (int from = 0; from < G.N; from++) {
+			if (d->at(from) == G.INF)continue;
+			for (auto itr = G.E->at(from).begin(); itr != G.E->at(from).end(); itr++) {
+				if (d->at(itr->first) > d->at(from) + itr->second) {
+					d->at(itr->first) = d->at(from) + itr->second;
+					isRenewed = true;
+					if (i == G.N - 1)return true;
+				}
+			}
+		}
+		if (!isRenewed) {
+			delete d;
+			return false;
+		}
+	}
+	delete d;
+	return false;
+}

@@ -28,7 +28,7 @@ vector<int> dp;
 vector<pii> vec;
 bool func(pii a, pii b) {
 	if (a.first != b.first)return a.first < b.first;
-	else return a.second > b.second;
+	else return a.second < b.second;
 }
 int N;
 
@@ -36,23 +36,25 @@ void solve() {
 	cin >> N;
 	vec.resize(N);
 	for (int n = 0; n < N; n++) {
-		cin >> vec[n].first >> vec[n].second;
+		int x, r;
+		cin >> x >> r;
+		vec[n] = pii(x - r, x + r);
 	}
 	sort(vec.begin(), vec.end(), func);
-	dp.resize(N + 1,100001);
-	dp[0] = 0;
+	dp.resize(N + 1, -100000001);
+	dp[0] = 200000001;
 	for (int n = 0; n < N; n++) {
 		int s = 0, e = N;
 		while (e - s > 1) {
 			int m = (e + s) / 2;
-			if (dp[m] < vec[n].second)s = m;
+			if (dp[m] > vec[n].second)s = m;
 			else e = m;
 		}
 		dp[e] = vec[n].second;
 	}
 	int l = 1;
 	while (l < N) {
-		if (dp[l+1] == 100001)break;
+		if (dp[l+1] == -100000001)break;
 		l++;
 	}
 	cout << l << endl;
