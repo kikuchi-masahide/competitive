@@ -1,0 +1,20 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int P, Q, R;   //A-B,B-C,C-A
+
+void solve() {
+	cin >> P >> Q >> R;
+	cout << min(P + Q, min(Q + R, R + P)) << endl;
+	return;
+}

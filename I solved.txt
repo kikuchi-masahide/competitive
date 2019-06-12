@@ -118,4 +118,9 @@ AOJ Course 最小全域木
 UTPC 2013 H Asteroids2
 ABC 012 D バスと避けられない運命
 AGC 034 B ABC
-
+AtCoder Typical Contest 001 C 高速フーリエ変換
+ABC 129 A Airplane
+ABC 129 B Balance
+ABC 129 C Typical Stairs
+ABC 129 D Lamp
+ABC 129 E Sum Equals Xor
