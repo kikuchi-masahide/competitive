@@ -124,3 +124,6 @@ ABC 129 B Balance
 ABC 129 C Typical Stairs
 ABC 129 D Lamp
 ABC 129 E Sum Equals Xor
+AOJ Course Huge Knapsack Problem
+ABC 034 D êHâñêÖ
+2018 CODE FESTIVAL Final C - Telephone Charge

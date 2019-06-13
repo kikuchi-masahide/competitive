@@ -1,0 +1,80 @@
+void 
+solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <limits.h>
+using namespace std;
+
+typedef pair<long long, long long> pll;   //w,v
+vector<pll> nap1, nap2;
+int N;
+long long Wlim;
+vector<long long> V, W;
+vector<long long> nap2v;   //nap2[0]-nap2[n]‚Ìvmax
+
+void solve() {
+	cin >> N >> Wlim;
+	V.resize(N);
+	W.resize(N);
+	for (int n = 0; n < N; n++)cin >> V[n] >> W[n];
+	int N1 = floor(N / 2), N2 = N - N1;
+	nap1.resize(pow(2, N1));
+	nap2.resize(pow(2, N2));
+	nap2v.resize(pow(2, N2));
+	for (int c = pow(2, N1) - 1; c >= 0; c--) {
+		nap1[c] = pll(0, 0);
+		for (int n = 0; n < N1; n++) {
+			if ((c >> n) % 2 == 1) {
+				nap1[c].first += W[n];
+				nap1[c].second += V[n];
+				if (nap1[c].first > Wlim) {
+					nap1[c].first = LLONG_MAX;
+					break;
+				}
+			}
+		}
+	}
+	for (int c = pow(2, N2) - 1; c >= 0; c--) {
+		nap2[c] = pll(0, 0);
+		for (int n = 0; n < N2; n++) {
+			if ((c >> n) % 2 == 1) {
+				nap2[c].first += W[N1+n];
+				nap2[c].second += V[N1+n];
+				if (nap2[c].first > Wlim) {
+					nap2[c].first = LLONG_MAX;
+					break;
+				}
+			}
+		}
+	}
+	sort(nap1.begin(), nap1.end());
+	sort(nap2.begin(), nap2.end());
+	nap2v[0] = nap2[0].second;
+	for (int c = 1; c < nap2.size(); c++) {
+		nap2v[c] = max(nap2v[c-1],nap2[c].second);
+	}
+	long long ans = 0;
+	for(int c = 0;c < nap1.size();c++){
+		long long f = Wlim - nap1[c].first;
+		if (f < 0)break;
+		//nap1[s].first <= f,f< nap1[s].second
+		int s = 0, e = nap2.size();
+		while (e - s > 1) {
+			int m = (s + e) / 2;
+			if (nap2[m].first <= f)s = m;
+			else e = m;
+		}
+		ans = max(ans, nap1[c].second + nap2v[s]);
+	}
+	cout << ans << endl;
+	return;
+}
