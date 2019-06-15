@@ -127,3 +127,11 @@ ABC 129 E Sum Equals Xor
 AOJ Course Huge Knapsack Problem
 ABC 034 D êHâñêÖ
 2018 CODE FESTIVAL Final C - Telephone Charge
+2016 CODE FESTIVAL qual A B - íáó«ÇµÇ§Ç≥Ç¨/Friendly Rabbits
+ABC 058 D à‰à‰à‰/###
+diverta 2019 Programming Contest A - Consecutive Integers
+diverta 2019 Programming Contest B - RGB Boxes
+diverta 2019 Programming Contest D - DiRem Number
+diverta 2019 Programming Contest 2 A - Ball Distribution
+diverta 2019 Programming Contest 2 B - Picking Up
+diverta 2019 Programming Contest 2 C -Successive Substraction

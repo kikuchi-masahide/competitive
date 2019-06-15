@@ -1,0 +1,22 @@
+void 
+solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+void solve() {
+	int N, K;
+	cin >> N >> K;
+	if (K == 1)cout << 0 << endl;
+	else cout << N - K << endl;
+	return;
+}
