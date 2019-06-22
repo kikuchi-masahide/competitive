@@ -1,0 +1,56 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <limits.h>
+using namespace std;
+
+int N;
+vector<int> A, B, C;
+
+void solve() {
+	int N;
+	cin >> N;
+	A.resize(N+2);
+	B.resize(N+2);
+	C.resize(N+2);
+	A[0] = 0;
+	A[N + 1] = INT_MAX;
+	for (int n = 0; n < N; n++) cin >> A[n];
+	B[0] = 0;
+	B[N + 1] = INT_MAX;
+	for (int n = 0; n < N; n++) cin >> B[n];
+	C[0] = 0;
+	C[N + 1] = INT_MAX;
+	for (int n = 0; n < N; n++) cin >> C[n];
+	sort(A.begin(), A.end());
+	sort(B.begin(), B.end());
+	sort(C.begin(), C.end());
+	long long ans = 0;
+	for (int n = 1; n <= N; n++) {
+		int s = 0, e = N+1;
+		while (e - s > 1) {
+			int m = (e + s) / 2;
+			if (A[m] < B[n])s = m;
+			else e = m;
+		}
+		long long tempans = s;
+		s = 0, e = N + 1;
+		while (e - s > 1) {
+			int m = (e + s) / 2;
+			if (C[m] <= B[n])s = m;
+			else e = m;
+		}
+		ans += tempans * (long long)(N - s);
+	}
+	cout << ans << endl;
+	return;
+}
