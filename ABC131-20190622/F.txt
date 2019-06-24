@@ -1,0 +1,118 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <limits.h>
+#include <map>
+#include <queue>
+#include <iomanip>
+#include <set>
+using namespace std;
+typedef pair<int, int> pii;
+
+//unionFind
+class unionFind {
+private:
+	int* p;   //親配列のポインタ
+	int* rank;
+	int N;   //要素数
+public:
+	unionFind(int);   //コンストラクタ
+	int parent(int);   //親要素を返す
+	void unit(int, int);   //2要素をつなぐ
+	int operator[](int);   //parentの省略形
+	~unionFind();
+	int size();   //要素数を返す
+};
+
+unionFind::unionFind(int n) {
+	N = n;
+	p = new int[N];
+	rank = new int[N];
+	for (int i = 0; i < N; i++) {
+		p[i] = i;
+		rank[i] = 0;
+	}
+	return;
+}
+
+int unionFind::parent(int n) {
+	if (n < 0 || n >= N)return -1;
+	if (p[n] == n)return n;   //自分が一番上の親
+	return p[n] = parent(p[n]);   //つなぎ直しと上にたどる操作
+}
+
+int unionFind::operator[](int n) {
+	return parent(n);
+}
+
+void unionFind::unit(int x, int y) {
+	x = parent(x), y = parent(y);
+	if (x == y)return;   //根が同じだから何もせずに帰る
+	if (rank[x] < rank[y])p[x] = y;
+	else {
+		p[y] = x;
+		if (rank[x] == rank[y])rank[x]++;
+	}
+	return;
+}
+
+unionFind::~unionFind() {
+	delete(p);
+	delete(rank);
+	return;
+}
+
+int unionFind::size() {
+	return N;
+}
+
+int N;
+vector<pii> points;
+vector<bool> checked;
+set<int> samey[100001];
+vector<set<int>> xcount;
+vector<int> parentcount;
+
+void solve() {
+	cin >> N;
+	points.resize(N);
+	checked.resize(N, false);
+	xcount.resize(100001);
+	//memset(xcount, 0, 100001);
+	parentcount.resize(100001, 0);
+	for (int n = 0; n < N; n++) {
+		cin >> points[n].first >> points[n].second;
+		samey[points[n].second].insert(n);
+
+	}
+	unionFind uf(100001);
+	for (int n = 0; n < N; n++) {
+		if (checked[n])continue;
+		checked[n] = true;
+		for (auto itr = samey[points[n].second].begin(); itr != samey[points[n].second].end(); itr++) {
+			uf.unit(points[*itr].first,points[n].first);
+			checked[*itr] = true;
+		}
+	}
+	for (int n = 0; n < N; n++) {
+		xcount[uf.parent(points[n].first)].insert(points[n].second);
+	}
+	for (int x = 1; x <= 100000; x++) {
+		parentcount[uf[x]]++;
+	}
+	long long sum = 0;
+	for (int x = 1; x <= 100000; x++) {
+		if (xcount[x].size() != 0)sum += xcount[x].size() * parentcount[x];
+	}
+	cout << sum - N << endl;
+	return;
+}

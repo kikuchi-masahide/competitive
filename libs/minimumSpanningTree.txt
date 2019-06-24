@@ -33,7 +33,6 @@
 //一般版?unionfind必要
 int V,E;   //それぞれ頂点数、辺数
 struct edge {
-public:
 	int u, v, w;
 };   //無向辺管理のクラス(u,v:頂点、w:重み) この場合、(u,v)と(v,u)両方を登録、みたいなことはない
 vector<edge> Edges;   //辺集合
