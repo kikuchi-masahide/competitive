@@ -135,3 +135,4 @@ diverta 2019 Programming Contest D - DiRem Number
 diverta 2019 Programming Contest 2 A - Ball Distribution
 diverta 2019 Programming Contest 2 B - Picking Up
 diverta 2019 Programming Contest 2 C -Successive Substraction
+AOJ Course The Number of Inversions
