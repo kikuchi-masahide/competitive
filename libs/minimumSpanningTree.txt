@@ -1,3 +1,4 @@
+//最小全域木クラス版:
 //最小全域木問題(クラスカル法)
 //最小全域木自体と、重み和
 //wGraphに追加する感じで
@@ -27,3 +28,23 @@
 		delete g;
 		return ans;
 	}
+
+
+//一般版?unionfind必要
+int V,E;   //それぞれ頂点数、辺数
+struct edge {
+	int u, v, w;
+};   //無向辺管理のクラス(u,v:頂点、w:重み) この場合、(u,v)と(v,u)両方を登録、みたいなことはない
+vector<edge> Edges;   //辺集合
+
+####################
+
+
+sort(Edges.begin(), Edges.end(), [](edge a, edge b) {return a.w < b.w; });
+int res = 0;   //結果
+unionFind uf(V);
+for (int e = 0; e < E; e++) {
+	if (uf[Edges[e].u] == uf[Edges[e].v])continue;
+	uf.unit(Edges[e].u, Edges[e].v);
+	res += Edges[e].w;
+}

@@ -1,0 +1,27 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <limits.h>
+#include <map>
+#include <queue>
+#include <iomanip>
+#include <set>
+using namespace std;
+typedef pair<int, int> pii;
+
+void solve() {
+	string S;
+	cin >> S;
+	if (S[0] == S[1] || S[1] == S[2] || S[2] == S[3])cout << "Bad" << endl;
+	else cout << "Good" << endl;
+	return;
+}

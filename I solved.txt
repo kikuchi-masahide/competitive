@@ -36,7 +36,7 @@ AOJ Course Longest Common Subsequence
 ATC 001 B Union Find
 AOJ Course Edit Distance (Levenshtein Distance)
 Maximum-Cup 2018 C 嘘つきな天使たち
-ABC 062 D - 3N Numbers
+ABC 062 D 3N Numbers
 ABC 037 D 経路
 ABC 037 A 饅頭
 ABC 037 B 編集
@@ -136,3 +136,20 @@ diverta 2019 Programming Contest 2 A - Ball Distribution
 diverta 2019 Programming Contest 2 B - Picking Up
 diverta 2019 Programming Contest 2 C -Successive Substraction
 AOJ Course The Number of Inversions
+ABC 049 C - 白昼夢 / Daydream
+ABC 077 C - Snuke Festival
+AOJ Course Spanning Tree - Minimum Spanning Tree
+AOJ Course Graph II - Minimum Spanning Tree
+ABC 131 A Security
+ABC 131 B Bite Eating
+ABC 131 C Anti-Division
+ABC 131 D Megalomania
+ABC 131 E Friendships
+ABC 131 F Must Be Rectangular!
+ARC 026 D 道を直すお仕事
+AOJ Course The Number of Windows
+ABC 048 C Boxes and Candie
+Recursion / Divide and Conquer - The Number of Inversions
+ARC 033 C データ構造
+ARC 069 D Menagerie
+

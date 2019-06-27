@@ -1,0 +1,80 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+using namespace std;
+typedef pair<int, int> pii;
+
+template<class T>
+class BIT {
+public:
+	vector<T>* array;
+	int N, RN = 1;   //実データ数、ごみデータ含めたデータ数
+	BIT(int n) {
+		construct(n);
+	}
+	BIT(){}
+	void construct(int n) {
+		n++;
+		while (RN < n)RN *= 2;
+		array = new vector<T>;
+		array->resize(RN + 1, 0);
+	}
+	~BIT() {
+		delete array;
+		return;
+	}
+	//a0(=0)a1+...+anを求める
+	T get(long long n) {
+		n++;
+		T s = 0;
+		while (n > 0) {
+			s = s + array->at(n);
+			n -= n & (-n);
+		}
+		return s;
+	}
+	//anに+x(1-index)
+	void add(int n, T x) {
+		n++;
+		while (n <= RN) {
+			array->at(n) += x;
+			n += n & (-n);
+		}
+	}
+};
+
+int N;
+vector<pii> A;
+
+void solve() {
+	cin >> N;
+	A.resize(N + 1);
+	A[0] = pii(-1,0);
+	for (int n = 1; n <= N; n++) {
+		int a;
+		cin >> a;
+		A[n] = pii(a, n);
+	}
+	sort(A.begin(), A.end(), [](pii a, pii b) {return a.first < b.first; });
+	for (int n = 1; n <= N; n++)A[n].first = n;
+	sort(A.begin(), A.end(), [](pii a, pii b) {return a.second < b.second; });
+	long long ans = 0;
+	BIT<int> bit(N);
+	for (int n = 1; n <= N; n++) {
+		ans += bit.get(A[n].first);
+		bit.add(A[n].first, 1);
+	}
+	ans = (long long)N * (long long)(N - 1) / 2 - ans;
+	cout << ans << endl;
+	return;
+}

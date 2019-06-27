@@ -1,0 +1,36 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+typedef pair<int, int> pii;
+
+int N;
+long long X;
+vector<long long> A;
+long long sum = 0;
+
+void solve() {
+	cin >> N;
+	cin >> X;
+	A.resize(N);
+	for (int i = 0; i < N; i++)cin >> A[i];
+	for (int n = 0; n < N; n++)sum += A[n];
+	if (A[0] > X)A[0] = X;
+	for (int n = 1; n < N; n++) {
+		if (A[n - 1] + A[n] <= X)continue;
+		A[n] = X - A[n - 1];
+	}
+	long long aftersum = 0;
+	for (int n = 0; n < N; n++)aftersum += A[n];
+	cout << sum - aftersum << endl;
+	return;
+}

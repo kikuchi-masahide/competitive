@@ -1,0 +1,102 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <limits.h>
+#include <map>
+#include <queue>
+#include <iomanip>
+#include <set>
+using namespace std;
+typedef pair<int, int> pii;
+
+//unionFind
+class unionFind {
+private:
+	int* p;   //親配列のポインタ
+	int* rank;
+	int N;   //要素数
+public:
+	unionFind(int);   //コンストラクタ
+	int parent(int);   //親要素を返す
+	void unit(int, int);   //2要素をつなぐ
+	int operator[](int);   //parentの省略形
+	~unionFind();
+	int size();   //要素数を返す
+};
+
+unionFind::unionFind(int n) {
+	N = n;
+	p = new int[N];
+	rank = new int[N];
+	for (int i = 0; i < N; i++) {
+		p[i] = i;
+		rank[i] = 0;
+	}
+	return;
+}
+
+int unionFind::parent(int n) {
+	if (n < 0 || n >= N)return -1;
+	if (p[n] == n)return n;   //自分が一番上の親
+	return p[n] = parent(p[n]);   //つなぎ直しと上にたどる操作
+}
+
+int unionFind::operator[](int n) {
+	return parent(n);
+}
+
+void unionFind::unit(int x, int y) {
+	x = parent(x), y = parent(y);
+	if (x == y)return;   //根が同じだから何もせずに帰る
+	if (rank[x] < rank[y])p[x] = y;
+	else {
+		p[y] = x;
+		if (rank[x] == rank[y])rank[x]++;
+	}
+	return;
+}
+
+unionFind::~unionFind() {
+	delete(p);
+	delete(rank);
+	return;
+}
+
+int unionFind::size() {
+	return N;
+}
+
+int V,E;
+class edge {
+public:
+	int u, v, w;
+};
+vector<edge> Edges;
+
+void solve() {
+	cin >> V >> E;
+	Edges.resize(E);
+	for (int e = 0; e < E; e++) {
+		int u, v, w;
+		cin >> u >> v >> w;
+		Edges[e].u = u; Edges[e].v = v; Edges[e].w = w;
+	}
+	sort(Edges.begin(), Edges.end(), [](edge a, edge b) {return a.w < b.w; });
+	int res = 0;
+	unionFind uf(V);
+	for (int e = 0; e < E; e++) {
+		if (uf[Edges[e].u] == uf[Edges[e].v])continue;
+		uf.unit(Edges[e].u, Edges[e].v);
+		res += Edges[e].w;
+	}
+	cout << res << endl;
+}
