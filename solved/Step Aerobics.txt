@@ -1,0 +1,37 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <map>
+#include <limits.h>
+#include <algorithm>
+#include <deque>
+
+using namespace std;
+
+void solve() {
+	while (true) {
+		int N;
+		cin >> N;
+		if(N == 0)return;
+		int ans = 0;
+		string s;
+		cin >> s;
+		for (int n = 1; n < N; n++) {
+			string s2;
+			cin >> s2;
+			if (s[0] != s2[0]) {
+				if (s[1] == s2[1])ans++;
+			}
+			s = s2;
+		}
+		cout << ans << endl;
+	}
+}

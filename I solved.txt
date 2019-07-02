@@ -152,4 +152,8 @@ ABC 048 C Boxes and Candie
 Recursion / Divide and Conquer - The Number of Inversions
 ARC 033 C データ構造
 ARC 069 D Menagerie
-
+ICPC Score Totalizer Software
+ICPC Princess's Gamble
+ICPC Step Aerobics
+ICPC Airport Codes
+ICPC Moonlight Farm
