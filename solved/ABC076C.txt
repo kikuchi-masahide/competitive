@@ -1,0 +1,58 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits.h>
+#include <algorithm>
+#include <deque>
+
+using namespace std;
+
+vector<string> strvect;
+void solve() {
+	string SS, T;
+	cin >> SS >> T;
+	for (int n = 0; n <= (int)SS.size() - (int)T.size(); n++) {
+		//SS‚Ìn•¶Žš–Ú‚©‚çT‚É’u‚«Š·‚¦‚é
+		bool flag = true;
+		for (int t = 0; t < T.size(); t++) {
+			if (SS[n + t] == '?')continue;
+			if (SS[n + t] != T[t]) {
+				flag = false;
+				break;
+			}
+		}
+		if (!flag)continue;
+		string sstemp = SS;
+		for (int ntemp = 0; ntemp < n; ntemp++) {
+			if (sstemp[ntemp] == '?')sstemp[ntemp] = 'a';
+		}
+		for (int t = 0; t < T.size(); t++) {
+			sstemp[n + t] = T[t];
+		}
+		for (int ntemp = n + T.size(); ntemp < SS.size(); ntemp++) {
+			if (sstemp[ntemp] == '?')sstemp[ntemp] = 'a';
+		}
+		strvect.push_back(sstemp);
+	}
+	if (strvect.size() == 0) {
+		cout << "UNRESTORABLE" << endl;
+		return;
+	}
+	sort(strvect.begin(), strvect.end(), [](string a, string b) {
+		for (int i = 0; i < min(a.size(), b.size()); i++) {
+			if (a[i] != b[i])return a[i] < b[i];
+		}
+		return a.size() < b.size();
+	});
+	cout << strvect[0] << endl;
+	return;
+}
