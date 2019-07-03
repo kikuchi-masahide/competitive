@@ -157,3 +157,5 @@ ICPC Princess's Gamble
 ICPC Step Aerobics
 ICPC Airport Codes
 ICPC Moonlight Farm
+ICPC Pollock's conjecture
+ICPC Princess in Danger
