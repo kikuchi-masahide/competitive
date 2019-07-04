@@ -1,0 +1,45 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits.h>
+#include <algorithm>
+#include <set>
+
+using namespace std;
+
+vector<int> Q1;
+vector<int> Q1E;   //Šï”ƒo[ƒWƒ‡ƒ“
+vector<int> dp;
+vector<int> dp2;
+
+void solve() {
+	Q1E.push_back(0);
+	for (int q = 1; (q - 1) * q * (q + 1) <= 6e6; q++) {
+		Q1.push_back((q - 1) * q * (q + 1) / 6);
+		if (((q - 1) * q * (q + 1) / 6) % 2 == 1)Q1E.push_back((q - 1) * q * (q + 1) / 6);
+	}
+	Q1.push_back(1e6 + 1);
+	Q1E.push_back(1e6 + 1);
+	dp.resize(1e6 + 1,INT_MAX);
+	dp2.resize(1e6 + 1,INT_MAX);
+	dp[0] = 0, dp2[0] = 0;
+	for (int n = 1; n <= 1e6; n++) {
+		for (int q = 1; n - Q1[q] >= 0;q++)dp[n] = min(dp[n], dp[n - Q1[q]] + 1);
+		for (int q = 1; n - Q1E[q] >= 0; q++)dp2[n] = min(dp2[n], dp2[n - Q1E[q]] + 1);
+	}
+	while (true) {
+		int N;
+		cin >> N;
+		if (N == 0)return;
+		cout << dp[N] << " " << dp2[N] << endl;
+	}
+}

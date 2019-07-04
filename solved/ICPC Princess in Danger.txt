@@ -1,0 +1,165 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits.h>
+#include <algorithm>
+#include <deque>
+
+using namespace std;
+
+vector<vector<int>> dvec;
+typedef pair<int, int> pii;
+typedef pair<int, pii> piii;
+vector<vector<pii>> roads;
+int N,M,L,K,A,H;
+
+void washall() {
+	for (int n = 0; n < N; n++) {
+		for (int m = 0; m < N; m++) {
+			for (int d = 0; d < N; d++) {
+				if (dvec[n][d] != INT_MAX && dvec[d][m] != INT_MAX) {
+					if (dvec[n][m] == INT_MAX) {
+						dvec[n][m] = dvec[n][d] + dvec[d][m];
+						continue;
+					}
+					dvec[n][m] = min(dvec[n][m], dvec[n][d] + dvec[d][m]);
+				}
+			}
+		}
+	}
+}
+
+vector<int> dijkans;
+vector<int> from;
+void dijkstra() {
+	dijkans.clear();
+	dijkans.resize(N,INT_MAX);
+	from.clear();
+	from.resize(N, A);
+	priority_queue<piii, vector<piii>, greater<piii>> que;
+	que.push(piii(0,pii(A,A)));
+	while (!que.empty()) {
+		piii cur = que.top();
+		int now = cur.second.first;
+		que.pop();
+		if (dijkans[now] <= cur.first)continue;
+		dijkans[now] = cur.first;
+		from[now] = cur.second.second;
+		for (auto itr = roads[now].begin(); itr != roads[now].end(); itr++) {
+			que.push(piii(cur.first+itr->second,pii(itr->first,now)));
+		}
+	}
+}
+
+//重み付きグラフ
+//距離の部分をテンプレートに
+template<class T>
+class wGraph {
+public:
+	int N;
+	vector<vector<pair<int, T>>>* E;
+	wGraph(int n, T i) {
+		N = n;
+		E = new vector<vector<pair<int, T>>>;
+		E->resize(N);
+		INF = i;
+	}
+	wGraph() {
+	}
+	void constructor(int n, T i) {
+		N = n;
+		E = new vector<vector<pair<int, T>>>;
+		E->resize(N);
+		INF = i;
+	}
+	~wGraph() {
+		delete E;
+	}
+	void addEdge(int a, int b, T c) {
+		E->at(a).push_back(pair<int, T>(b, c));
+	}
+	T INF;
+};
+
+
+template<class T>
+void warshallFloyd(wGraph<T>& g, vector<vector<T>>& array) {
+	array.resize(g.N);
+	for (auto itr = array.begin(); itr != array.end(); itr++) {
+		(*itr).resize(g.N);
+		fill((*itr).begin(), (*itr).end(), g.INF);
+	}
+	for (int n = 0; n < g.N; n++)array[n][n] = 0;
+	for (int n = 0; n < g.N; n++) {
+		for (auto itr = g.E->at(n).begin(); itr != g.E->at(n).end(); itr++) {
+			array[n][(*itr).first] = min(array[n][(*itr).first], (*itr).second);
+		}
+	}
+	for (int k = 0; k < g.N; k++) {
+		for (int i = 0; i < g.N; i++) {
+			for (int j = 0; j < g.N; j++) {
+				if (array[i][k] != g.INF && array[k][j] != g.INF) {
+					array[i][j] = min(array[i][j], array[i][k] + array[k][j]);
+				}
+			}
+		}
+	}
+	return;
+}
+
+void solve() {
+	while (true) {
+		cin >> N >> M >> L >> K >> A >> H;
+		if (N == 0)return;
+		wGraph<int> G(N, INT_MAX);
+		vector<int> repoint;
+		repoint.resize(L + 2);
+		for (int l = 0; l < L; l++) {
+			int a;
+			cin >> a;
+			repoint[l] = a;
+		}
+		repoint[L] = A, repoint[L+1] = H;
+		dvec.clear();
+		dvec.resize(N);
+		for (int n = 0; n < N; n++)dvec[n].resize(N, INT_MAX);
+		for (int n = 0; n < N; n++)dvec[n][n] = 0;
+		for (int r = 0; r < K; r++) {
+			int u, v, t;
+			cin >> u >> v >> t;
+			dvec[u][v] = min(dvec[u][v],t);
+			dvec[v][u] = min(dvec[v][u],t);
+			G.addEdge(u, v, t);
+			G.addEdge(v, u, t);
+		}
+		washall();
+		vector<vector<int>> warans;
+		warshallFloyd(G, warans);
+		roads.clear();
+		roads.resize(N);
+		for (int l1 = 0; l1 < L + 2; l1++) {
+			for (int l2 = l1 + 1; l2 < L + 2; l2++) {
+				if (warans[repoint[l1]][repoint[l2]] > M)continue;
+				roads[repoint[l1]].push_back(pii(repoint[l2],warans[repoint[l1]][repoint[l2]]));
+				roads[repoint[l2]].push_back(pii(repoint[l1], warans[repoint[l1]][repoint[l2]]));
+			}
+		}
+		dijkstra();
+		if (dijkans[H] == INT_MAX) {
+			cout << "Help!" << endl;
+			continue;
+		}
+		int ans = dijkans[H];
+		if (dijkans[H] > M)ans += dijkans[H] - M;
+		cout << ans << endl;
+	}
+}

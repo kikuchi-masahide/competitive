@@ -1,3 +1,21 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits.h>
+#include <algorithm>
+#include <deque>
+
+using namespace std;
+
 class flow {
 private:
 	class edge {
@@ -5,8 +23,8 @@ private:
 		int to;
 		long long cap;
 		int rev;  //ãtï”Ç™G[to]ÇÃÇ«Ç±Ç…Ç¢ÇÈÇ©
-		edge(int t,int c,int r):to(t),cap(c),rev(r){}
-		edge():to(0),cap(0),rev(0){}
+		edge(int t, int c, int r) :to(t), cap(c), rev(r) {}
+		edge() :to(0), cap(0), rev(0) {}
 	};
 	int V;
 	vector<vector<edge>>* G;
@@ -35,7 +53,7 @@ private:
 		for (int& i = iter->at(v); i < G->at(v).size(); i++) {
 			edge& e = G->at(v)[i];
 			if (e.cap > 0 && lev->at(v) < lev->at(e.to)) {
-				int d = dfs(e.to, t, min(f,e.cap));
+				int d = dfs(e.to, t, min(f, e.cap));
 				if (d > 0) {
 					e.cap -= d;
 					G->at(e.to)[e.rev].cap += d;
@@ -61,12 +79,12 @@ public:
 	}
 	//ï”í«â¡
 	void addEdge(int from, int to, int cap) {
-		G->at(from).push_back(edge(to,cap,G->at(to).size()));
-		G->at(to).push_back(edge(from, 0, G->at(from).size() - 1 ));
+		G->at(from).push_back(edge(to, cap, G->at(to).size()));
+		G->at(to).push_back(edge(from, 0, G->at(from).size() - 1));
 	}
 	//ç≈ëÂó¨ñ‚ëËÇâÇ≠(Dinic)
 	//O(EV^2)
-	static int maxFlow(flow& F ,int s, int t) {
+	static int maxFlow(flow& F, int s, int t) {
 		int flowint = 0;
 		for (;;) {
 			F.bfs(s);
@@ -80,3 +98,32 @@ public:
 		}
 	}
 };
+
+
+int N;
+typedef pair<int, int> pii;
+vector<pii> red, blue;
+void solve() {
+	cin >> N;
+	flow F(2 * N + 2);
+	for (int i = 1; i <= N; i++) {
+		F.addEdge(0, i, 1);
+		F.addEdge(i + N, 2 * N + 1, 1);
+	}
+	red.resize(N); blue.resize(N);
+	for (int n = 1; n <= N; n++) {
+		cin >> red[n - 1].first >> red[n - 1].second;
+	}
+	for (int n = 1; n <= N; n++) {
+		cin >> blue[n - 1].first >> blue[n - 1].second;
+	}
+	for (int r = 0; r < N; r++) {
+		for (int b = 0; b < N; b++) {
+			if (red[r].first < blue[b].first && red[r].second < blue[b].second) {
+				F.addEdge(r + 1, N + b + 1, 1);
+			}
+		}
+	}
+	cout << flow::maxFlow(F, 0, 2 * N + 1) << endl;
+	return;
+}

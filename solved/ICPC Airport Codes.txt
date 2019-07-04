@@ -1,0 +1,54 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <map>
+#include <limits.h>
+#include <algorithm>
+#include <set>
+
+using namespace std;
+
+void solve() {
+	while (true) {
+		int N;
+		cin >> N;
+		if(N == 0)return;
+		vector<string> S;
+		S.resize(N);
+		for (int n = 0; n < N; n++) {
+			string s;
+			cin >> s;
+			S[n] += s.substr(0, 1);
+			for (int i = 1; i < s.size(); i++) {
+				if (s[i - 1] == 'a' || s[i - 1] == 'i' || s[i - 1] == 'u' || s[i - 1] == 'e' || s[i - 1] == 'o') {
+					S[n] += s.substr(i, 1);
+				}
+			}
+		}
+			int ss = 0, e = 51;
+			while(e-ss > 1){
+				int m = (e + ss) / 2;
+				set<string> sset;
+				bool flag = false;
+				for (int i = 0; i < N; i++) {
+					if (sset.find(S[i].substr(0, m)) != sset.end()) {
+						flag = true;
+						break;
+					}
+					sset.insert(S[i].substr(0, m));
+				}
+				if (flag)ss = m;
+				else e = m;
+			}
+			if (e != 51)cout << e << endl;
+			else cout << -1 << endl;
+	}
+}

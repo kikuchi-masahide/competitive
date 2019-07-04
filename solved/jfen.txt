@@ -1,0 +1,90 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <iomanip>
+#include <string>
+
+using namespace std;
+
+int H, W;
+vector<string> mapstr;
+vector<vector<int>> map;   //ボール有り->1 番外-> -1
+
+void solve() {
+	map.resize(10);
+	for (int y = 0; y < 10; y++)map[y].resize(10, -1);
+	while (true) {
+		for (int y = 0; y < 10; y++) {
+			for (int x = 0; x < 10; x++)map[y][x] = -1;
+		}
+		string BFS;
+		cin >> BFS;
+		if (BFS[0] == '#')return;
+		BFS += string("/");
+		int pos = 0, prev = -1/*前のスラッシュの位置*/;
+		mapstr.clear();
+		while (pos < BFS.size()) {
+			if (BFS[pos] == '/') {
+				mapstr.push_back(BFS.substr(prev + 1, pos - prev - 1));
+				prev = pos;
+			}
+			pos++;
+		}
+		for (int y = 0; y < mapstr.size(); y++) {
+			mapstr[y] += string("b");
+			vector<string> tempvect;
+			pos = 0, prev = -1;
+			while (pos < mapstr[y].size()) {
+				if (mapstr[y][pos] == 'b') {
+					tempvect.push_back(mapstr[y].substr(prev + 1, pos - prev - 1));
+					tempvect.push_back(string("b"));
+					prev = pos;
+				}
+				pos++;
+			}
+			int x = 0;   //現在のx座標
+			for (int i = 0; i < tempvect.size() - 1; i++) {
+				if (tempvect[i][0] == 'b') {
+					map[y][x] = 1;
+					x++;
+				}
+				else {
+					int count = atoi(tempvect[i].c_str());
+					for (int c = 0; c < count; c++) {
+						map[y][x] = 0;
+						x++;
+					}
+				}
+			}
+		}
+		int A, B, C, D;
+		cin >> A >> B >> C >> D; A--; B--; C--; D--;
+		map[A][B] = 0; map[C][D] = 1;
+		string ans;
+		for (int y = 0; y < 9; y++) {
+			if (map[y][0] == -1)break;
+			int counter = 0;
+			for (int x = 0; map[y][x] != -1; x++) {
+				if (map[y][x] == 1) {
+					if (counter != 0)ans += to_string(counter);
+					ans += string("b");
+					counter = 0;
+				}
+				else counter++;
+			}
+			if (counter != 0)ans += to_string(counter);
+			ans += string("/");
+		}
+		cout << ans.substr(0, ans.size() - 1) << endl;
+	}
+}

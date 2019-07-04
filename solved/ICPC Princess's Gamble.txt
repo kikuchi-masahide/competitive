@@ -1,0 +1,35 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <map>
+#include <limits.h>
+#include <algorithm>
+#include <deque>
+
+using namespace std;
+
+void solve() {
+	while (true) {
+		int N, M, P;
+		cin >> N >> M >> P;
+		if(N == 0 && M == 0 && P == 0)return;
+		M--;
+		int sum = 0, x = 0;
+		for (int n = 0; n < N; n++) {
+			int X;
+			cin >> X;
+			sum += X;
+			if (n == M)x = X;
+		}
+		if (x != 0)cout << (sum * (100 - P)) / x << endl;
+		else cout << 0 << endl;
+	}
+}
