@@ -47,3 +47,44 @@ public:
 		return vl*vr;
 	}
 };
+
+
+####################
+//‹óvector‚ğ—v‘f”N‚ÌsegTree‚Æ‚µ‚Äz‚Å‰Šú‰»
+template<class T>
+void segTree_init(vector<T>& vec, int N,T z) {
+	int RN = 1;
+	while (RN < N)RN *= 2;
+	vec.resize(2 * RN - 1,z);
+}
+
+//vec‚ğsegTree‚Æ‚µ‚Än”Ô–Ú‚ğx‚É
+template<class T>
+void segTree_set(vector<T>& vec, int n, T x,function<T(T,T)> f) {
+	int RN = (vec.size() + 1) / 2;
+	n = RN + n - 1;
+	vec[n] = x;
+	while (n > 0) {
+		n = (n - 1) / 2;
+		vec[n] = f(vec[2*n+1],vec[2*n+2]);
+	}
+	return;
+}
+
+//vec‚ªsegTree‚Ì‚ÌAn”Ô–Ú‚Ì—v‘f
+template<class T>
+T segTree_at(vector<T>& vec, int n) {
+	int RN = (vec.size() + 1) / 2;
+	return vec[RN+n-1];
+}
+
+template<class T>
+T segTree_get(vector<T>& vec, int a, int b, function<T(T,T)> f,T e) {
+	T vl = e, vr = e;
+	int RN = (vec.size() + 1) / 2;
+	for (int l = a + RN, r = b + RN; l < r; l >>= 1, r >>= 1) {
+		if (l & 1)vl = f(vl, vec[(l++) - 1]);
+		if (r & 1)vr = f(vr, vec[(--r) - 1]);
+	}
+	return f(vl, vr);
+}
