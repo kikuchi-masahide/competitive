@@ -1,0 +1,138 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+
+using namespace std;
+
+vector<int> PQR;
+
+class c_formula {
+public:
+	virtual int calcurate() { return 0; };
+};
+
+//0,1,2->•’Ê‚Ì’è”
+//3,4,5->P,Q,R
+class c_var :public c_formula {
+public:
+	int type;
+	int calcurate() {
+		if (type <= 2)return type;
+		return PQR[type-3];
+	};
+};
+
+class c_not :public c_formula {
+public:
+	c_formula* a;
+	int calcurate() {
+		int aa = a->calcurate();
+		return 2 - aa;
+	}
+	~c_not() {
+		delete a;
+	}
+};
+
+class c_and :public c_formula {
+public:
+	c_formula* a, * b;
+	int calcurate() {
+		int aa = a->calcurate(), bb = b->calcurate();
+		return min(aa, bb);
+	}
+	~c_and() {
+		delete a;
+		delete b;
+	}
+};
+
+class c_or :public c_formula {
+public:
+	c_formula* a, * b;
+	int calcurate() {
+		int aa = a->calcurate(), bb = b->calcurate();
+		return max(aa, bb);
+	}
+	~c_or() {
+		delete a;
+		delete b;
+	}
+};
+
+c_formula* analyse(string input) {
+	if (input[0] == '(') {
+		input = input.substr(1, input.size() - 2);
+		int pos = 0, counter = 0;
+		while (pos < input.size()) {
+			if (input[pos] == '(')counter++;
+			else if (input[pos] == ')')counter--;
+			else if (input[pos] == '+') {
+				if (counter == 0) {   //ˆê”ÔuŠO‘¤v‚Ì+
+					c_or* temp = new c_or;
+					temp->a = analyse(input.substr(0, pos));
+					temp->b = analyse(input.substr(pos + 1, input.size() - 1-pos));
+					return temp;
+				}
+			}
+			else if (input[pos] == '*') {
+				if (counter == 0) {
+					c_and* temp = new c_and;
+					temp->a = analyse(input.substr(0, pos));
+					temp->b = analyse(input.substr(pos + 1, input.size() - 1-pos));
+					return temp;
+				}
+			}
+			pos++;
+		}
+	}
+	if (input[0] == '-') {
+		c_not* temp = new c_not;
+		temp->a = analyse(input.substr(1, input.size() - 1));
+		return temp;
+	}
+	if (input[0] >= '0' && input[0] <= '2') {
+		c_var* temp = new c_var;
+		temp->type = input[0] - '0';
+		return temp;
+	}
+	c_var* temp = new c_var;
+	if (input[0] == 'P')temp->type = 3;
+	else if (input[0] == 'Q')temp->type = 4;
+	else temp->type = 5;
+	return temp;
+}
+
+void solve() {
+	PQR.resize(3);
+	while (true) {
+		string input;
+		cin >> input;
+		if (input == string("."))return;
+		c_formula* temp = analyse(input);
+		int ans = 0;
+		for (int ccode = 0; ccode < 27; ccode++) {
+			int code = ccode;
+			PQR[0] = code % 3;
+			code /= 3;
+			PQR[1] = code % 3;
+			code /= 3;
+			PQR[2] = code % 3;
+			if (temp->calcurate() == 2)ans++;
+		}
+		cout << ans << endl;
+	}
+}

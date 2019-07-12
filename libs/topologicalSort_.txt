@@ -37,3 +37,48 @@ bool topologicalSort(graph& g0, vector<int>& deck) {
 	delete check;
 	return true;
 }
+
+########################################
+########################################
+
+vector<vector<int>> edges;
+
+void topologicalVisit(int n, vector<char>& check, stack<int>& q, bool& flag) {
+	if (check.at(n) == 1) {
+		flag = true;
+		return;
+	}
+	if (check.at(n) == 0) {
+		check.at(n) = 1;
+		for (auto itr = edges[n].begin(); itr != edges[n].end(); itr++) {
+			topologicalVisit(*itr, check, q, flag);
+			if (flag)return;
+		}
+		check[n] = 2;
+		q.push(n);
+	}
+}
+
+void solve() {
+	int V = 9;   //頂点数
+	vector<char> check;   //0初期・1一時的・2恒常的
+	vector<int> topans;   //結果保存用 i -> j  => topans[i] < topans[j]
+	stack<int> qans;
+	bool cflag = false;
+	for (int i = 0; i < V; i++) {
+		if (check[i] != 0)continue;
+		topologicalVisit(i, check, qans, cflag);
+	}
+	//cflag == trueだったら木じゃない
+	while (!qans.empty()) {
+		topans.push_back(qans.top());
+		qans.pop();
+	}
+	if (cflag) {
+		cout << "!tree" << endl;
+		return;
+	}
+	for (int i = 0; i < V; i++) {
+		cout << topans[i] << endl;
+	}
+}

@@ -1,0 +1,83 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <stack>
+using namespace std;
+
+class node {
+public:
+	node* l = NULL, *r = NULL;
+	node* p;
+	int num;
+	string output() {
+		string out("(");
+		if (l != NULL)out += l->output();
+		out += string(")[");
+		out += to_string(num);
+		out += string("](");
+		if (r != NULL)out += r->output();
+		out += string(")");
+		return out;
+	}
+	~node() {
+		if(l != NULL)delete l;
+		if(r != NULL)delete r;
+	}
+};
+
+//•¶š—ñ‚ğ‰ğÍ‚µAª—v‘f‚ğ•Ô‚·
+node* analyse(string S) {
+	if (S == string(""))return NULL;
+	int pos = 1, counter = 1;
+	while (pos < S.size()) {
+		if (S[pos] == '(')counter++;
+		else if (S[pos] == ')')counter--;
+		else if(S[pos] == '['){
+			if (counter == 0) {
+				int poss = pos;
+				while (S[poss] != ']')poss++;
+				node* root = new node;
+				root->num = atoi(S.substr(pos+1,poss-pos-1).c_str());
+				root->l = analyse(S.substr(1, pos - 2));
+				root->r = analyse(S.substr(poss+2,S.size()-1-poss));
+				return root;
+			}
+		}
+		pos++;
+	}
+	return NULL;
+}
+
+string dif(node* n1, node* n2) {
+	string out("(");
+	if (n1->l != NULL && n2->l != NULL)out += dif(n1->l,n2->l);
+	out += string(")[");
+	out += to_string(n1->num+n2->num);
+	out += string("](");
+	if (n1->r != NULL && n2->r != NULL)out += dif(n1->r,n2->r);
+	out += string(")");
+	return out;
+}
+
+void solve() {
+	string S1, S2;
+	cin >> S1 >> S2;
+	node* root1, * root2;
+	root1 = analyse(S1);
+	root2 = analyse(S2);
+	cout << dif(root1,root2) << endl;
+	return;
+}
