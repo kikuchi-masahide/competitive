@@ -1,61 +1,31 @@
-//N!を求める(O(N))
-long long stair(int N, int mod = 1000000007) {
-	long long temp = 1;
-	if (mod != -1) {
-		for (int i = 2; i <= N; i++) {
-			temp = (temp*i) % mod;
-		}
-	}
-	else {
-		for (int i = 2; i <= N; i++) {
-			temp = temp*i;
-		}
-	}
-	return temp;
+//拡張拡張Euclidの互除法による(階乗)逆元の求め方
+//O(N)
+int N = ,M = 1e9+7;
+vector<long long> inv, sinv;   //inv[i]*i%M = 1,sinv[i]*(i!)%M = 1(0<=i<=N)
+inv.resize(N + 1);
+sinv.resize(N + 1);
+inv[1] = 1;
+sinv[0] = 1;
+sinv[1] = 1;
+for (int n = 2; n <= N; n++) {
+	inv[n] = M - (inv[M%n]*(M/n)) % M;
+	sinv[n] = (sinv[n - 1] * inv[n]) % M;
 }
 
-//0!,1!,...,N!を求める(O(N))
-void stairs(int N, vector<long long>& vec,int mod = 1000000007) {
-	long long temp = 1;
-	vec.resize(N+1);
-	vec[0] = 1;
-	vec[1] = 1;
-	for (int i = 2; i <= N; i++) {
-		if(mod != -1)temp = (temp*i) % mod;
-		else temp *= i;
-		vec[i] = temp;
+//フェルマーの三角形を用いた、n,kが小さい場合のdp的解法(mod Mが素数じゃなくても使える)
+//O(N*N)
+int  N = ,M = 1e9 + 7;
+vector<vector<long long>> dp;
+dp.resize(N + 1);
+dp[1].resize(3);
+dp[1][0] = 1;
+dp[1][1] = 1;
+dp[1][2] = 0;
+for (int n = 2; n <= N; n++) {
+	dp[n].resize(n + 2);
+	dp[n][0] = 1;
+	for (int r = 1; r <= n; r++) {
+		dp[n][r] = (dp[n - 1][r - 1] + dp[n - 1][r])%M;
 	}
-	return;
-}
-
-//0!,1!,...,N!の逆元(mod剰余)を求める
-//O(log(mod)+N)
-void stairInv(int N, vector<long long>& vect,int mod = 1000000007) {
-	vect.resize(N+1);
-	long long temp = stair(N, mod);
-	temp = pow(temp, mod - 2, (long long)mod);
-	vect[N] = temp;
-	for (long long n = N - 1; n >= 1; n--) {
-		temp = (vect[n + 1] * (n + 1)) % mod;
-		vect[n] = temp;
-	}
-	return;
-}
-
-//nCkを求める(mod剰余)
-//O(N+log(mod)+max(n-k,k))
-long long C(int n, int k,int mod = 1000000007) {
-	long long temp = stair(n,mod);
-	vector<long long>* vect = new vector<long long>;
-	stairInv(max(n-k,k), *vect, mod);
-	temp = (temp*vect->at(n - k))%mod;
-	temp = (temp*vect->at(k)) % mod;
-	delete vect;
-	return temp;
-}
-
-//nHk(重複順序)を求める
-//
-long long H(int n, int k,int mod = 1000000007) {
-	return C(n - 1 + k, n - 1,mod);
+	dp[n][n + 1] = 0;
 }
