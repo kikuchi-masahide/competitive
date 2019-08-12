@@ -1,0 +1,48 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <limits.h>
+#include <math.h>
+#include <iomanip>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long double ld;
+typedef long long ll;
+
+vector<int> A;
+vector<int> store;
+int ans = 0;
+
+void solve() {
+	int N;
+	cin >> N;
+	A.resize(N + 1); store.resize(N + 1,0);
+	for (int n = 1; n <= N; n++)cin >> A[n];
+	for (int n = N; n >= 1; n--) {
+		int old = store[n];
+		store[n] = (A[n] + old) % 2;
+		ans += store[n];
+		if(n != 1)store[1] += store[n];
+		for (int m = 2; m * m <= n; m++) {
+			if (n % m == 0) {
+				store[m] += store[n];
+				if(m != n/m)store[n / m] += store[n];
+			}
+		}
+	}
+	cout << ans << endl;
+	for (int n = 1; n <= N; n++) {
+		if (store[n] == 1)cout << n << endl;
+	}
+	return;
+}

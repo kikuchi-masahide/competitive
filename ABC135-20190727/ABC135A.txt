@@ -1,0 +1,28 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <limits.h>
+#include <math.h>
+#include <iomanip>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long double ld;
+typedef long long ll;
+
+void solve() {
+	int A, B, C, D;
+	cin >> A >> B;
+	if ((A - B) % 2 == 0)cout << (A + B) / 2 << endl;
+	else cout << "IMPOSSIBLE" << endl;
+	return;
+}

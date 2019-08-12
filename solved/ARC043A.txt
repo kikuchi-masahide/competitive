@@ -1,0 +1,45 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <limits.h>
+#include <math.h>
+#include <iomanip>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long double ld;
+typedef long long ll;
+
+vector<long double> S;
+int N;
+long double A, B;
+
+void solve() {
+	cin >> N >> A >> B;
+	S.resize(N);
+	long double sum = 0;
+	for (int n = 0; n < N; n++) {
+		cin >> S[n];
+		sum += S[n];
+	}
+	long double P, Q;
+	sort(S.begin(), S.end());
+	if (S[0] == S[N - 1]) {
+		cout << -1 << endl;
+		return;
+	}
+	P = B / (S[N - 1] - S[0]);
+	Q = A - P * sum/(long double)N;
+	cout << setprecision(18) << P << " ";
+	cout << setprecision(18) << Q << endl;
+	return;
+}

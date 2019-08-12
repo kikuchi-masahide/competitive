@@ -1,0 +1,55 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <limits.h>
+#include <math.h>
+#include <iomanip>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long double ld;
+typedef long long ll;
+
+vector<int> A,B;
+int N;
+
+void solve() {
+	cin >> N;
+	A.resize(N + 1); B.resize(N);
+	for (int n = 0; n <= N; n++)cin >> A[n];
+	for (int n = 0; n < N; n++)cin >> B[n];
+	long long counter = 0;
+	for (int n = 0; n < N; n++) {
+		if (A[n] > B[n]) {
+			counter += B[n];
+			A[n] -= B[n];
+			continue;
+		}
+		else {
+			counter += A[n];
+			B[n] -= A[n];
+			if (A[n + 1] <= B[n]) {
+				counter += A[n + 1];
+				B[n] -= A[n + 1];
+				A[n + 1] = 0;
+			}
+			else {
+				counter += B[n];
+				A[n + 1] -= B[n];
+				B[n] = 0;
+			}
+			continue;
+		}
+	}
+	cout << counter << endl;
+	return;
+}

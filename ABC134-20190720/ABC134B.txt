@@ -1,0 +1,28 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <limits.h>
+#include <math.h>
+#include <iomanip>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long double ld;
+typedef long long ll;
+
+void solve() {
+	int N,D;
+	cin >> N >> D;
+	if (N % (2 * D + 1) == 0)cout << N / (2 * D + 1) << endl;
+	else cout << (int)floor(N / (2 * D + 1)) + 1 << endl;
+	return;
+}
