@@ -1,0 +1,51 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+using namespace std;
+
+int N, Q;
+vector<long long> DD;
+
+void solve() {
+	cin >> N >> Q;
+	DD.resize(N + 1);
+	DD[0] = 0;
+	for(int n = 0;n < N;n++){
+		long long d;
+		cin >> d;
+		DD[n + 1] = DD[n] + d;
+	}
+	for (int q = 0; q < Q; q++) {
+		long long T, L, R;
+		cin >> T >> L >> R;
+		int s1 = -1, e1 = N + 1;
+		while (e1 - s1 > 1) {
+			int m = (e1 + s1) / 2;
+			if (DD[m] < T - R)s1 = m;
+			else e1 = m;
+		}
+		int s2 = -1, e2 = N + 1;
+		while (e2 - s2 > 1) {
+			int m = (s2 + e2) / 2;
+			if (DD[m] <= T - L)s2 = m;
+			else e2 = m;
+		}
+		cout << s2 - s1 << endl;
+	}
+	return;
+}

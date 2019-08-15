@@ -1,3 +1,14 @@
+ABC 137 F Polynomial Construction
+ABC 137 E Coins Respawn
+ABC 137 C Green Bin
+ABC 137 B One Clue
+ABC 137 A +-x
+大手前プロコン 2019 F - 天秤とコイン (Balance and Coins)
+大手前プロコン 2019 E - 最悪の教頭 (Worst Head Teacher)
+大手前プロコン 2019 D - FizzBuzz (FizzBuzz)
+大手前プロコン 2019 C - カード並べ 2 (Arranging Card 2)
+大手前プロコン 2019 B - 駒 (Pieces)
+大手前プロコン 2019 A - 寝坊だ！ピ太郎！ (You overslept, Pitaro)
 AOJ 1501 Grid
 ABC 021 D 多重ループ
 ICPC Twirling Robot

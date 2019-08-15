@@ -1,0 +1,30 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <limits.h>
+#include <math.h>
+#include <iomanip>
+#include <string>
+#include <queue>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long double ld;
+typedef long long ll;
+
+int A, B;
+
+void solve() {
+	cin >> A >> B;
+	cout << (A >= B ? 1 : 0) << endl;
+	return;
+}
