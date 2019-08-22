@@ -1,0 +1,40 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+using namespace std;
+
+int N, K;
+
+void solve() {
+	cin >> N >> K;
+	int ans = -1;
+	int m = 0;
+	for (int n = 1; n <= N; n++) {
+		int a;
+		cin >> a;
+		if (a < K) {
+			if (m < a) {
+				ans = n;
+				m = a;
+			}
+		}
+	}
+	cout << ans << endl;
+	return;
+}
