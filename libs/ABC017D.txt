@@ -1,0 +1,61 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+using namespace std;
+
+int N, M;
+vector<int> F;
+vector<bool> S;   //[L,n]にある数はtrue
+vector<long long> DP;
+long long SSUM = 0;   //DP[L]+DP[L+1]+...+DP[n]
+int L = 1;
+int MOD = 1e9 + 7;
+
+void solve() {
+	cin >> N >> M;
+	F.resize(N + 1);
+	for (int n = 1; n <= N; n++)cin >> F[n];
+	if (N == 1) {
+		cout << 1 << endl;
+		return;
+	}
+	S.resize(M + 1,false);
+	DP.resize(N + 1);
+	DP[1] = 1;
+	DP[0] = 1;
+	S[F[1]] = true;
+	SSUM = 1;
+	for (int n = 2; n <= N; n++) {
+		while (S[F[n]] == true) {
+			SSUM = (SSUM+MOD-DP[L-1])%MOD;
+			S[F[L]] = false;
+			L++;
+		}
+		S[F[n]] = true;
+		SSUM += DP[n - 1];
+		SSUM %= MOD;
+		DP[n] = SSUM;
+	}
+	cout << DP[N] << endl;
+	return;
+}
