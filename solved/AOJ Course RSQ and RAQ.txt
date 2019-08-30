@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+using namespace std;
+
+vector<long long> seg;
+vector<long long> lazy;
+
+void eval(int k, int l, int r) {
+	if (k >= seg.size())return;
+	if (lazy[k] == 0)return;
+	seg[k] += lazy[k];
+	if (k < seg.size() / 2) {
+		lazy[2 * k] += lazy[k] / 2;
+		lazy[2 * k + 1] += lazy[k] / 2;
+	}
+	lazy[k] = 0;
+}
+
+void add(int a, int b, long long x, int k = 1, int l = 0, int r = seg.size()/2-1) {
+	eval(k, l, r);
+	if (r < a || b < l)return;
+	if (a <= l && r <= b) {
+		lazy[k] = x * (r - l +1);
+		eval(k, l, r);
+	}
+	else {
+		add(a, b, x, 2 * k, l, (l + r) / 2);
+		add(a, b, x, 2 * k + 1, (l + r) / 2 + 1, r);
+		seg[k] = seg[2 * k] + seg[2 * k + 1];
+	}
+}
+
+long long getSum(int a, int b, int k = 1, int l = 0, int r = seg.size()/2-1) {
+	if (r < a || b < l)return 0;
+	eval(k, l, r);
+	if (a <= l && r <= b)return seg[k];
+	else return getSum(a, b, 2 * k, l, (r + l) / 2) + getSum(a, b, 2 * k + 1, (l + r) / 2 + 1, r);
+}
+
+void solve() {
+	int N,Q;
+	cin >> N >> Q;
+	int RN = 1;
+	while (RN < N)RN *= 2;
+	seg.clear(); lazy.clear();
+	seg.resize(2 * RN, 0);
+	lazy.resize(2 * RN);
+	for (int query = 0; query < Q; query++) {
+		int com;
+		cin >> com;
+		if (com == 0) {
+			int s, t, x;
+			cin >> s >> t >> x;
+			add(--s, --t, x);
+		}
+		else {
+			int s, t;
+			cin >> s >> t;
+			cout << getSum(--s, --t) << endl;
+		}
+	}
+	return;
+}
+
+//////////////////////////////
+//////////////////////////////
+
+int main() {
+#ifdef DEBUGTIME
+	for (int time = 0; time < DEBUGTIME; time++) {
+		solve();
+		cout << "####################" << endl;
+	}
+#else
+	solve();
+#endif
+	return 0;
+}

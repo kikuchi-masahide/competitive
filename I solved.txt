@@ -1,6 +1,10 @@
+AOJ Course Range Sum Query (RSQ)
+AOJ Course Disjoint Set: Union Find Tree
+AOJ Course RMQ and RAQ
+AOJ Course RSQ and RAQ
 ABC 009 D 漸化式
 AOJ Course Structured Program II - Matrix Multiplication
-?IOI 2011 春合宿 day4-2 本棚
+IOI 2011 春合宿 day4-2 本棚
 JOI 2007 本選 E ペンキの色
 ABC 018 D バレンタインデー
 JOI 2007 予選 E おせんべい
