@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+using namespace std;
+
+void solve() {
+	int Query;
+	cin >> Query;
+	for (int query = 0; query < Query; query++) {
+		string S;
+		cin >> S;
+		//okyo
+		int n = 0;
+		for (; n < (int)S.size() - 3; n++) {
+			if (S.substr(n,4) == string("okyo"))break;
+		}
+		if (n >= (int)S.size() - 3) {
+			cout << "No" << endl;
+			continue;
+		}
+		int n2 = n + 4;
+		for (; n2 < (int)S.size() - 2; n2++) {
+			if (S.substr(n2,3) == string("ech"))break;
+		}
+		if (n2 >= (int)S.size() - 2) {
+			cout << "No" << endl;
+			continue;
+		}
+		cout << "Yes" << endl;
+		continue;
+	}
+}
+
+//////////////////////////////
+//////////////////////////////
+
+int main() {
+#ifdef DEBUGTIME
+	for (int time = 0; time < DEBUGTIME; time++) {
+		solve();
+		cout << "####################" << endl;
+	}
+#else
+	solve();
+#endif
+	return 0;
+}
