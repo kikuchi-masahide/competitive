@@ -1,3 +1,8 @@
+ABC 140 E Second Sum
+ABC 140 D Face Produces Unhappiness
+ABC 140 C Maximal Value
+ABC 140 B Buffet
+ABC 140 A Password
 東京工業大学プログラミングコンテスト2019 F Road Construction
 東京工業大学プログラミングコンテスト2019 E N法陣
 東京工業大学プログラミングコンテスト2019 D 素数取りゲーム

@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+using namespace std;
+
+int N;
+
+void solve() {
+	long long ans = 0;
+	cin >> N;
+	vector<int> B;
+	B.resize(N);
+	for (int n = 0; n < N-1; n++) {
+		cin >> B[n];
+	}
+	ans += B[0];
+	for (int n = 1; n < N-1; n++) {
+		ans += min(B[n-1],B[n]);
+	}
+	ans += B[N -2];
+	cout << ans << endl;
+	return;
+}
+
+//////////////////////////////
+//////////////////////////////
+
+int main() {
+#ifdef DEBUGTIME
+	for (int time = 0; time < DEBUGTIME; time++) {
+		solve();
+		cout << "####################" << endl;
+	}
+#else
+	solve();
+#endif
+	return 0;
+}
