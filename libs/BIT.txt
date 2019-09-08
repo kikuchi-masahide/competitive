@@ -37,6 +37,7 @@ public:
 	}
 };
 
+//1-indexed
 template<class T>
 class RangeAdditionBIT {
 public:

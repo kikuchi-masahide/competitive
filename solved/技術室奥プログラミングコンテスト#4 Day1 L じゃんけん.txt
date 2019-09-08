@@ -1,0 +1,75 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+using namespace std;
+
+int N, M, K, X, Y;
+vector<vector<int>> G;
+vector<int> C;   //’¸“_‚ÌŽè
+vector<int> D;   //‚¢‚Â‚Ç‚±‚É‚¢‚é‚©
+vector<vector<int>> dp;
+
+int score(int k, int n) {
+	if (C[n] == (C[D[k]] + 1) % 3)return 0;
+	else if (C[n] == C[D[k]])return Y;
+	else return X;
+}
+
+void solve() {
+	cin >> N >> M >> K >> X >> Y;
+	G.resize(N);
+	for (int m = 0; m < M; m++) {
+		int a, b;
+		cin >> a >> b;
+		a--; b--;
+		G[a].push_back(b);
+		G[b].push_back(a);
+	}
+	C.resize(N);
+	for (int n = 0; n < N; n++) {
+		string s;
+		cin >> s;
+		if (s[0] == 'G')C[n] = 0;
+		else if (s[0] == 'C')C[n] = 1;
+		else C[n] = 2;
+	}
+	D.resize(K);
+	for (int k = 0; k < K; k++) {
+		cin >> D[k];
+		D[k]--;
+	}
+	dp.resize(K+1);
+	dp[0].resize(N,-1);
+	dp[0][0] = 0;
+	for (int k = 0; k < K; k++) {
+		dp[k+1].resize(N, -1);
+		for (int n = 0; n < N; n++) {
+			dp[k+1][n] = dp[k][n];
+			for (auto itr = G[n].begin(); itr != G[n].end(); itr++) {
+				if (dp[k][*itr] != -1)dp[k+1][n] = max(dp[k+1][n], dp[k][*itr]);
+			}
+			if(dp[k+1][n] != -1)dp[k+1][n] += score(k, n);
+		}
+	}
+	int ans = 0;
+	for (int n = 0; n < N; n++)ans = max(ans, dp[K][n]);
+	cout << ans << endl;
+	return;
+}

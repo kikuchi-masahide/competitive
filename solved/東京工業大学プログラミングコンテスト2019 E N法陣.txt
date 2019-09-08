@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+using namespace std;
+
+int N;
+void solve() {
+	cin >> N;
+	if (N % 2 == 0) {
+		cout << "No" << endl;
+		return;
+	}
+	vector<vector<int>> V;
+	V.resize(N, vector<int>(N, 0));
+	int t = 1;
+	for (int y = 0; y < N; y++) {
+		for (int x = 0; x < N; x++) {
+			V[y][x] = t;
+			t++;
+		}
+	}
+	for (int n = 0; n < N / 2; n++) {
+		swap(V[n][n], V[N-1 - n][N-1 - n]);
+	}
+	cout << "Yes" << endl;
+	for (int y = 0; y < N; y++) {
+		for (int x = 0; x < N; x++) {
+			cout << V[y][x] << " ";
+		}
+		cout << endl;
+	}
+	return;
+}
+
+
+//////////////////////////////
+//////////////////////////////
+
+int main() {
+#ifdef DEBUGTIME
+	for (int time = 0; time < DEBUGTIME; time++) {
+		solve();
+		cout << "####################" << endl;
+	}
+#else
+	solve();
+#endif
+	return 0;
+}

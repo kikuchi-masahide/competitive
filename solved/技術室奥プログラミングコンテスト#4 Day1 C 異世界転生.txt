@@ -1,0 +1,44 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+using namespace std;
+
+long long N;
+string Xs;
+vector<long long> X;
+
+void solve() {
+	cin >> N >> Xs;
+	for (int i = Xs.size() - 1; i >= 0; i--) {
+		X.push_back((int)(Xs[i] - '0'));
+	}
+	for (long long M = 2; M <= 10; M++) {
+		long long m = 1;
+		long long temp = 0;
+		for (int n = 0; n < X.size(); n++) {
+			temp += X[n] * m;
+			if (temp > N)break;
+			m *= M;
+		}
+		if (N == temp) {
+			cout << M << endl;
+			return;
+		}
+	}
+}

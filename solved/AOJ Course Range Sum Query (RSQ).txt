@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+using namespace std;
+
+vector<long long> seg;
+
+void add(int n, long long x,int k = 1,int l = 0,int r = seg.size()/2-1) {
+	if (n < l|| n > r)return;
+	if (k >= seg.size())return;
+	seg[k] += x;
+	add(n, x, 2 * k, l, (l + r) / 2);
+	add(n, x, 2 * k + 1, (l + r) / 2 + 1, r);
+	return;
+}
+
+long long getSum(int a, int b, int k = 1, int l = 0, int r = seg.size() / 2 - 1) {
+	if (b < l || a > r)return 0;
+	if (a <= l && r <= b)return seg[k];
+	else return getSum(a, b, 2 * k, l, (l + r) / 2) + getSum(a, b, 2 * k + 1, (l + r) / 2 + 1, r);
+}
+
+void solve() {
+	int N, Q;
+	cin >> N >> Q;
+	int RN = 1;
+	while (RN < N)RN *= 2;
+	seg.resize(2 * RN);
+	for (int query = 0; query < Q; query++) {
+		int com, x, y;
+		cin >> com >> x >> y;
+		if (com == 0) {
+			add(--x, y);
+		}
+		else {
+			cout << getSum(--x, --y) << endl;
+		}
+	}
+	return;
+}
+
+//////////////////////////////
+//////////////////////////////
+
+int main() {
+#ifdef DEBUGTIME
+	for (int time = 0; time < DEBUGTIME; time++) {
+		solve();
+		cout << "####################" << endl;
+	}
+#else
+	solve();
+#endif
+	return 0;
+}

@@ -1,0 +1,71 @@
+#define DEBUGTIME 1
+
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+using namespace std;
+
+int N, M, P, Q, R;
+vector<vector<pair<int, int>>> Z;   //女支店
+
+void solve() {
+	cin >> N >> M >> P >> Q >> R;
+	Z.resize(N);
+	for (int r = 0; r < R; r++) {
+		int x, y, z;
+		cin >> x >> y >> z;
+		x--; y--;
+		Z[x].push_back(pair<int, int>(y, z));
+	}
+	long long ans = 0;
+	//集合{0,1,...,n-1}からサイズkの部分集合を昇順に取り出す
+	vector<int> Point;
+	int comb = (1 << P) - 1;
+	while (comb < (1 << N)) {
+
+		Point.clear();
+		Point.resize(M,0);
+		for (int n = 0; n < N; n++) {
+			if ((comb & (1 << n)) == 0)continue;
+			for (auto itr = Z[n].begin(); itr != Z[n].end(); itr++) {
+				Point[itr->first] += itr->second;
+			}
+		}
+		sort(Point.begin(), Point.end(),greater<int>());
+		long long tempans = 0;
+		for (int n = 0; n < Q; n++)tempans += Point[n];
+		ans = max(ans, tempans);
+
+		int x = comb & -comb;
+		int y = comb + x;
+		comb = ((comb & ~y) / x >> 1) | y;
+	}
+	cout << ans << endl;
+	return;
+}
+
+//////////////////////////////
+//////////////////////////////
+
+int main() {
+#ifdef DEBUGTIME
+	for (int time = 0; time < DEBUGTIME; time++) {
+		solve();
+		cout << "####################" << endl;
+	}
+#else
+	solve();
+#endif
+	return 0;
+}

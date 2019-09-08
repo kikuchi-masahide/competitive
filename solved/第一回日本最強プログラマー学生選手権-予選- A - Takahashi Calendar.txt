@@ -1,0 +1,39 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+using namespace std;
+
+int M, D;
+
+void solve() {
+	cin >> M >> D;
+	int counter = 0;
+	for (int d = 10; d <= D; d++) {
+		int d1 = d % 10;
+		int d10 = (d - d1) / 10;
+		if (d1 < 2 || d10 < 2)continue;
+		if (d1 * d10 <= M)counter++;
+	}
+	cout << counter << endl;
+	return;
+}

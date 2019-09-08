@@ -1,0 +1,78 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+using namespace std;
+
+int N, M;
+vector<int> P;
+vector<vector<int>> CP;
+queue<pair<int, int>> Q;
+vector<pair<int,int>> DP;
+vector<int> order;   //見る順番
+
+void solve() {
+	cin >> N >> M;
+	P.resize(N+1);
+	CP.resize(M);
+	for (int m = 0; m < M; m++)CP[m].resize(N+1,0);
+	for (int n = 1; n <= N; n++) {
+		cin >> P[n];
+		P[n]--;
+		CP[P[n]][n]++;
+	}
+	for (int n = 1; n <= N; n++) {
+		for (int m = 0; m < M; m++)CP[m][n] += CP[m][n - 1];
+	}
+	DP.resize(1 << M);
+	order.resize(1 << M);
+	for (int n = 0; n < 1 << M; n++) order[n] = n;
+	sort(order.begin(), order.end(), [](int a, int b) {
+		unsigned int counta = a;
+		counta = (counta & 0x55555555) + ((counta & 0xAAAAAAAA) >> 1);
+		counta = (counta & 0x33333333) + ((counta & 0xCCCCCCCC) >> 2);
+		counta = (counta & 0x0F0F0F0F) + ((counta & 0xF0F0F0F0) >> 4);
+		counta = (counta & 0x00FF00FF) + ((counta & 0xFF00FF00) >> 8);
+		counta = (counta & 0x0000FFFF) + ((counta & 0xFFFF0000) >> 16);
+		unsigned int countb = b;
+		countb = (countb & 0x55555555) + ((countb & 0xAAAAAAAA) >> 1);
+		countb = (countb & 0x33333333) + ((countb & 0xCCCCCCCC) >> 2);
+		countb = (countb & 0x0F0F0F0F) + ((countb & 0xF0F0F0F0) >> 4);
+		countb = (countb & 0x00FF00FF) + ((countb & 0xFF00FF00) >> 8);
+		countb = (countb & 0x0000FFFF) + ((countb & 0xFFFF0000) >> 16);
+		return counta < countb;
+	});
+	DP[0] = pair<int, int>(0, 0);
+	for (auto itr = order.begin() + 1; itr != order.end(); itr++) {
+		DP[*itr] = pair<int, int>(0, 0);
+		for (int m = 0; m < M; m++) {
+			int code = *itr;
+			if ((code & (1 << m)) == 0)continue;
+			code -= 1 << m;
+			int prevn = DP[code].first, prevp = DP[code].second;
+			if (CP[m][prevp + CP[m][N]] - CP[m][prevp] + prevn > DP[*itr].first) {
+				DP[*itr].first = CP[m][prevp + CP[m][N]] - CP[m][prevp] + prevn;
+			}
+			DP[*itr].second = prevp + CP[m][N];
+		}
+	}
+	cout << N - DP[(1 << M) - 1].first << endl;
+	return;
+}

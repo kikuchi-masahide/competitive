@@ -1,0 +1,47 @@
+void solve();
+
+int main() {
+	solve();
+	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <limits.h>
+#include <math.h>
+#include <iomanip>
+#include <string>
+#include <queue>
+using namespace std;
+typedef pair<int, int> pii;
+typedef long double ld;
+typedef long long ll;
+
+void solve() {
+	int M, N, K;
+	cin >> M >> N >> K;
+	vector<int> komap;
+	komap.resize(M + 1, 0);
+	for (int n = 0; n < N; n++) {
+		int pos;
+		cin >> pos;
+		komap[pos]++;
+	}
+	int ans = 0;
+	for (int n = 1; n <= M; n++) {
+		int temp = komap[n];
+		for (int k = 1; k <= K; k++) {
+			int tempcount = 0;
+			if (n - k >= 1)tempcount += komap[n - k];
+			if (n + k <= M)tempcount += komap[n + k];
+			if (tempcount >= 1)temp++;
+		}
+		ans = max(ans, temp);
+	}
+	cout << ans << endl;
+	return;
+}
