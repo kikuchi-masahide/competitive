@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+using namespace std;
+
+struct query {
+	int S, T, X;
+};
+vector<query> Querys;
+int N, Q, RN;
+vector<int> D;
+vector<int> seg;
+vector<int> razy;
+
+void eval(int k) {
+	if (razy[k] == 0)return;
+	seg[k] = min(seg[k], razy[k]);
+	if (k < RN) {
+		razy[2 * k] = razy[k];
+		razy[2 * k+1] = razy[k];
+	}
+	razy[k] = 0;
+	return;
+}
+
+void change(int a, int b, int x, int k = 1, int l = 0, int r = RN - 1) {
+	eval(k);
+	if (b < l || r < a)return;
+	if (a <= l && r <= b) {
+		razy[k] = x;
+		eval(k);
+		return;
+	}
+	change(a, b, x, 2 * k, l, (l + r) / 2);
+	change(a, b, x, 2 * k + 1, (l + r) / 2 + 1, r);
+	seg[k] = min(seg[2 * k], seg[2 * k + 1]);
+	return;
+}
+
+int get(int a, int b, int k = 1, int l = 0, int r = RN - 1) {
+	eval(k);
+	if (r < a || b < l)return INT_MAX;
+	if (a <= l && r <= b)return seg[k];
+	return min(get(a, b, 2 * k, l, (l + r) / 2),get(a, b, 2 * k + 1, (l + r) / 2 + 1, r));
+}
+
+void solve() {
+	cin >> N >> Q;
+	Querys.clear();
+	Querys.resize(N);
+	for (int n = 0; n < N; n++)cin >> Querys[n].S >> Querys[n].T >> Querys[n].X;
+	sort(Querys.begin(), Querys.end(), [](const query& a, const query& b) {return (a.X > b.X); });
+	D.clear();
+	D.resize(Q);
+	for (int n = 0; n < Q; n++)cin >> D[n];
+	RN = 1;
+	while (RN < Q)RN *= 2;
+	seg.clear();
+	seg.resize(2 * RN,INT_MAX);
+	razy.clear();
+	razy.resize(2 * RN,0);
+	for (query q:Querys) {
+		int s = -1, e = Q;
+		while (e - s > 1) {
+			int m = (e + s) / 2;
+			if (D[m] < q.S - q.X)s = m;
+			else e = m;
+		}
+		int S = e;
+		if (S == Q)continue;
+		s = -1, e = Q;
+		while (e - s > 1) {
+			int m = (e + s) / 2;
+			if (D[m] < q.T - q.X)s = m;
+			else e = m;
+		}
+		int T = s;
+		if (T == -1)continue;
+		change(S, T, q.X);
+	}
+	for (int n = 0; n < Q; n++) {
+		int a = get(n, n);
+		if (a == INT_MAX)cout << -1 << endl;
+		else cout << a << endl;
+	}
+	return;
+}
+
+//////////////////////////////
+//////////////////////////////
+
+int main() {
+#ifdef DEBUGTIME
+	for (int time = 0; time < DEBUGTIME; time++) {
+		solve();
+		cout << "####################" << endl;
+	}
+#else
+	solve();
+#endif
+	return 0;
+}
+

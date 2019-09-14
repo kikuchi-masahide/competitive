@@ -1,3 +1,8 @@
+ABC 128 E Roadwork
+CADDi 2018 D Harlequin
+ABC 134 E Sequence Decomposing
+ABC 136 E Max GCD
+ABC 059 D Alice&Brown
 ABC 140 E Second Sum
 ABC 140 D Face Produces Unhappiness
 ABC 140 C Maximal Value
