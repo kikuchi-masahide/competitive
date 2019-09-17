@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+using namespace std;
+
+template<class T>
+void in(T& I) {
+	cin >> I;
+	return;
+}
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+void out(string S) {
+	cout << S << endl;
+	return;
+}
+
+template<class T>
+void out(T& O) {
+	cout << O << endl;
+	return;
+}
+
+int main() {
+	string S;
+	in(S);
+	for (int i = 0; i < S.size(); i++) {
+		if (i % 2 == 1) {
+			if (S[i] == 'R')goto fail;
+		}
+		else {
+			if (S[i] == 'L')goto fail;
+		}
+	}
+	out(string("Yes"));
+	return 0;
+fail:
+	out(string("No"));
+	return 0;
+}

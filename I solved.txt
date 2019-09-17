@@ -1,4 +1,10 @@
-ABC 128 E Roadwork
+ABC 132 E Hopscotch Addict
+ABC 130 E Common Subsequence 
+ABC 141 D Powerful Discount Tickets
+ABC 141 C Attack Survival
+ABC 141 B Tap Dance
+ABC 141 A Weather Prediction
+ABC 128 E Roadworkd
 CADDi 2018 D Harlequin
 ABC 134 E Sequence Decomposing
 ABC 136 E Max GCD

@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+vector<vector<long long>> DP;
+vector<long long> SUM;
+int N, M;
+vector<int> S, T;
+int MOD = 1e9 + 7;
+
+int main() {
+	cin >> N >> M;
+	S.resize(N);
+	in(S);
+	T.resize(M);
+	in(T);
+	DP.resize(M+1, vector<long long>(N+1,0));
+	SUM.resize(N + 1,0);
+	for (int t = 1; t <= M; t++) {
+		for (int s = 1; s <= N; s++) {
+			if (S[s-1] != T[t-1])continue;
+			DP[t][s] = SUM[s - 1] + 1;
+		}
+		for (int s = 2; s <= N; s++) {
+			DP[t][s] += DP[t][s - 1];
+			DP[t][s] %= MOD;
+		}
+		for (int s = 1; s <= N; s++) {
+			SUM[s] += DP[t][s];
+			SUM[s] %= MOD;
+		}
+	}
+	cout << (SUM[N]+1)%MOD << endl;
+	return 0;
+}
