@@ -1,0 +1,93 @@
+#include <iostream>
+
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+int N;
+vector<vector<int>> win;
+struct game {
+	int pw, pl;
+	int w, l;
+	int d;
+};
+vector<game> games;
+
+//ê[Ç≥ÅAÉmÅ[Éh
+pair<int,int> add(int p) {
+	if (win[p].size() == 0)return pair<int,int>(0, -1);
+	struct TEMP {
+		int l, d;
+		int g;
+	};
+	vector<TEMP> V;
+	for (int i : win[p]) {
+		pair<int, int> t = add(i);
+		V.push_back({ i, t.first, t.second });
+	}
+	sort(V.begin(), V.end(), [](TEMP a, TEMP b) {
+		return a.d < b.d;
+	});
+	int back = -1;
+	int ans = 0,counter = V.size();
+	for (auto itr = V.begin(); itr != V.end();itr++) {
+		games.push_back({ back,itr->g,p,itr->l,0 });
+		back = games.size()-1;
+		ans = max(ans, itr->d + (counter--));
+	}
+	return pair<int, int>(ans, back);
+}
+
+int main() {
+	cin >> N;
+	win.resize(N);
+	for (int n = 1; n < N; n++) {
+		int a;
+		cin >> a;
+		win[--a].push_back(n);
+	}
+	int game0 = add(0).second;
+	vector<int> deep(N, 0);
+	//ÉmÅ[ÉhÅAê[Ç≥
+	queue < pair<int, int>> q;
+	q.push(pair<int,int>(game0,1));
+	while (!q.empty()) {
+		int node = q.front().first;
+		int d = q.front().second;
+		q.pop();
+		games[node].d = d;
+		if (games[node].pl == -1)deep[games[node].l] = d;
+		else q.push(pair<int, int>(games[node].pl, d + 1));
+		if (games[node].pw == -1)deep[games[node].w] = d;
+		else q.push(pair<int, int>(games[node].pw, d + 1));
+	}
+	int ans = 0;
+	for (int n = 0; n < N; n++)ans = max(ans, deep[n]);
+	cout << ans << endl;
+	return 0;
+}
