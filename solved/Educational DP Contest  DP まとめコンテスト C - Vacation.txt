@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+int N;
+vector<int> A, B, C;
+vector<int> DPA, DPB, DPC;
+
+int main() {
+	cin >> N;
+	A.resize(N + 1);
+	B.resize(N + 1);
+	C.resize(N + 1);
+	for (int n = 1; n <= N; n++)cin >> A[n] >> B[n] >> C[n];
+	DPA.resize(N + 1,0);
+	DPB.resize(N + 1,0);
+	DPC.resize(N + 1,0);
+	for (int n = 1; n <= N; n++) {
+		DPA[n] = max(DPB[n - 1], DPC[n - 1])+A[n];
+		DPB[n] = max(DPC[n - 1], DPA[n - 1]) + B[n];
+		DPC[n] = max(DPA[n - 1], DPB[n - 1]) + C[n];
+	}
+	cout << max(max(DPA[N], DPB[N]), DPC[N]) << endl;
+	return 0;
+}

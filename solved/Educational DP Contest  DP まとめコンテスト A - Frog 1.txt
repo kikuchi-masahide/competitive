@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+vector<int> H;
+vector<long long> DP;
+int N;
+
+int main() {
+	cin >> N;
+	H.resize(N + 1, INT_MAX);
+	for (int n = 1; n <= N; n++)cin >> H[n];
+	DP.resize(N + 1);
+	DP[0] = INT_MAX;
+	DP[1] = 0;
+	for (int n = 2; n <= N; n++) {
+		DP[n] = min(
+			DP[n - 1] + abs(H[n] - H[n - 1]),
+			DP[n - 2] + abs(H[n] - H[n - 2])
+		);
+	}
+	cout << DP[N] << endl;
+	return 0;
+}

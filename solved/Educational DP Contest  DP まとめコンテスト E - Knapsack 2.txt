@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+int N, Wmax;
+vector<int> W, V;
+vector<vector<long long>> DP;
+
+int main() {
+	cin >> N >> Wmax;
+	W.resize(N + 1);
+	V.resize(N + 1);
+	for (int n = 1; n <= N; n++) {
+		cin >> W[n] >> V[n];
+	}
+	DP.resize(N + 1, vector<long long>(100001,(1e9)*100));
+	DP[0][0] = 0;
+	for (int n = 1; n <= N; n++) {
+		for (int v = 0; v < V[n]; v++)DP[n][v] = DP[n - 1][v];
+		for (int v = V[n]; v <= 100000; v++) {
+			DP[n][v] = min(DP[n - 1][v], DP[n - 1][v - V[n]] + W[n]);
+		}
+	}
+	long long ans = 0;
+	for (int v = 0; v <= 100000;v++) {
+		if (DP[N][v] <= Wmax)ans = v;
+	}
+	cout << ans << endl;
+	return 0;
+}
