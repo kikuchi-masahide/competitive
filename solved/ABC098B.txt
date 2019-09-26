@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+int N;
+string S;
+
+int main(){
+	cin >> N >> S;
+	vector<vector<bool>> DP1;
+	DP1.resize(N + 2, vector<bool>(26, false));
+	for (int n = 1; n <= N; n++) {
+		for (int c = 0; c < 26; c++) {
+			DP1[n][c] = DP1[n - 1][c] | (S[n-1]-'a' == c);
+		}
+	}
+	vector<vector<bool>> DP2;
+	DP2.resize(N + 2, vector<bool>(26, false));
+	for (int n = N; n >= 1; n--) {
+		for (int c = 0; c < 26; c++) {
+			DP2[n][c] = DP2[n + 1][c] | (S[n-1]-'a' == c);
+		}
+	}
+	int ans = 0;
+	for (int n = 1; n < N; n++) {
+		int temp = 0;
+		for (int c = 0; c < 26; c++) {
+			if (DP1[n][c] && DP2[n + 1][c])temp++;
+		}
+		ans = max(ans, temp);
+	}
+	cout << ans << endl;
+	return 0;
+}

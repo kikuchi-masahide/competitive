@@ -1,0 +1,123 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+template< typename T >
+struct edge {
+	int src, to;
+	T cost;
+
+	edge(int to, T cost) : src(-1), to(to), cost(cost) {}
+
+	edge(int src, int to, T cost) : src(src), to(to), cost(cost) {}
+
+	edge& operator=(const int& x) {
+		to = x;
+		return *this;
+	}
+
+	operator int() const { return to; }
+};
+
+template< typename T >
+using Edges = vector< edge< T > >;
+template< typename T >
+using WeightedGraph = vector< Edges< T > >;
+using UnWeightedGraph = vector< vector< int > >;
+template< typename T >
+using Matrix = vector< vector< T > >;
+
+template< typename T >
+vector< T > dijkstra(WeightedGraph< T >& g, int s) {
+	const auto INF = numeric_limits< T >::max();
+	vector< T > dist(g.size(), INF);
+
+	using Pi = pair< T, int >;
+	priority_queue< Pi, vector< Pi >, greater< Pi > > que;
+	dist[s] = 0;
+	que.emplace(dist[s], s);
+	while (!que.empty()) {
+		T cost;
+		int idx;
+		tie(cost, idx) = que.top();
+		que.pop();
+		if (dist[idx] < cost) continue;
+		for (auto& e : g[idx]) {
+			auto next_cost = cost + e.cost;
+			if (dist[e.to] <= next_cost) continue;
+			dist[e.to] = next_cost;
+			que.emplace(dist[e.to], e.to);
+		}
+	}
+	return dist;
+}
+
+struct circle {
+	long double x, y, r;
+};
+vector<circle> circles;
+int N;
+
+int main() {
+	circle tc;
+	cin >> tc.x >> tc.y;
+	tc.r = 0;
+	circles.push_back(tc);
+	cin >> tc.x >> tc.y;
+	tc.r = 0;
+	circles.push_back(tc);
+	cin >> N;
+	for (int n = 0; n < N; n++) {
+		circle c;
+		cin >> c.x >> c.y >> c.r;
+		circles.push_back(c);
+	}
+	WeightedGraph<long double> edges;
+	edges.resize(N + 2);
+	for (int s = 0; s < N + 2; s++) {
+		for (int t = s + 1; t < N + 2; t++) {
+			circle cs = circles[s];
+			circle ct = circles[t];
+			long double rr = (cs.x - ct.x) * (cs.x - ct.x) + (cs.y - ct.y) * (cs.y - ct.y);
+			long double r = sqrt(rr);
+			if (r - cs.r - ct.r < 0) {
+				edges[s].push_back(edge<long double>(s, t, 0));
+				edges[t].push_back(edge<long double>(t, s, 0));
+			}
+			else {
+				r = r - cs.r - ct.r;
+				edges[s].push_back(edge<long double>(s, t, r));
+				edges[t].push_back(edge<long double>(t, s, r));
+			}
+		}
+	}
+	cout << setprecision(12) << dijkstra(edges, 0)[1] << endl;
+	return 0;
+}
