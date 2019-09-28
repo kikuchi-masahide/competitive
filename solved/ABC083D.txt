@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+deque<int> S;
+int N;
+
+int main() {
+	string s;
+	cin >> s;
+	N = s.size();
+	S.push_back(1);
+	for (int n = 1; n < N; n++) {
+		if (s[n] != s[n - 1])S.push_back(1);
+		else S.back()++;
+	}
+	int ans = N;
+	while (S.size() != 1) {
+		if (S.front() < S.back()) {
+			ans = min(ans, N - S.front());
+			int temp = S.front();
+			S.pop_front();
+			S.front() += temp;
+		}
+		else {
+			ans = min(ans, N - S.back());
+			int temp = S.back();
+			S.pop_back();
+			S.back() += temp;
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}
