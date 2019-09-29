@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+typedef pair<int, int> pii;
+
+int N;
+vector<pii> A;
+int main() {
+	cin >> N;
+	A.resize(N);
+	for (int n = 1; n <= N; n++) {
+		int a;
+		cin >> a;
+		A[n-1] = pii(n,a);
+	}
+	sort(A.begin(), A.end(), [](pii a, pii b) {
+		return a.second < b.second;
+	});
+	for (int n = 0; n < N; n++) {
+		cout << A[n].first << " ";
+	}
+	cout << endl;
+	return 0;
+}

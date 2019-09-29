@@ -1,3 +1,10 @@
+第一回日本最強プログラマー学生選手権決勝(オープンコンテスト) B Reachability
+第一回日本最強プログラマー学生選手権決勝(オープンコンテスト) A Equal Weight
+ABC 142 E - Get Everything
+ABC 142 D - Disjoint Set of Common Divisors
+ABC 142 C - Go to School
+ABC 142 B - Roller Coaster
+ABC 142 A - Odds of Oddness
 AtCoder Petrozavodsk Contest C Vacant Seat
 ABC 083 D - Wide Flip
 ARC 064 E - Cosmic Rays

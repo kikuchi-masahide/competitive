@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+
+template< typename T >
+struct edge {
+	int src, to;
+	T cost;
+
+	edge(int to, T cost) : src(-1), to(to), cost(cost) {}
+
+	edge(int src, int to, T cost) : src(src), to(to), cost(cost) {}
+
+	edge& operator=(const int& x) {
+		to = x;
+		return *this;
+	}
+
+	operator int() const { return to; }
+};
+
+template< typename T >
+using Edges = vector< edge< T > >;
+template< typename T >
+using WeightedGraph = vector< Edges< T > >;
+using UnWeightedGraph = vector< vector< int > >;
+template< typename T >
+using Matrix = vector< vector< T > >;
+
+template< typename T >
+vector< T > dijkstra(WeightedGraph< T >& g, int s) {
+	const auto INF = numeric_limits< T >::max();
+	vector< T > dist(g.size(), INF);
+
+	using Pi = pair< T, int >;
+	priority_queue< Pi, vector< Pi >, greater< Pi > > que;
+	dist[s] = 0;
+	que.emplace(dist[s], s);
+	while (!que.empty()) {
+		T cost;
+		int idx;
+		tie(cost, idx) = que.top();
+		que.pop();
+		if (dist[idx] < cost) continue;
+		for (auto& e : g[idx]) {
+			auto next_cost = cost + e.cost;
+			if (dist[e.to] <= next_cost) continue;
+			dist[e.to] = next_cost;
+			que.emplace(dist[e.to], e.to);
+		}
+	}
+	return dist;
+}
+
+
+int N, M;
+vector<vector<int>> open;
+vector<long long> cost;
+
+int main() {
+	cin >> N >> M;
+	open.resize(M + 1,vector<int>());
+	cost.resize(M + 1);
+	for (int m = 1; m <= M; m++) {
+		int b;
+		cin >> cost[m] >> b;
+		for (int bb = 0; bb < b; bb++) {
+			int c;
+			cin >> c;
+			open[m].push_back(--c);
+		}
+	}
+	WeightedGraph<long long> G(1 << N);
+	for (int m = 1; m <= M; m++) {
+		int code = 0;
+		for (int n : open[m]) {
+			code |= (1 << n);
+		}
+		for (int n = 0; n < (1 << N); n++) {
+			G[n].push_back(edge<long long>(n, (n | code), cost[m]));
+		}
+	}
+	int end = (1 << N) - 1;
+	long long ans = dijkstra(G, 0)[end];
+	if (ans == LLONG_MAX)cout << -1 << endl;
+	else cout << ans << endl;
+	return 0;
+}

@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+int N, M;
+vector<int> A, B;
+typedef pair<int, int> pii;
+vector<pii> DP;
+
+int main() {
+	cin >> N >> M;
+	A.resize(N);
+	in(A);
+	B.resize(M);
+	in(B);
+	DP.resize(2000001, pii(-1, -1));
+	for (int n = 0; n < N; n++) {
+		for (int m = 0; m < M; m++) {
+			auto temp = DP[A[n] + B[m]];
+			if (temp.first != -1) {
+				if (temp.first == n || temp.second == m)continue;
+				cout << temp.first << " " << temp.second << " "
+					<< n << " " << m << endl;
+				return 0;
+			}
+			else DP[A[n] + B[m]] = pii(n, m);
+		}
+	}
+	cout << -1 << endl;
+}
