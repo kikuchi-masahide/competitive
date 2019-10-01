@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+vector<long long> L,P;
+long long N, X;
+
+//Lv.NÅAâ∫Ç©ÇÁKñá
+long long calc(long long N, long long K) {
+	if (N == 1) {
+		int t[]{ 0, 1, 2, 3, 3 };
+		return t[K - 1];
+	}
+	long long ans = 0;
+	K--;
+	if (K == 0)return ans;
+	if (K < L[N - 1])return calc(N - 1, K);
+	K -= L[N - 1];
+	ans += P[N - 1];
+	if (K == 0)return ans;
+	K--;
+	ans++;
+	if (K == 0)return ans;
+	if (K < L[N - 1])return ans + calc(N - 1, K);
+	return ans+P[N - 1];
+}
+
+int main() {
+	cin >> N >> X;
+	L.resize(51, 1);
+	for (int l = 1; l <= 50; l++)L[l] = 2 * L[l - 1] + 3;
+	P.resize(51,1);
+	for (int l = 1; l <= 50; l++)P[l] = 2 * P[l - 1] + 1;
+	cout << calc(N, X) << endl;
+	return 0;
+}
