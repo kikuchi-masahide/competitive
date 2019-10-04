@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+int N;
+vector<vector<long long>> A;
+vector<vector<long long>> G;
+vector<vector<long long>> bell;
+
+int main() {
+	cin >> N;
+	A.resize(N, vector<long long>(N, 0));
+	G.resize(N, vector<long long>(N, -1));   //ë∂ç›ÇµÇ»Ç¢
+	for (int y = 0; y < N; y++) {
+		for (int x = 0; x < N; x++) {
+			cin >> A[x][y];
+		}
+	}
+	for (int x = 0; x < N; x++) {
+		for (int y = x + 1; y < N; y++) {
+			bool flag = false;
+			for (int k = 0; k < N; k++) {
+				if (A[x][k] == 0 || A[k][y] == 0)continue;
+				if (A[x][k] + A[k][y] == A[x][y]) {
+					flag = true;
+					break;
+				}
+			}
+			if (!flag) {
+				G[x][y] = A[x][y];
+				G[y][x] = A[y][x];
+			}
+		}
+	}
+	bell.resize(N, vector<long long>(N, -1));   //ë∂ç›ÇµÇ»Ç¢
+	for (int x = 0; x < N; x++) {
+		for (int y = 0; y < N; y++) {
+			if (G[x][y] != -1)bell[x][y] = G[x][y];
+			else if (x == y)bell[x][y] = 0;
+		}
+	}
+	for (int k = 0; k < N; k++) {
+		for (int x = 0; x < N; x++) {
+			for (int y = 0; y < N; y++) {
+				if (bell[x][k] == -1 || bell[k][y] == -1)continue;
+				if (bell[x][y] == -1)bell[x][y] = bell[x][k] + bell[k][y];
+				else bell[x][y] = min(bell[x][y], bell[x][k] + bell[k][y]);
+			}
+		}
+	}
+	long long ans = 0;
+	bool flag = false;
+	for (int x = 0; x < N; x++) {
+		for (int y = 0; y < N; y++) {
+			if (G[x][y] != -1)ans += G[x][y];
+			if (bell[x][y] != A[x][y]) {
+				flag = true;
+				break;
+			}
+		}
+	}
+	if (flag)cout << -1 << endl;
+	else cout << ans / 2 << endl;
+	return 0;
+}

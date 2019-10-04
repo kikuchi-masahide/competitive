@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+int N, K;
+vector<int> X;
+
+int main() {
+	cin >> N >> K;
+	X.resize(N);
+	for (int n = 0; n < N; n++)cin >> X[n];
+	int ans = 0;
+	for (int n = 0; n < N; n++) {
+		ans += min(X[n], K - X[n]);
+	}
+	cout << 2 * ans << endl;
+	return 0;
+}

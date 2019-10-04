@@ -1,3 +1,9 @@
+8VC Venture Cup 2017 - Final Round and Codeforces Round #393 C - Factory Repairs
+8VC Venture Cup 2017 - Final Round and Codeforces Round #393 B - XOR Equation
+8VC Venture Cup 2017 - Final Round and Codeforces Round #393 A - Island Puzzle
+ABC 074 D - Restoring Road Network
+ABC 074 B - Collecting Balls (Easy Version)
+ABC 074 A - Bichrome Cells
 CODE FESTIVAL 2016 Final D - Pair Cards
 CODE FESTIVAL 2016 qual C C - 二人のアルピニスト / Two Alpinists
 ABC 047 D - 高橋君と見えざる手 / An Invisible Hand
