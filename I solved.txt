@@ -1,3 +1,5 @@
+AGC 016 B - Colorful Hats
+AGC 003 C - BBuBBBlesort!
 8VC Venture Cup 2017 - Final Round and Codeforces Round #393 C - Factory Repairs
 8VC Venture Cup 2017 - Final Round and Codeforces Round #393 B - XOR Equation
 8VC Venture Cup 2017 - Final Round and Codeforces Round #393 A - Island Puzzle
