@@ -1,3 +1,6 @@
+ABC 057 D - Maximum Average Sets
+ARC 091 D - Remainder Reminder
+ARC 097 C - K-th Substring
 AGC 016 B - Colorful Hats
 AGC 003 C - BBuBBBlesort!
 8VC Venture Cup 2017 - Final Round and Codeforces Round #393 C - Factory Repairs
