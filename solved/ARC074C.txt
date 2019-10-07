@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+long long H, W;
+
+int main() {
+	cin >> H >> W;
+	long long ans = LLONG_MAX;
+	if (H % 3 == 0) {
+		cout << 0 << endl;
+		return 0;
+	}
+	else ans = min(ans, H);
+	if (W % 3 == 0) {
+		cout << 0 << endl;
+		return 0;
+	}
+	else ans = min(ans, W);
+	for (long long w = 1; w < W; w++) {
+		long long h = H/2;
+		long long m = min(min(w * H, (W - w) * h), (W - w) * (H - h));
+		long long M = max(max(w * H, (W - w) * h), (W - w) * (H - h));
+		ans = min(ans, M - m);
+	}
+	for (long long h = 1; h <H; h++) {
+		long long w =W / 2;
+		long long m = min(min(h * W, (H - h) *w), (H - h) * (W - w));
+		long long M = max(max(h * W, (H - h) * w), (H - h) * (W - w));
+		ans = min(ans, M - m);
+	}
+	cout << ans << endl;
+	return 0;
+}
