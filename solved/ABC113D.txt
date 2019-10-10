@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+int H, W, K;
+vector<long long> p;
+vector<vector<long long>> DP;
+int MOD = 1e9 + 7;
+
+int main() {
+	cin >> H >> W >> K;
+	p.resize(W + 1,1);
+	DP.resize(H + 1, vector<long long>(W + 1,0));
+	p[1] = 1;
+	if(W >= 2)p[2] = 2;
+	for (int w = 3; w <= W; w++)p[w] = (p[w - 1] + p[w - 2])%MOD;
+	DP[1][1] = p[W - 1]%MOD;
+	if(W >= 2)DP[1][2] = p[W - 2] % MOD;
+	for (int h = 2; h <= H; h++) {
+		for (int w = 1; w <= W; w++) {
+			long long temp = 0;
+			if (w > 1) {
+				temp = (DP[h - 1][w - 1] * p[w - 2]) % MOD;
+				temp = (temp * p[W - w]) % MOD;
+				DP[h][w] += temp;
+			}
+			temp = (DP[h - 1][w] * p[w - 1]) % MOD;
+			temp = (temp * p[W - w]) % MOD;
+			DP[h][w] += temp;
+			if (w < W) {
+				temp = (DP[h - 1][w + 1] * p[w - 1]) % MOD;
+				temp = (temp * p[W - w - 1]) % MOD;
+				DP[h][w] += temp;
+			}
+			DP[h][w] %= MOD;
+		}
+	}
+	cout << DP[H][K] << endl;
+	return 0;
+}

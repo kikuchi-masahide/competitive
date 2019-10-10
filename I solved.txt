@@ -1,3 +1,6 @@
+ABC 113 D - Number of Amidakuji
+ABC 124 D - Handstand
+ARC 100 C - Linear Approximation
 ARC 074 C - Chocolate Bar
 ABC 057 D - Maximum Average Sets
 ARC 091 D - Remainder Reminder
