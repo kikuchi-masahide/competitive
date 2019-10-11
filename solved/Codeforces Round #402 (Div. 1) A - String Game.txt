@@ -1,0 +1,119 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+template<class T>
+void in(vector<T>& V) {
+	for (auto itr = V.begin(); itr != V.end(); itr++)cin >> *itr;
+	return;
+}
+
+template<class T>
+void out(vector<T>& V) {
+	for (T& itr : V)cout << itr << endl;
+	return;
+}
+
+//空vectorを要素数NのsegTreeとしてzで初期化
+template<class T>
+void segTree_init(vector<T>& vec, int N, T z) {
+	int RN = 1;
+	while (RN < N)RN *= 2;
+	vec.resize(2 * RN, z);
+}
+
+//vecをsegTreeとしてn番目をxに
+template<class T>
+void segTree_set(vector<T>& vec, int n, T x, function<T(T, T)> f, int k = -1) {
+	int RN = (vec.size() + 1) / 2;
+	if (k == -1) {
+		k = n + RN;
+		vec[k] = x;
+		segTree_set(vec, n, x, f, k / 2);
+	}
+	else if (k != 0) {
+		vec[k] = f(vec[2 * k], vec[2 * k + 1]);
+		segTree_set(vec, n, x, f, k / 2);
+	}
+}
+
+//vecがsegTreeの時の、n番目の要素
+template<class T>
+T segTree_at(vector<T>& vec, int n) {
+	int RN = (vec.size()) / 2;
+	return vec[RN + n];
+}
+
+//get [a,b]
+template<class T>
+T segTree_get(vector<T>& vec, int a, int b, function<T(T, T)> f, T e, int k = 1, int l = 0, int r = -1) {
+	if (r == -1)r = vec.size() / 2 - 1;
+	if (b < l || r < a)return e;
+	else if (a <= l && r <= b)return vec[k];
+	else return f(
+		segTree_get(vec, a, b, f, e, 2 * k, l, (l + r) / 2),
+		segTree_get(vec, a, b, f, e, 2 * k + 1, (l + r) / 2 + 1, r)
+	);
+}
+
+
+string X;   //もとの文字列、欲しいやつ
+string S;
+int N;
+vector<int> A;
+typedef pair<int, int> pii;
+vector<int> tempseg;
+function<int(int, int)> tempf = [](int a, int b) {
+	return a + b;
+};
+vector<int> VS;
+
+bool judge(int n) {
+	int lookings = 0, lookingx = 0;
+	while (lookings < N) {
+		if (VS[lookings] > n) {
+			if (S[lookings] == X[lookingx]) {
+				lookingx++;
+				if (lookingx == X.size())return true;
+			}
+		}
+		lookings++;
+	}
+	return false;
+}
+
+int main() {
+	cin >> S >> X;
+	N = S.size();
+	A.resize(N);
+	segTree_init(tempseg, N,0);
+	VS.resize(N);
+	for (int n = 0; n < N; n++)segTree_set(tempseg, n, 1, tempf);
+	for (int n = 1; n <= N; n++) {
+		cin >> A[n - 1];
+		VS[A[n - 1] - 1] = n;
+	}
+	int s = -1, e = N;   //s:可能 e:不可能
+	while (e - s > 1) {
+		int m = (e + s) / 2;
+		if (judge(m))s = m;
+		else e = m;
+	}
+	cout << s << endl;
+	return 0;
+}
