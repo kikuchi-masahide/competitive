@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+long long N, M;
+
+bool judge(long long g) {
+	return (N * g <= M);
+}
+
+int main() {
+	cin >> N >> M;
+	long long ans = 0;
+	for (long long n = 1; n * n <= M; n++) {
+		if (M % n != 0)continue;
+		if (judge(n))ans = max(ans, n);
+		if (judge(M / n))ans = max(ans, M / n);
+	}
+	cout << ans << endl;
+	return 0;
+}
