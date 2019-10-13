@@ -81,3 +81,73 @@ void solve() {
 	}
 	return;
 }
+
+########################################
+########################################
+
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+struct Bucket {
+	vector<int> v;
+	int sum = 0;
+};
+struct Buckets {
+	vector <Bucket> v;
+	int NUM = 447;   //1個のバケットは大体このぐらいしか持たない
+};
+
+int Q;
+
+int main() {
+	Buckets buckets;
+	buckets.v.resize(ceil((double)200001 / 447));
+	for (int i = 0; i < buckets.v.size() - 1; i++)buckets.v[i].v.resize(447,0);
+	buckets.v.back().v.resize(192,0);
+	cin >> Q;
+	for (int query = 0; query < Q; query++) {
+		int T, X;
+		cin >> T >> X;
+		if (T == 1) {
+			int b = X / 447;
+			int n = X - b*447;
+			buckets.v[b].v[n] = 1;
+			buckets.v[b].sum++;
+		}
+		else {
+			int s = 0, e = 200001;
+			while (e - s > 1) {
+				int m = (e + s) / 2;
+				int counter = 0;
+				int b = m / 447;
+				int n = m - b * 447;
+				for (int bb = 0; bb < b; bb++)counter += buckets.v[bb].sum;
+				for (int nn = 0; nn <= n; nn++)counter += buckets.v[b].v[nn];
+				if (counter < X)s = m;
+				else e = m;
+			}
+			cout << e << endl;
+			int b = e / 447;
+			int n = e - b * 447;
+			buckets.v[b].v[n] = 0;
+			buckets.v[b].sum--;
+		}
+	}
+	return 0;
+}

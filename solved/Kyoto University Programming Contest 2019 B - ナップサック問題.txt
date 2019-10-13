@@ -1,0 +1,110 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+//unionFind
+class unionFind {
+private:
+	int* p;   //親配列のポインタ
+	int* rank;
+	int N;   //要素数
+public:
+	unionFind(int);   //コンストラクタ
+	int parent(int);   //親要素を返す
+	void unit(int, int);   //2要素をつなぐ
+	int operator[](int);   //parentの省略形
+	~unionFind();
+	int size();   //要素数を返す
+};
+
+unionFind::unionFind(int n) {
+	N = n;
+	p = new int[N];
+	rank = new int[N];
+	for (int i = 0; i < N; i++) {
+		p[i] = i;
+		rank[i] = 0;
+	}
+	return;
+}
+
+int unionFind::parent(int n) {
+	if (n < 0 || n >= N)return -1;
+	if (p[n] == n)return n;   //自分が一番上の親
+	return p[n] = parent(p[n]);   //つなぎ直しと上にたどる操作
+}
+
+int unionFind::operator[](int n) {
+	return parent(n);
+}
+
+void unionFind::unit(int x, int y) {
+	x = parent(x), y = parent(y);
+	if (x == y)return;   //根が同じだから何もせずに帰る
+	if (rank[x] < rank[y])p[x] = y;
+	else {
+		p[y] = x;
+		if (rank[x] == rank[y])rank[x]++;
+	}
+	return;
+}
+
+unionFind::~unionFind() {
+	delete(p);
+	delete(rank);
+	return;
+}
+
+int unionFind::size() {
+	return N;
+}
+
+int N, M, Wmax;
+vector<int> W, V;
+vector<int> WW, VV;
+vector<int> DP;
+
+int main() {
+	cin >> N >> M >> Wmax;
+	W.resize(N);
+	V.resize(N);
+	unionFind UF(N);
+	for (int n = 0; n < N; n++)cin >> W[n] >> V[n];
+	for (int m = 0; m < M; m++) {
+		int a, b;
+		cin >> a >> b;
+		UF.unit(--a, --b);
+	}
+	WW.resize(N);
+	VV.resize(N);
+	for (int n = 0; n < N; n++) {
+		WW[UF.parent(n)] += W[n];
+		VV[UF.parent(n)] += V[n];
+	}
+	DP.resize(Wmax + 1,-1);
+	DP[0] = 0;
+	for (int n = 0; n < N; n++) {
+		for (int w = Wmax; w > 0; w--) {
+			if (w - WW[n] >= 0)DP[w] = max(DP[w], DP[w - WW[n]] + VV[n]);
+		}
+	}
+	int ans = 0;
+	for (int w = 0; w <= Wmax; w++)ans = max(ans, DP[w]);
+	cout << ans << endl;
+	return 0;
+}
