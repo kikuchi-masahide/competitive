@@ -1,3 +1,5 @@
+Kyoto University Programming Contest 2018 B - 弾幕ゲーム
+Kyoto University Programming Contest 2018 A - 立て看板
 Kyoto University Programming Contest 2019 C - てんびんばかり
 Kyoto University Programming Contest 2019 B - ナップサック問題
 Kyoto University Programming Contest 2019 A - November Festival
