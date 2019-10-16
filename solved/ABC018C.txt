@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+int H,W,K;
+vector<vector<int>> usualmap;   //1->x
+vector<vector<int>> imos;
+
+int main() {
+	cin >> H >> W >> K;
+	usualmap.resize(W + H, vector<int>(W + H, 0));
+	imos.resize(W + H, vector<int>(W + H, 0));
+	for (int y = H - 1; y >= 0; y--) {
+		string S;
+		cin >> S;
+		for (int x = 0; x < W; x++) {
+			if (S[x] == 'x') {
+				usualmap[x + y + 1][x - y + H] = 1;
+			}
+		}
+	}
+	for (int u = 1; u < W + H; u++) {
+		for (int v = 1; v < W + H; v++) {
+			imos[u][v] = imos[u][v - 1] + imos[u - 1][v] - imos[u - 1][v - 1] + usualmap[u][v];
+		}
+	}
+	int ans = 0;
+	for (int x = K-1; x <= W - K; x++) {
+		for (int y = K-1; y <= H - K ; y++) {
+			int ubottom = x + y - K + 2, uup = x + y + K;
+			int vbottom = x - y - K + 1 + H, vup = x - y + K - 1 + H;
+			int xcount = imos[uup][vup] + imos[ubottom - 1][vbottom - 1] - imos[uup][vbottom - 1] - imos[ubottom - 1][vup];
+			if (xcount == 0)ans++;
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}

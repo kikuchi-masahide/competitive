@@ -4,13 +4,14 @@ private:
 	int* p;   //親配列のポインタ
 	int* rank;
 	int N;   //要素数
+	int* check;   //同値な要素の数
 public:
 	unionFind(int);   //コンストラクタ
 	int parent(int);   //親要素を返す
 	void unit(int, int);   //2要素をつなぐ
 	int operator[](int);   //parentの省略形
 	~unionFind();
-	int size();   //要素数を返す
+	int size(int n);   //頂点nと同値な要素数を返す
 };
 
 unionFind::unionFind(int n) {
@@ -21,6 +22,8 @@ unionFind::unionFind(int n) {
 		p[i] = i;
 		rank[i] = 0;
 	}
+	check = new int[N];
+	for (int n = 0; n < N; n++)check[n] = 1;
 	return;
 }
 
@@ -37,20 +40,24 @@ int unionFind::operator[](int n) {
 void unionFind::unit(int x, int y) {
 	x = parent(x), y = parent(y);
 	if (x == y)return;   //根が同じだから何もせずに帰る
+	int sum = check[x] + check[y];
 	if (rank[x] < rank[y])p[x] = y;
 	else {
 		p[y] = x;
 		if (rank[x] == rank[y])rank[x]++;
 	}
+	check[x] = sum;
+	check[y] = sum;
 	return;
 }
 
 unionFind::~unionFind() {
 	delete(p);
 	delete(rank);
+	delete(check);
 	return;
 }
 
-int unionFind::size() {
-	return N;
+int unionFind::size(int n) {
+	return check[parent(n)];
 }

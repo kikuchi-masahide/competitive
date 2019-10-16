@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+int A, B, C, D;
+
+int main() {
+	cin >> A >> B >> C >> D;
+	if (B * C > A * D)cout << "TAKAHASHI" << endl;
+	else if (B * C < A * D)cout << "AOKI" << endl;
+	else cout << "DRAW" << endl;
+	return 0;
+}
