@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+vector<int> xdir,ydir;
+int X, Y;
+int N;
+
+void decode(string S) {
+	int n = 0;
+	for (; n < N; n++) {
+		if (S[n] == 'T')break;
+		else X--;
+	}
+	int dir = 1;   //y->1 x->0
+	int counter = 0;
+	n++;
+	for (; n < N; n++) {
+		if (S[n] == 'F')counter++;
+		else {
+			if (counter != 0) {
+				if (dir == 0) xdir.push_back(counter);
+				else ydir.push_back(counter);
+			}
+			counter = 0;
+			dir = 1 - dir;
+		}
+	}
+	if (counter != 0) {
+		if (dir == 0) xdir.push_back(counter);
+		else ydir.push_back(counter);
+	}
+}
+
+//vector“à‚Å˜a·‚ªx‚É‚È‚é‚©”»’è
+bool judge(vector<int>& vec, int x) {
+	int M = vec.size();
+	vector<vector<bool>> dp;
+	dp.resize(M + 1,vector<bool>(8001,false));
+	dp[0][0] = true;
+	for (int m = 1; m <= M; m++) {
+		for (int d = 0; d <= 8000; d++) {
+			if (d + vec[m-1] <= 8000) {
+				dp[m][d] = dp[m][d] | dp[m - 1][d + vec[m-1]];
+			}
+			if (abs(d - vec[m-1]) <= 8000) {
+				dp[m][d] = dp[m][d] | dp[m - 1][abs(d - vec[m-1])];
+			}
+		}
+	}
+	return dp[M][abs(x)];
+}
+
+int main() {
+	string S;
+	cin >> S >> X >> Y;
+	N = S.size();
+	decode(S);
+	bool xres = judge(xdir, X);
+	bool yres = judge(ydir, Y);
+	if (xres && yres)cout << "Yes" << endl;
+	else cout << "No" << endl;
+	return 0;
+}

@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+int N;
+
+int main() {
+	cin >> N;
+	int d1 = 2 * N - 1;
+	int d2 = 1;
+	for (int d = 1; d <= N; d++) {
+		int c = d;
+		for (int n = 1; n <= N; n++) {
+			cout << c << " ";
+			if (n & 1)c += d1;
+			else c += d2;
+		}
+		cout << endl;
+		d1 -= 2;
+		d2 += 2;
+	}
+	return 0;
+}

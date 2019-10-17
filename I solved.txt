@@ -1,3 +1,9 @@
+Codeforces Round #593 (Div. 2) E. Alice and the Unfair Game^
+Codeforces Round #593 (Div. 2) D. Alice and the Doll^
+Codeforces Round #593 (Div. 2) C. Labs
+Codeforces Round #593 (Div. 2) B. Alice and the List of Presents
+Codeforces Round #593 (Div. 2) A. Stones
+ABC 082 D - FT Robot
 ABC 040 D - “¹˜H‚Ì˜V‹€‰»‘Îô‚É‚Â‚¢‚Ä
 ABC 018 C - •HŒ^ƒJƒEƒ“ƒg
 ABC 019 C - ‚‹´‚­‚ñ‚Æ–‚–@‚Ì” 

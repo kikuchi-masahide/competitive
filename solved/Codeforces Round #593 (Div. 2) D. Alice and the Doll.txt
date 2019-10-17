@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+ 
+int H, W, K;
+typedef pair<int, int> pii;
+set<pii> pack;
+vector<pii> obs;
+ 
+void package(int w, int h, int k) {
+	if (w >= 2 && h >= 2) {
+		package(w - 2, h - 2, k + 1);
+		int x = 1, y = 2;
+		while (K > 0) {
+			if (x == 1) {
+				pack.insert(pii(x + k, y + k));
+				if (y < h)y++;
+				else x++;
+				K--;
+			}
+			else if (y == h) {
+				pack.insert(pii(x + k, y + k));
+				if (x < w)x++;
+				else y--;
+				K--;
+			}
+			else if (x == w) {
+				pack.insert(pii(x + k, y + k));
+				if (y > 1)y--;
+				else x--;
+				K--;
+			}
+			else {
+				pack.insert(pii(x + k, y + k));
+				K--;
+				if (x > 1)x--;
+				else break;
+			}
+		}
+	}
+	else if (w == 1) {
+		int y = h;
+		while (K > 0) {
+			pack.insert(pii(1 + k, y + k));
+			K--;
+			if (y > 1)y--;
+			else break;
+		}
+	}
+	else if (h == 1) {
+		int x = w;
+		while (K > 0) {
+			pack.insert(pii(x + k, 1 + k));
+			K--;
+			if (x > 1)x--;
+			else break;
+		}
+	}
+}
+ 
+int main() {
+	cin >> H >> W >> K;
+	int oldk = K;
+	obs.resize(K);
+	for (int k = 0; k < K; k++) {
+		cin >> obs[k].second >> obs[k].first;
+	}
+	package(W, H, 0);
+	for (int k = 0; k < oldk; k++) {
+		if (pack.find(obs[k]) == pack.end()) {
+			cout << "No" << endl;
+			return 0;
+		}
+	}
+	cout << "Yes" << endl;
+	return 0;
+}
