@@ -1,3 +1,7 @@
+Educational DP Contest / DP まとめコンテスト S - Digit Sum
+Educational DP Contest / DP まとめコンテスト R - Walk
+Educational DP Contest / DP まとめコンテスト Q - Flowers
+Educational DP Contest / DP まとめコンテスト L - Deque
 Educational Codeforces Round 74 C. Standard Free2play
 Educational Codeforces Round 74 B. Kill 'Em All
 Educational Codeforces Round 74 A. Prime Subtraction

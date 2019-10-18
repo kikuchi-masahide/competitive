@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+vector<int> K;
+int D,N;
+vector<vector<long long>> DP[2];   //確定未確定・桁・あまり
+
+int main() {
+	string S;
+	cin >> S >> D;
+	N = S.size();
+	K.resize(N);
+	for (int n = 0; n < N; n++)K[n] = S[n] - '0';
+	DP[0].resize(N, vector<long long>(D, 0));
+	DP[1].resize(N, vector<long long>(D, 0));
+	for (int k = 0; k < K[0]; k++)DP[0][0][k % D]++;
+	DP[1][0][K[0] % D]++;
+	for (int n = 1; n < N; n++) {
+		for (int d = 0; d < D; d++) {
+			for (int k = 0; k < 10; k++) {
+				DP[0][n][(d + k)%D] += DP[0][n - 1][d];
+				DP[0][n][(d + k)%D] %= MOD;
+			}
+			for (int k = 0; k < K[n]; k++) {
+				DP[0][n][(d + k)%D] += DP[1][n - 1][d];
+				DP[0][n][(d + k)%D] %= MOD;
+			}
+			DP[1][n][(d + K[n]) % D] += DP[1][n - 1][d];
+			DP[1][n][(d + K[n]) % D] %= MOD;
+		}
+	}
+	cout << (DP[0][N - 1][0] + DP[1][N - 1][0]+MOD-1) % MOD << endl;
+	return 0;
+}
