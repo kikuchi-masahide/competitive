@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+int MOD = 1e9 + 7;
+
+struct Query {
+	int w, v;
+};
+
+int main() {
+	int N;
+	cin >> N;
+	vector<vector<int>> good;   //íjê´ÅAëäê´ÇÃÇ¢Ç¢êl
+	good.resize(N + 1);
+	for (int n = 1; n <= N; n++) {
+		for (int girl = 0; girl < N; girl++) {
+			int g;
+			cin >> g;
+			if (g == 1)good[n].push_back(girl);
+		}
+	}
+	vector<vector<long long>> DP;
+	DP.resize(N + 1, vector<long long>((1 << N), 0));
+	DP[0][0] = 1;
+	for (int girl : good[1]) {
+		DP[1][1 << girl] = 1;
+	}
+	for (int n = 1; n < N; n++) {
+		int comb = (1 << n) - 1;
+		while (comb < (1 << N)) {
+			DP[n][comb] %= MOD;
+			for (int girl : good[n + 1]) {
+				if ((comb & (1 << girl)))continue;   //Ç∑Ç≈Ç…éÊÇÁÇÍÇƒÇ¢ÇÈÇÃÇ≈
+				DP[n + 1][(comb | (1 << girl))] += DP[n][comb];
+			}
+			int x = comb & (-comb);
+			int y = comb + x;
+			comb = ((comb & ~y)/x >> 1) | y;
+		}
+	}
+	cout << DP[N][(1 << N) - 1] % MOD << endl;
+	return 0;
+}

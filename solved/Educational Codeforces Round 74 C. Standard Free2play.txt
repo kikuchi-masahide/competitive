@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+ 
+int main() {
+	int Query;
+	cin >> Query;
+	for (int q = 0; q < Query; q++) {
+		long long H, N;
+		cin >> H >> N;
+		deque<long long> Q;
+		for (int n = 0; n < N; n++) {
+			long long a;
+			cin >> a;
+			Q.push_back(a);
+		}
+		long long ans = 0;
+		while (!Q.empty()) {
+			if (Q.size() == 1)break;
+			else if (Q.size() == 2) {
+				if (Q.back() != 1)ans++;
+				break;
+			}
+			else {
+				if (Q[0] != Q[1] + 1) {
+					Q.pop_front();
+					int next = Q.front()+1;
+					Q.push_front(next);
+				}
+				else if (Q[1] == Q[2] + 1) {
+					Q.pop_front();
+					Q.pop_front();
+				}
+				else {
+					Q.pop_front();
+					Q.pop_front();
+					int next = Q.front() + 1;
+					Q.push_front(next);
+					ans++;
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}

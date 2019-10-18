@@ -1,3 +1,9 @@
+Educational Codeforces Round 74 C. Standard Free2play
+Educational Codeforces Round 74 B. Kill 'Em All
+Educational Codeforces Round 74 A. Prime Subtraction
+Educational DP Contest / DP まとめコンテスト N - Slimes
+Educational DP Contest / DP まとめコンテスト P - Independent Set
+Educational DP Contest / DP まとめコンテスト O - Matching
 Codeforces Round #593 (Div. 2) E. Alice and the Unfair Game^
 Codeforces Round #593 (Div. 2) D. Alice and the Doll^
 Codeforces Round #593 (Div. 2) C. Labs
