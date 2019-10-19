@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int N, M, X, Y;
+vector<int> xv, yv;
+int xmax = INT_MIN, ymin = INT_MAX;
+
+int main() {
+	cin >> N >> M >> X >> Y;
+	xv.resize(N);
+	yv.resize(M);
+	for (int n = 0; n < N; n++) {
+		int x;
+		cin >> x;
+		xmax = max(xmax, x);
+	}
+	xmax = max(X, xmax);
+	for (int m = 0; m < M; m++) {
+		int y;
+		cin >> y;
+		ymin = min(ymin, y);
+	}
+	ymin = min(ymin, Y);
+	if (xmax < ymin)cout << "No War" << endl;
+	else cout << "War" << endl;
+	return 0;
+}

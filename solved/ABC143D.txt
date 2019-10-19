@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int N;
+vector<int> L;
+
+int main() {
+	cin >> N;
+	L.resize(N + 2);
+	for (int n = 1; n <= N; n++) {
+		cin >> L[n];
+	}
+	L[0] = 0;
+	L[N + 1] = 1000 + 1;
+	sort(L.begin(), L.end(), [](int a, int b) {
+		return a < b;
+	});
+	long long ans = 0;
+	for (int a = 1; a <= N; a++) {
+		for (int b = a + 1; b <= N; b++) {
+			int bs = b, be = N + 1;
+			while (be - bs > 1) {
+				int m = (be + bs) / 2;
+				if (L[m] > L[b] - L[a])be = m;
+				else bs = m;
+			}
+			int us = b, ue = N + 1;
+			while (ue - us > 1) {
+				int m = (ue + us) / 2;
+				if (L[m] < L[a] + L[b])us = m;
+				else ue = m;
+			}
+			ans += (us - bs);
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}

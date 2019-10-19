@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int N, M;
+vector<long long> A,dev;
+
+int main() {
+	cin >> N >> M;
+	A.resize(N+1);
+	for (int n = 1; n <= N; n++)cin >> A[n];
+	dev.resize(N + 1);
+	dev[0] = 0;
+	for (int n = 1; n <= N; n++) {
+		dev[n] = (dev[n - 1] + A[n]) % M;
+	}
+	sort(dev.begin(), dev.end(), [](long long a, long long b) {
+		return a < b;
+	});
+	dev.push_back(INT_MAX);
+	long long ans = 0;
+	long long counter = 1;
+	for (int n = 1; n <= N+1; n++) {
+		if (dev[n] == dev[n - 1])counter++;
+		else {
+			ans += counter * (counter - 1) / 2;
+			counter = 1;
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}
