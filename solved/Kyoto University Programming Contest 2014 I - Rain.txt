@@ -1,3 +1,24 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
 template< typename flow_t, typename cost_t >
 struct PrimalDual {
 	const cost_t INF;
@@ -76,3 +97,29 @@ struct PrimalDual {
 		}
 	}
 };
+
+int N, M, K;
+vector<int> C;
+struct charm {
+	long long a, b, d;
+};
+vector<charm> charms;
+
+int main() {
+	cin >> N >> M >> K;
+	C.resize(K);
+	for (int c = 0; c < K; c++)cin >> C[c];
+	charms.resize(M);
+	PrimalDual<long long, long long> PD(N+2);
+	for (int m = 0; m < M; m++) {
+		cin >> charms[m].a >> charms[m].b >> charms[m].d;
+		PD.add_edge(charms[m].b, charms[m].a,INT_MAX,charms[m].d);
+	}
+	for (int c = 0; c < C.size(); c++) {
+		charm ch = charms[--C[c]];
+		PD.add_edge(0, ch.a, 1, 0);
+		PD.add_edge(ch.b, N + 1, 1, 0);
+	}
+	cout << PD.min_cost_flow(0, N + 1, K) << endl;
+	return 0;
+}

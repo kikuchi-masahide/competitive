@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+vector<long long> stairs(200001,0),inv(200001,0), sinv(200001,0);   //inv[i]*i%M = 1,sinv[i]*(i!)%M = 1(0<=i<=N)
+
+void setup() {
+	stairs[0] = 1;
+	stairs[1] = 1;
+	inv[1] = 1;
+	sinv[0] = 1;
+	sinv[1] = 1;
+	for (int n = 2; n <= 200000; n++) {
+		stairs[n] = (stairs[n - 1] * n) % MOD;
+		inv[n] = MOD - (inv[MOD % n] * (MOD / n)) % MOD;
+		sinv[n] = (sinv[n - 1] * inv[n]) % MOD;
+	}
+}
+
+int H, W, A, B;
+
+int main() {
+	cin >> H >> W >> A >> B;
+	setup();
+	long long ans = 0;
+	for (int k = 0; k < min(W-B,H-A); k++) {
+		long long temp = (stairs[B+H-1-A] * sinv[B+k])%MOD;
+		temp = (temp * sinv[H - 1 - A - k]) % MOD;
+		temp = (temp * stairs[W - 1 + A - B]) % MOD;
+		temp = (temp * sinv[A + k]) % MOD;
+		temp = (temp * sinv[W - 1 - k - B]) % MOD;
+		ans = (ans + temp) % MOD;
+	}
+	cout << ans << endl;
+	return 0;
+}

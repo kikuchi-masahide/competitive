@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+vector<int> V;
+int main() {
+	V.resize(3);
+	cin >> V[0] >> V[1] >> V[2];
+	sort(V.begin(), V.end(), [](int a, int b) {
+		return a < b;
+	});
+	if (V[0] == 5 && V[1] == 5 && V[2] == 7)cout << "YES" << endl;
+	else cout << "NO" << endl;
+	return 0;
+}

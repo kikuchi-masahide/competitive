@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int N, M, Q;
+
+int main() {
+	cin >> N >> M >> Q;
+	vector<vector<int>> imos;
+	imos.resize(N+1, vector<int>(N+1, 0));
+	for (int m = 0; m < M; m++) {
+		int l, r;
+		cin >> l >> r;
+		imos[l][r]++;
+	}
+	for (int x = 1; x <= N; x++) {
+		for (int y = 1; y <= N; y++) {
+			imos[x][y] += imos[x - 1][y] + imos[x][y - 1] - imos[x - 1][y - 1];
+		}
+	}
+	for (int query = 0; query < Q; query++) {
+		int p, q;
+		cin >> p >> q;
+		cout << imos[q][q] - imos[p-1][q] - imos[q][p-1] + imos[p - 1][p - 1] << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+vector<vector<bool>> M;
+int W, H,N;
+
+int main() {
+	cin >> W >> H >> N;
+	M.resize(W + 1, vector<bool>(H + 1, false));
+	for (int n = 0; n < N; n++) {
+		int x, y, a;
+		cin >> x >> y >> a;
+		if (a == 1) {
+			for (int xx = 1; xx <= x; xx++) {
+				for (int yy = 1; yy <= H; yy++)M[xx][yy] = true;
+			}
+		}
+		else if (a == 2) {
+			for (int xx = x+1; xx <= W; xx++) {
+				for (int yy = 1; yy <= H; yy++)M[xx][yy] = true;
+			}
+		}
+		else if (a == 3) {
+			for (int yy = 1; yy <= y; yy++) {
+				for (int xx = 1; xx <= W; xx++)M[xx][yy] = true;
+			}
+		}
+		else {
+			for (int yy = y+1; yy <= H; yy++) {
+				for (int xx = 1; xx <= W; xx++)M[xx][yy] = true;
+			}
+		}
+	}
+	int counter = 0;
+	for (int xx = 1; xx <= W; xx++) {
+		for (int yy = 1; yy <= H; yy++) {
+			if (!M[xx][yy])counter++;
+		}
+	}
+	cout << counter << endl;
+	return 0;
+}

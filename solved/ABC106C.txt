@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+string S;
+int K;
+
+int main() {
+	cin >> S >> K;
+	while (K >= 0) {
+		if (K == 1) {
+			cout << S.substr(0, 1) << endl;
+			return 0;
+		}
+		else if (S[0] == '1') {
+			K--;
+			S = S.substr(1);
+		}
+		else {
+			cout << S[0] << endl;
+			return 0;
+		}
+	}
+	return 0;
+}

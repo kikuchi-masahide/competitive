@@ -1,3 +1,21 @@
+Kyoto University Programming Contest 2014 I - Rain
+AGC 013 C - Ants on a Circle
+ABC 106 D - AtCoder Express 2
+ABC 106 C - To Infinity
+ABC 106 B - 105
+ABC 106 A - Garden
+AOJ 2207 Consistet Unit System
+AOJ 1330 Never Wait for Weights
+ABC 087 D - People on a Line
+AOJ Course Weighted Union Find Trees
+AOJ 2429 marukaite
+ABC 042 D - いろはちゃんとマス目 / Iroha and a Grid
+ABC 042 C - こだわり者いろはちゃん / Iroha's Obsession
+ABC 042 B - 文字列大好きいろはちゃんイージー / Iroha Loves Strings (ABC Edition)
+ABC 042 A - 和風いろはちゃんイージー / Iroha and Haiku (ABC Edition)
+ABC 047 C - 一次元リバーシ / 1D Reversi
+ABC 047 B - すぬけ君の塗り絵 2 イージー / Snuke's Coloring 2 (ABC Edit)
+ABC 047 A - キャンディーと2人の子供 / Fighting over Candies
 ABC 143 E - Travel by Car
 ABC 143 D - Triangles
 ABC 143 C - Slimes
