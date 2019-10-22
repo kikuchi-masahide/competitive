@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+vector<long long> A;
+vector<long long> S;
+int N;
+typedef pair<long long, long long> pll;
+
+pll judge(int l, int r) {
+	int s = l, e = r;
+	while (e - s > 1) {
+		int m = (e + s) / 2;
+		if (S[m] >= (long double)(S[r] + S[l - 1]) / 2)e = m;
+		else s = m;
+	}
+	long long p1 = 2 * S[e] - S[r] - S[l - 1];
+	long long p2 = S[r] + S[l - 1] - 2 * S[s];
+	if (p1 < p2) return pll(S[e] - S[l - 1], S[r] - S[e]);
+	else return pll(S[e - 1] - S[l - 1], S[r] - S[e - 1]);
+}
+
+int main() {
+	cin >> N;
+	A.resize(N + 1,0);
+	S.resize(N + 1,0);
+	for (int n = 1; n <= N; n++)cin >> A[n];
+	for (int n = 1; n <= N; n++)S[n] = S[n - 1] + A[n];
+	long long ans = LLONG_MAX;
+	for (int k = 2; k <= N - 2; k++) {
+		pll L = judge(1, k);
+		long long B = L.first, C = L.second;
+		pll R = judge(k + 1, N);
+		long long D = R.first, E = R.second;
+		ans = min(ans, max(B, max(C, max(D, E))) - min(B, min(C, min(D, E))));
+	}
+	cout << ans << endl;
+	return 0;
+}

@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+typedef pair<long long, long long> pii;
+
+int N;
+vector<int> A;
+
+int main() {
+	cin >> N;
+	A.resize(N);
+	for (int n = 0; n < N; n++)cin >> A[n];
+	int ans = INT_MIN;
+	//æè”ÔP‚ªˆê‚Â‘I‚Ô
+	for (int P = 0; P < N; P++) {
+		int sel, point = INT_MIN;
+		int tempans;
+		//Œãè”Ô
+		for (int Q = 0; Q < N; Q++) {
+			if (P == Q)continue;
+			int L = min(P, Q);
+			int R = max(P, Q);
+			int p = 0;
+			int q = 0;
+			for (int n = L; n <= R; n += 2)p += A[n];
+			for (int n = L + 1; n <= R; n += 2)q += A[n];
+			if (point < q) {
+				sel = Q;
+				point = q;
+				tempans = p;
+			}
+		}
+		ans = max(ans, tempans);
+	}
+	cout << ans << endl;
+	return 0;
+}

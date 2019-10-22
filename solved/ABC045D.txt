@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int H, W, N;
+typedef pair<int, int> pii;
+vector<pii> blacks;
+map<pii, int> allpoints;
+vector<int> ans;
+
+int main() {
+	cin >> H >> W >> N;
+	blacks.resize(N);
+	for (int n = 0; n < N; n++) {
+		int x, y;
+		cin >> y >> x;
+		blacks[n].first = x;
+		blacks[n].second = y;
+		for (int x0 = max(x - 1, 1); x0 <= min(W, x + 1); x0++) {
+			for (int y0 = max(y - 1, 1); y0 <= min(H, y + 1); y0++) {
+				if (allpoints.find(pii(x0, y0)) == allpoints.end()) {
+					allpoints.insert(pair<pii, int>(pii(x0, y0), 0));
+				}
+			}
+		}
+	}
+	for (auto point : blacks) {
+		int x0 = point.first;
+		int y0 = point.second;
+		for (int x = max(x0 - 1, 1); x <= min(W, x0 + 1); x++) {
+			for (int y = max(y0 - 1, 1); y <= min(H, y0 + 1); y++) {
+				allpoints[pii(x, y)]++;
+			}
+		}
+	}
+	ans.resize(10, 0);
+	for (auto val : allpoints) {
+		pii p = val.first;
+		if (p.first == 1 || p.first == W || p.second == 1 || p.second == H)continue;
+		ans[val.second]++;
+	}
+	long long sum = 0;
+	for (int n = 1; n < 10; n++) {
+		sum += ans[n];
+	}
+	cout << (long long)(W - 2) * (long long)(H - 2) - sum << endl;
+	for (int n = 1; n < 10; n++) {
+		cout << ans[n] << endl;
+	}
+	return 0;
+}

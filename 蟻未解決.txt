@@ -7,7 +7,6 @@ https://atcoder.jp/contests/abc009/tasks/abc009_3
 https://community.topcoder.com/stat?c=problem_statement&pm=12296
 http://codeforces.com/contest/462/problem/C
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_1_B&lang=jp
-https://atcoder.jp/contests/indeednow-finala-open/tasks/indeednow_2015_finala_c
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_1_C&lang=jp
 https://atcoder.jp/contests/arc057/tasks/arc057_b
 https://atcoder.jp/contests/agc033/tasks/agc033_d
@@ -17,7 +16,6 @@ https://atcoder.jp/contests/joisc2016/tasks/joisc2016_a JOI 2016
 https://atcoder.jp/contests/dwacon2018-prelims/tasks/dwacon2018_prelims_c
 https://atcoder.jp/contests/joi2009yo/tasks/joi2009yo_f JOI 2008
 https://atcoder.jp/contests/tdpc/tasks/tdpc_game
-https://atcoder.jp/contests/abc025/tasks/abc025_c
 https://atcoder.jp/contests/arc085/tasks/arc085_b
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2415^
 https://atcoder.jp/contests/atc002/tasks/atc002_c^
@@ -55,8 +53,6 @@ https://atcoder.jp/contests/arc041/tasks/arc041_d
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2370^
 https://atcoder.jp/contests/soundhound2018-summer-qual/tasks/soundhound2018_summer_qual_d
 https://atcoder.jp/contests/wupc2012-closed/tasks/wupc2012_5^
-https://atcoder.jp/contests/arc084/tasks/arc084_b
-https://atcoder.jp/contests/indeednow-finalb-open/tasks/indeednow_2015_finalb_d
 https://atcoder.jp/contests/jag2012autumn/tasks/icpc2012autumn_c?lang=ja
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1350
 https://atcoder.jp/contests/utpc2013/tasks/utpc20https://atcoder.jp/contests/wupc2nd/tasks/wupc_0713_06
@@ -102,8 +98,7 @@ https://atcoder.jp/contests/joi2013yo/tasks/joi2013yo_e
 https://atcoder.jp/contests/joi2009yo/tasks/joi2009yo_e
 https://atcoder.jp/contests/abc008/tasks/abc008_4
 https://atcoder.jp/contests/apc001/tasks/apc001_i
-https://atcoder.jp/contests/jag2013summer-day2/tasks/icpc2013summer_day2_g
-https://atcoder.jp/contests/yahoo-procon2017-qual/tasks/yahoo_procon2017_qual_d
+https://atcoder.jp/contests/yahoo-procon2017-qual/tasks/yahoo_procon2017_qual_d^
 https://atcoder.jp/contests/indeednow-finalb-open/tasks/indeednow_2015_finalb_e
 https://atcoder.jp/contests/tenka1-2017/tasks/tenka1_2017_e
 https://atcoder.jp/contests/arc088/tasks/arc088_c
@@ -187,4 +182,4 @@ https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_
 
 
 monge hu-tucker ツリー二重DP 連結性DP きたまさ法 永続Union-Find木 並列二分探索 拡張Dijkstra
-Moのアルゴリズム Hallの結婚定理 割り当て問題 重み付きマッチング 単体法 
+Moのアルゴリズム Hallの結婚定理 割り当て問題 重み付きマッチング 単体法 Project Selection Problem

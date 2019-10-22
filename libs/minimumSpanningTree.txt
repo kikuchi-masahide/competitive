@@ -30,7 +30,7 @@
 	}
 
 
-//一般版?unionfind必要
+//一般版?unionfind必要 ただし無向辺
 int V,E;   //それぞれ頂点数、辺数
 struct edge {
 	int u, v, w;

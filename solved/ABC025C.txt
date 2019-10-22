@@ -1,0 +1,122 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int B[2][3];
+int C[3][2];
+typedef pair<int, int> pii;
+int boards[19683];
+
+int conv(int y, int x) {
+	return 3 * y + x;
+}
+
+int enc(int nums[]) {
+	int ans = 0;
+	for (int n = 8; n >= 0; n--) {
+		ans = 3 * ans + nums[n];
+	}
+	return ans;
+}
+
+void initBoards() {
+	for (int n = 0; n < 19683; n++)boards[n] = INT_MIN;
+	for (int code = 0; code < 19683; code++) {
+		int nums[9];
+		int copycode = code;
+		bool flag0 = false;
+		for (int n = 0; n < 9; n++) {
+			nums[n] = copycode % 3;
+			if (nums[n] == 0) {
+				flag0 = true;
+				break;
+			}
+			copycode /= 3;
+		}
+		if (flag0)continue;
+		boards[code] = 0;
+		pii now = pii(0,0);
+		for (int y = 0; y < 2; y++) {
+			for (int x = 0; x < 3; x++) {
+				if (nums[conv(y, x)] == nums[conv(y + 1, x)])now.first += B[y][x];
+				else now.second += B[y][x];
+			}
+		}
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 2; x++) {
+				if (nums[conv(y, x)] == nums[conv(y, x + 1)])now.first += C[y][x];
+				else now.second += C[y][x];
+			}
+		}
+		boards[code] += now.first - now.second;
+	}
+}
+
+//—^‚¦‚ç‚ê‚éŠe‹Ç–Ê‚É‘Î‚µ‚ÄŒvŽZ
+void DP(int nums[]) {
+	int dig = 0;
+	for (int n = 0; n < 9; n++) {
+		if (nums[n] != 0)dig++;
+	}
+	//ŒãŽè
+	if (dig & 1) {
+		int ans = INT_MAX;
+		for (int n = 0; n < 9; n++) {
+			if (nums[n] != 0)continue;
+			//‹ó‚¢‚Ä‚¢‚é‚Æ‚±‚ë‚É‘‚¢‚Ä‚Ý‚é
+			nums[n] = 2;
+			if (boards[enc(nums)] == INT_MIN)DP(nums);
+			if (boards[enc(nums)] < ans)ans = boards[enc(nums)];
+			nums[n] = 0;
+		}
+		boards[enc(nums)] = ans;
+	}
+	else {
+		int ans = INT_MIN;
+		for (int n = 0; n < 9; n++) {
+			if (nums[n] != 0)continue;
+			//‹ó‚¢‚Ä‚¢‚é‚Æ‚±‚ë‚É‘‚¢‚Ä‚Ý‚é
+			nums[n] = 1;
+			if (boards[enc(nums)] == INT_MIN)DP(nums);
+			if (boards[enc(nums)] > ans)ans = boards[enc(nums)];
+			nums[n] = 0;
+		}
+		boards[enc(nums)] = ans;
+	}
+}
+
+int main() {
+	for (int y = 0; y < 2; y++) {
+		for (int x = 0; x < 3; x++)cin >> B[y][x];
+	}
+	for (int y = 0; y < 3; y++) {
+		for (int x = 0; x < 2; x++)cin >> C[y][x];
+	}
+	initBoards();
+	int initial[9];
+	for (int n = 0; n < 9; n++)initial[n] = 0;
+	DP(initial);
+	int p1, p2 = 0;
+	int sum = boards[19682];
+	p1 = (boards[0] + sum) / 2;
+	p2 = (sum-boards[0]) / 2;
+	cout << p1 << endl << p2 << endl;
+	return 0;
+}

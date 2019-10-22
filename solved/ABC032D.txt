@@ -1,143 +1,123 @@
 #include <iostream>
+#include <vector>
+#include <limits.h>
 #include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
 #include <map>
 #include <set>
-#include <vector>
-#include <queue>
-#include <math.h>
-
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
 using namespace std;
-typedef pair<int, int> pii;
-typedef pair<int, long double> pild;
-typedef pair<long double, int> pldi;
+long long MOD = 1e9 + 7;
+typedef pair<long long, long long> pii;
 
-void solve();
+int N, Wmax;
+vector<pii> items;   //èdÇ≥ÅAâøíl
 
 int main() {
-	solve();
-	return 0;
-}
-
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
-#include <boost/multiprecision/cpp_int.hpp>
-
-using namespace boost::multiprecision;
-
-typedef pair<long int, long int> plili;
-typedef pair<cpp_int, cpp_int> pcici;
-
-bool comp1(pcici a1,pcici a2){
-	if (a1.first == a2.first)return a1.second < a2.second;
-	return a1.first < a2.first;
-}
-
-bool comp2(pcici a1, pcici a2) {
-	if (a1.second == a2.second)return a1.first < a2.first;
-	return a1.second < a2.second;
-}
-
-long int N,WMAX;
-vector<long int> V,W;
-vector<pcici> v1, v2;
-vector<vector<long int>> dp1;
-
-void solve() {
-	cin >> N >> WMAX;
-	V.resize(N);
-	W.resize(N);
-	long int vm = 0, wm = 0;
-	long int ws = 0, vs = 0;
+	cin >> N >> Wmax;
+	items.resize(N);
+	long long fmax = 0, smax = 0;
 	for (int n = 0; n < N; n++) {
-		cin >> V[n] >> W[n];
-		vm = max(vm,V[n]);
-		wm = max(wm,W[n]);
-		vs += V[n];
-		ws += W[n];
+		cin >> items[n].second >> items[n].first;
+		fmax = max(fmax, items[n].first);
+		smax = max(smax, items[n].second);
 	}
 	if (N <= 30) {
-		for (int i = 0; i < pow(2, N / 2); i++) {
-			cpp_int a = 0,b = 0;
-			for (int t = 1,c = 0; t <= i; t *= 2,c++) {
-				if ((i & t) != 0) {
-					a = a+V[c];
-					b = b + W[c];
+		vector<pii> bag1, bag2;
+		for (int code = 0; code < (1 << N / 2); code++) {
+			long long w = 0, v = 0;
+			for (int n = 0; n < N/2; n++) {
+				if (code & (1 << n)) {
+					w += items[n].first;
+					v += items[n].second;
 				}
 			}
-			if (b > WMAX)continue;
-			v1.push_back(pcici(a,b));
+			if (w > Wmax)continue;
+			bag1.push_back(pii(w, v));
 		}
-		sort(v1.begin(), v1.end(),comp1);
-		for (int i = 0; i < pow(2, N - N / 2); i++) {
-			cpp_int a = 0, b = 0;
-			for (int t = 1, c = N / 2; t <= i; t *= 2, c++) {
-				if ((i & t) != 0) {
-					a = a + V[c];
-					b = b + W[c];
+		for (int code = 0; code < (1 << (N - N / 2)); code++) {
+			long long w = 0, v = 0;
+			for (int n = 0; n < N - N / 2; n++) {
+				if (code & (1 << n)) {
+					w += items[n + N / 2].first;
+					v += items[n + N / 2].second;
 				}
 			}
-			if (b > WMAX)continue;
-			v2.push_back(pcici(a,b));
+			if (w > Wmax)continue;
+			bag2.push_back(pii(w, v));
 		}
-		sort(v2.begin(),v2.end(),comp2);
-		cpp_int vmax = 0;
-		for (auto itr = v1.begin(); itr != v1.end(); itr++) {
-			int s = 0, e = v2.size();
+		long long ans = 0;
+		sort(bag2.begin(), bag2.end(), [](pii a, pii b) {
+			if (a.first != b.first)return a.first < b.first;
+			return a.second < b.second;
+		});
+		for (int n = 1; n < bag2.size(); n++) {
+			bag2[n].second = max(bag2[n - 1].second, bag2[n].second);
+		}
+		for (auto item1 : bag1) {
+			long long x = Wmax - item1.first;
+			int s = 0, e = bag2.size();
 			while (e - s > 1) {
 				int m = (e + s) / 2;
-				if (v2[m].second <= WMAX - (*itr).second)s = m;
+				if (bag2[m].first <= x)s = m;
 				else e = m;
 			}
-			sort(v2.begin(),v2.begin()+s+1,comp1);
-			if (vmax < (*itr).first + v2[s].first)vmax = (*itr).first + v2[s].first;
-			sort(v2.begin(), v2.begin() + s + 1, comp2);
+			ans = max(ans, item1.second + bag2[s].second);
 		}
-		cout << vmax << endl;
-	}else if(wm <= 1000){
-		dp1.resize(N);
-		for (int n = 0; n < N; n++) {
-			dp1[n].resize(min(WMAX,ws)+1);
-			fill(dp1[n].begin(),dp1[n].end(),-1);
-		}
-		dp1[0][0] = 0;
-		dp1[0][W[0]] = V[0];
+		cout << ans << endl;
+		return 0;
+	}
+	else if (fmax <= 1000) {
+		vector<vector<long long>> DP;
+		DP.resize(200, vector<long long>(200000+1, LLONG_MIN));
+		DP[0][0] = 0;
+		DP[0][items[0].first] = items[0].second;
 		for (int n = 1; n < N; n++) {
-			for (int w = 0; w <= min(WMAX, ws); w++) {
-				if (dp1[n - 1][w] != -1)dp1[n][w] = dp1[n - 1][w];
-				if (w - W[n] < 0)continue;
-				if (dp1[n - 1][w - W[n]] != -1) {
-					if(dp1[n][w]< dp1[n - 1][w - W[n]] + V[n])
-						dp1[n][w] = dp1[n - 1][w - W[n]] + V[n];
+			for (int w = 0; w <= 200000; w++) {
+				DP[n][w] = DP[n - 1][w];
+				if (w - items[n].first >= 0) {
+					if(DP[n-1][w-items[n].first] != LLONG_MIN)DP[n][w] = max(DP[n][w], DP[n - 1][w - items[n].first] + items[n].second);
 				}
 			}
 		}
-		long int m = 0;
-		for (int w = 0; w <= min(WMAX, ws); w++)m = max(m,dp1[N-1][w]);
-		cout << m << endl;
+		long long ans = 0;
+		for (int w = 0; w <= min(Wmax,200000); w++) {
+			ans = max(ans, DP[N-1][w]);
+		}
+		cout << ans << endl;
+		return 0;
 	}
 	else {
-		dp1.resize(N);
-		for (int n = 0; n < N; n++) {
-			dp1[n].resize(vs + 1);
-			fill(dp1[n].begin(), dp1[n].end(), ws);
-		}
-		dp1[0][0] = 0;
-		dp1[0][V[0]] = W[0];
+		vector<vector<long long>> DP;
+		DP.resize(200, vector<long long>(200001, INT_MAX));
+		DP[0][0] = 0;
+		DP[0][items[0].second] = items[0].first;
 		for (int n = 1; n < N; n++) {
-			for (int v = 0; v <= vs; v++) {
-				if (dp1[n - 1][v] != -1)dp1[n][v] = dp1[n - 1][v];
-				if (v - V[n] < 0)continue;
-				if (dp1[n - 1][v - V[n]] != -1) {
-					if(dp1[n][v] > dp1[n - 1][v - V[n]] + W[n])
-						dp1[n][v] = dp1[n - 1][v - V[n]] + W[n];
+			for (int v = 0; v <= 200000; v++) {
+				DP[n][v] = DP[n - 1][v];
+				if (v - items[n].second >= 0) {
+					DP[n][v] = min(DP[n][v], DP[n - 1][v - items[n].second] + items[n].first);
 				}
 			}
 		}
-		cpp_int m = 0;
-		for (int v = 0; v <= vs; v++) {
-			if(dp1[N-1][v] <= WMAX)m = v;
+		long long ans = 0;
+		for (int v = 200000; v >= 0; v--) {
+			if (DP[N - 1][v] <= Wmax) {
+				ans = v;
+				break;
+			}
 		}
-		cout << m << endl;
+		cout << ans << endl;
+		return 0;
 	}
-	return;
 }

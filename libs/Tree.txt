@@ -1,0 +1,74 @@
+void treeConstruct(int N,int root,vector<vector<int>>& childs,vector<int>& parent) {
+	parent.resize(N,-2);   //ñ¢ê›íË
+	queue<pii> q;   //é©ï™ÅAêe
+	q.push(pii(root, -1));
+	while (!q.empty()) {
+		int my = q.front().first;
+		int par = q.front().second;
+		q.pop();
+		parent[my] = par;
+		for (int child : childs[my]) {
+			if (parent[child] != -2)continue;
+			q.push(pii(child, my));
+		}
+	}
+}
+
+void doublingConstruct(int N,vector<int>& parents,vector<vector<int>>& doubling){
+	doubling.push_back(parents);
+	while (true) {
+		vector<int> temp(N, -1);
+		vector<int>& back = doubling.back();
+		bool flag = false;
+		for (int n = 0; n < N; n++) {
+			if (doubling.back()[n] == -1)continue;
+			temp[n] = back[back[n]];
+			if (temp[n] != -1)flag = true;
+		}
+		if (!flag)break;
+		doubling.push_back(temp);
+	}
+}
+
+void setRank(int N, int root, vector<vector<int>>& childs,vector<int>& rank) {
+	rank.resize(N, -1);
+	queue<pii> q;
+	q.push(pii(root,0));
+	while (!q.empty()) {
+		int cur = q.front().first;
+		int dist = q.front().second;
+		rank[cur] = dist;
+		q.pop();
+		for (int child : childs[cur]) {
+			if (rank[child] != -1)continue;
+			q.push(pii(child, dist + 1));
+		}
+	}
+}
+
+int LowestCommonAncestor(int N,int root,vector<int>& parents,vector<int>& rank,vector<vector<int>>& doubling,int c1, int c2) {
+	if (c1 == c2)return c1;
+	if (rank[c1] > rank[c2])return LowestCommonAncestor(N, root, parents, rank, doubling, c2, c1);
+	if (rank[c1] != rank[c2]) {
+		int dif = rank[c2] - rank[c1];
+		int p = 0;
+		while (dif >= (1 << p)) {
+			if ((dif & (1 << p)))c2 = doubling[p][c2];
+			p++;
+		}
+		if (c1 == c2)return c1;
+	}
+	int log = doubling.size()-1;
+	for (; log >= 0; log--) {
+		if (c1 == c2)break;
+		if (doubling[log][c1] != doubling[log][c2]) {
+			int temp1 = doubling[log][c1];
+			int temp2 = doubling[log][c2];
+			if (temp1 != temp2) {
+				c1 = temp1;
+				c2 = temp2;
+			}
+		}
+	}
+	return parents[c1];
+}
