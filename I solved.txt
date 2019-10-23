@@ -1,3 +1,7 @@
+ABC 056 D - No Need
+ABC 056 C - Go Home
+ABC 056 B - NarrowRectanglesEasy
+ABC 056 A - HonestOrDishonest 
 ABC 136 D - Gathering Children
 ABC 136 C - Build Stairs
 ABC 136 B - Uneven Numbers
