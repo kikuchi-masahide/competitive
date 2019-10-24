@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int a, b;
+int main() {
+	cin >> a >> b;
+	if ((a * b) % 2 == 0)cout << "Even" << endl;
+	else cout << "Odd" << endl;
+	return 0;
+}

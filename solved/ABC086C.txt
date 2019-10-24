@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+struct query {
+	int t, x, y;
+};
+int N;
+vector<query> V;
+
+int main() {
+	cin >> N;
+	V.resize(N + 1);
+	V[0] = { 0,0,0 };
+	for (int n = 1; n <= N; n++) {
+		cin >> V[n].t >> V[n].x >> V[n].y;
+	}
+	for (int n = 1; n <= N; n++) {
+		int dx = abs(V[n].x - V[n - 1].x);
+		int dy = abs(V[n].y - V[n - 1].y);
+		int dt = V[n].t - V[n - 1].t;
+		if (dx+dy > dt || (dx + dy) % 2 != dt % 2) {
+			cout << "No" << endl;
+			return 0;
+		}
+	}
+	cout << "Yes" << endl;
+	return 0;
+}

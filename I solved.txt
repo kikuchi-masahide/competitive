@@ -1,3 +1,8 @@
+ABC 060 D - Simple Knapsack
+ABC 086 D - Checker
+ABC 086 C - Traveling
+ABC 086 B - 1 21
+ABC 086 A - Product
 ABC 056 D - No Need
 ABC 056 C - Go Home
 ABC 056 B - NarrowRectanglesEasy
