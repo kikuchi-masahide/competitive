@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+struct point {
+	long long x, y;
+};
+
+vector<point> points;
+int N;
+
+bool judge(point a, point b, point c) {
+	point p1 = { b.x - a.x,b.y - a.y };
+	point p2 = { c.x - a.x,c.y - a.y };
+	long long S2 = p1.x * p2.y - p1.y * p2.x;
+	if (S2 == 0)return false;
+	if (S2 % 2 == 0)return true;
+	else return false;
+}
+
+int main() {
+	cin >> N;
+	points.resize(N);
+	for (int n = 0; n < N; n++)cin >> points[n].x >> points[n].y;
+	long long ans = 0;
+	for (int a = 0; a < N; a++) {
+		for (int b = a + 1; b < N; b++) {
+			for (int c = b + 1; c < N; c++) {
+				if (judge(points[a], points[b], points[c]))ans++;
+			}
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}

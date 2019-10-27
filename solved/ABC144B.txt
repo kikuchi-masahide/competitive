@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int N;
+
+int main() {
+	cin >> N;
+	for (int a = 1; a <= 9; a++) {
+		for (int b = 1; b <= 9; b++) {
+			if (N == a * b) {
+				cout << "Yes" << endl;
+				return 0;
+			}
+		}
+	}
+	cout << "No" << endl;
+	return 0;
+}

@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int N;
+int MAX = 1 << 20;
+
+long long conv(int base) {
+	int count[4] = {0,0,0};
+	int n = 0;
+	long long p = 1;
+	long long ans = 0;
+	while (base > 0) {
+		int next = base % 4;
+		if (next == 0)return -1;
+		base /= 4;
+		count[next]++;
+		if (next == 1)ans += p * 3;
+		else if (next == 2)ans += p * 5;
+		else ans += p * 7;
+		p *= 10;
+	}
+	if (count[3] > 0 && count[1] > 0 && count[2] > 0)return ans;
+	else return -1;
+}
+
+int main() {
+	cin >> N;
+	int ans = 0;
+	for (int base = MAX-1; base >= 0; base--) {
+		long long res = conv(base);
+		if (res != -1 && res <= N) {
+			ans++;
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}

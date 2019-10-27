@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int A, B;
+int main() {
+	cin >> A >> B;
+	if (A >= 10 || B >= 10)cout << -1 << endl;
+	else cout << A*B << endl;
+	return 0;
+}

@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int N, M;
+vector<vector<int>> G;
+vector<long double> DP;
+
+long double dp(int s, int t) {
+	for (int n = N - 1; n >= 1; n--) {
+		int rn = G[n].size();
+		if (s == n)rn--;
+		if (rn == 0) {
+			DP[n] = LLONG_MAX;
+			continue;
+		}
+		DP[n] = 0;
+		for (int next : G[n]) {
+			if (n == s && next == t)continue;
+			if (DP[next] == LLONG_MAX) {
+				DP[n] = LLONG_MAX;
+				continue;
+			}
+			DP[n] += (1 + DP[next]) / rn;
+		}
+	}
+	return DP[1];
+}
+
+long double dpp(int s, int t) {
+	vector<long double> D(N+1,0);
+	for (int n = N - 1; n >= 1; n--) {
+		int rn = G[n].size();
+		if (s == n)rn--;
+		if (rn == 0) {
+			D[n] = LLONG_MAX;
+			continue;
+		}
+		for (int next : G[n]) {
+			if (n == s && next == t)continue;
+			if (D[next] == LLONG_MAX) {
+				D[n] = LLONG_MAX;
+				continue;
+			}
+			D[n] += (1 + D[next]) / rn;
+		}
+	}
+	return D[1];
+}
+
+
+int main() {
+	cin >> N >> M;
+	G.resize(N + 1);
+	for (int m = 0; m < M; m++) {
+		int s, t;
+		cin >> s >> t;
+		G[s].push_back(t);
+	}
+	DP.resize(N + 1);
+	DP[N] = 0;
+	long double ans = LLONG_MAX;
+	ans = min(ans, dp(0, 0));
+	for (int s = 1; s < N; s++) {
+		//ˆê”Ô‰e‹¿‚ª‚Å‚©‚¢•Ó‚ð’T‚·
+		long double maxe = -1;
+		int maxt = 0;
+		for (int t : G[s]) {
+			if (maxe < DP[t]) {
+				maxe = DP[t];
+				maxt = t;
+			}
+		}
+		ans = min(ans,dpp(s, maxt));
+	}
+	cout << setprecision(12) << ans << endl;
+	return 0;
+}

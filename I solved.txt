@@ -1,3 +1,20 @@
+ARC 018 B - äiéqì_Ç∆êÆêî
+ABC 144 F - Fork in the Road
+ABC 144 E - Gluttony
+ABC 144 D - Water Bottle
+ABC 144 C - Walk on Multiplication Table
+ABC 144 B - 81
+ABC 144 A - 9x9
+ABC 095 D - Static Sushi
+ABC 095 C - Half and Half
+ABC 095 B - Bitter Alchemy
+ABC 095 A - Something on It
+ABC 114 D - 756
+ABC 114 C - 755
+ABC 116 D - Various Sushi
+ABC 116 C - Grand Garden
+ABC 116 B - Collatz Problem
+ABC 116 A - Right Triangle
 ABC 060 D - Simple Knapsack
 ABC 086 D - Checker
 ABC 086 C - Traveling

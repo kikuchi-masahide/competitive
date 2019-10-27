@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+long long N;
+int main() {
+	cin >> N;
+	long long ans = LLONG_MAX;
+	for (long long n = 1; n * n <= N; n++) {
+		if (N % n != 0)continue;
+		ans = min(ans, (n + N / n) - 2);
+	}
+	cout << ans << endl;
+	return 0;
+}

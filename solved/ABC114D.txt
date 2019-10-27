@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+int N;
+int primes[25] = {
+	2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97
+};
+int pcount[25] = {
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+};
+
+vector<vector<int>> DP;
+
+int dp2(int a, int b) {
+	DP[0][0] = 1;
+	for (int n = 1; n <= 25; n++) {
+		DP[n][0] = 1;
+		DP[n][1] = DP[n - 1][1];
+		DP[n][2] = DP[n - 1][2];
+		if (pcount[n - 1] >= a)DP[n][1] += DP[n - 1][0];
+		if (pcount[n - 1] >= b)DP[n][2] += DP[n - 1][1];
+	}
+	return DP[25][2];
+}
+
+int dp3(int a, int b, int c) {
+	DP[0][0] = 1;
+	for (int n = 1; n <= 25; n++) {
+		DP[n][0] = 1;
+		DP[n][1] = DP[n - 1][1];
+		DP[n][2] = DP[n - 1][2];
+		DP[n][3] = DP[n - 1][3];
+		if (pcount[n - 1] >= a)DP[n][1] += DP[n - 1][0];
+		if (pcount[n - 1] >= b)DP[n][2] += DP[n - 1][1];
+		if (pcount[n - 1] >= c)DP[n][3] += DP[n - 1][2];
+	}
+	return DP[25][3];
+}
+
+int main() {
+	cin >> N;
+	for (int n = 1; n <= N; n++) {
+		int oldn = n;
+		int p = 0;
+		while (oldn > 1) {
+			if (oldn % primes[p] == 0) {
+				oldn /= primes[p];
+				pcount[p]++;
+			}
+			else p++;
+		}
+	}
+	DP.resize(26, vector<int>(4, 0));
+	//(2,24)
+	int ans = 0;
+	for (int p = 0; p < 25; p++) {
+		if (pcount[p] >= 74)ans++;
+	}
+	ans += dp2(2, 24);
+	ans += dp2(24, 2);
+	//(4,14)
+	ans += dp2(4, 14);
+	ans += dp2(14, 4);
+	//(2,4,4)
+	ans += dp3(2, 4, 4);
+	ans += dp3(4, 2, 4);
+	ans += dp3(4, 4, 2);
+	cout << ans << endl;
+	return 0;
+}

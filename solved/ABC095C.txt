@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+long long A, B, C;
+long long X, Y;
+
+int main() {
+	cin >> A >> B >> C >> X >> Y;
+	if (A + B >= 2 * C) {
+		long long cl = min(X,Y) * 2;
+		long long costcl = C * cl + A * (X - cl / 2) + B * (Y - cl / 2);
+		long long ce = max(X, Y) * 2;
+		long long costce = C * ce;
+		cout << min(costcl, costce) << endl;
+	}
+	else {
+		cout << A * X + B * Y << endl;
+	}
+	return 0;
+}
