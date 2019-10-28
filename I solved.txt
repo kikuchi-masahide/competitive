@@ -1,3 +1,14 @@
+ABC 063 D - Widespread
+ABC 063 C - Bugged
+ABC 063 B - Varied
+ABC 063 A - Restricted
+ABC 008 D - 金塊ゲーム
+ABC 008 C - コイン
+ABC 008 B - 投票
+ABC 008 A - アルバム
+ABC 026 C - 高橋君の給料
+ABC 026 B - N重丸
+ABC 026 A - 掛け算の最大値
 ARC 018 B - 格子点と整数
 ABC 144 F - Fork in the Road
 ABC 144 E - Gluttony

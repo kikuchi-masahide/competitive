@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+long long N;
+vector<long long> C;
+vector<long long> pcount;   //n”Ô–Ú‚Ì”‚É‰½–‡‚Ì–ñ”‚ª‚ ‚é‚©
+vector<vector<long long>> comb;
+
+long double calc(long double R, long double P) {
+	long double ans = 0;
+	for (int i = 0; 2 * i <= min(R-1,P); i++) {
+		long double temp = 1;
+		long double c = N - 1 - P;
+		long double m = R - 1 - 2 * i;
+		while (m >= 1) {
+			temp *= (c/m);
+			c--;
+			m--;
+		}
+		c = P;
+		m = 2 * i;
+		while (m >= 1) {
+			temp *= (c / m);
+			c--;
+			m--;
+		}
+		c = R - 1;
+		m = N - 1;
+		while (c >= 1) {
+			temp *= (c / m);
+			c--;
+			m--;
+		}
+		ans += temp;
+	}
+	return ans;
+}
+
+int main() {
+	cin >> N;
+	C.resize(N);
+	for (int n = 0; n < N; n++)cin >> C[n];
+	pcount.resize(N,0);
+	for (int n = 0; n < N; n++) {
+		for (int nn = 0; nn < N; nn++) {
+			if (n == nn)continue;
+			if (C[n] % C[nn] == 0)pcount[n]++;
+		}
+	}
+	long double ans = 1;
+	for (int r = N; r > 1; r--) {
+		for (int n = 0; n < N; n++) {
+			ans += calc(r, pcount[n]) / N;
+		}
+	}
+	cout << setprecision(12) << ans << endl;
+	return 0;
+}

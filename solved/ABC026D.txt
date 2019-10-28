@@ -1,67 +1,43 @@
-void solve();
-
-int main() {
-	solve();
-	return 0;
-}
-
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <set>
-#include <queue>
-#include <functional>
-#include <map>
-#include <string>
-#include <boost/multiprecision/cpp_int.hpp>
 #include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
 #include <iomanip>
-
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
 using namespace std;
-using namespace boost::multiprecision;
-
-const long double PI = 3.1415926535;
+long long MOD = 1e9 + 7;
 
 long double A, B, C;
-long double p1, p2;
 
-long double f(long double x) {
-	return A * x + B * sin(C*PI*x)-100;
+bool judge(long double t) {
+	static long double PI = acos(-1);
+	if (A * t + B * sinl(C * t * PI) - 100 >= 0)return true;
+	else return false;
 }
 
-long double g(long double x) {
-	return A + B * C*PI*cos(C*PI*x);
-}
-
-long double find(long double s,long double e) {   //íPí≤Ç»ãÊä‘Ç≈ìÒï™íTçı
-	if (f(s) < f(e)) {   //íPí≤ëùâ¡
-		while (f(e) - f(s) > 0.000001 / 2) {
-			long double m = (e + s) / 2;
-			if (f(m) < 0)s = m;
-			else e = m;
-		}
-		return (e+s)/2;
-	}
-	else {
-		while (f(e) - f(s) > 0.0000001 / 2) {
-			long double m = (e + s) / 2;
-			if (f(m) > 0)e = m;
-			else s = m;
-		}
-		return (e+s)/2;
-	}
-}
-
-void solve() {
+int main() {
 	cin >> A >> B >> C;
-	long double s = 0, e = 200;
-	while (abs(f(e) - f(s)) > 0.0000000001 / 2) {
-		long double m = (e+s)/2;
-		if (f(m) < 0)s = m;
-		else e = m;
+	long double s = 0, e = 10000;
+	int t = 0;
+	for (; t < 1000; t++) {
+		long double m = (e + s) / 2;
+		if (judge(m))e = m;
+		else s = m;
+		//cout << setprecision(12) << m << endl;
+		//cout << setprecision(12) << A * m + B * sinl(C * m * acosl(-1)) << endl;
 	}
-	cout << std::setprecision(20) << showpoint << s << endl;
-	return;
+	cout << setprecision(12) << (e + s) / 2 << endl;
+	return 0;
 }

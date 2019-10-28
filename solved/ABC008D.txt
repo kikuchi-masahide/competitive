@@ -1,0 +1,139 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+long long W, H, N;
+struct point {
+	long long x, y;
+};
+vector<point> machines;
+typedef pair<long long, long long> pll;
+vector<pll> X, Y;
+
+void compress() {
+	vector<long long> xs;
+	xs.push_back(0);
+	for (long long n = 0; n < N; n++) {
+		xs.push_back(machines[n].x);
+	}
+	xs.push_back(W + 1);
+	sort(xs.begin(), xs.end(), [](long long a, long long b) {
+		return a < b;
+	});
+	for (long long i = 1; i < xs.size(); i++) {
+		if (xs[i] == xs[i - 1])continue;
+		if (xs[i - 1] == xs[i] - 1)X.push_back(pll(xs[i], xs[i]));
+		else {
+			X.push_back(pll(xs[i - 1] + 1, xs[i] - 1));
+			X.push_back(pll(xs[i], xs[i]));
+		}
+	}
+	X.erase(X.begin() + X.size()-1);
+	vector<long long> ys;
+	ys.push_back(0);
+	for (long long n = 0; n < N; n++) {
+		ys.push_back(machines[n].y);
+	}
+	ys.push_back(H + 1);
+	sort(ys.begin(), ys.end(), [](long long a, long long b) {
+		return a < b;
+	});
+	for (long long i = 1; i < ys.size(); i++) {
+		if (ys[i] == ys[i - 1])continue;
+		if (ys[i - 1] == ys[i] - 1)Y.push_back(pll(ys[i], ys[i]));
+		else {
+			Y.push_back(pll(ys[i - 1] + 1, ys[i] - 1));
+			Y.push_back(pll(ys[i], ys[i]));
+		}
+	}
+	Y.erase(Y.begin() + Y.size() - 1);
+}
+
+void conv() {
+	for (int n = 0; n < N; n++) {
+		long long oldx = machines[n].x;
+		long long oldy = machines[n].y;
+		for (int x = 0; x < X.size(); x++) {
+			if (X[x].first == oldx && X[x].second == oldx) {
+				machines[n].x = x;
+				break;
+			}
+		}
+		for (int y = 0; y < Y.size(); y++) {
+			if (Y[y].first == oldy && Y[y].second == oldy) {
+				machines[n].y = y;
+				break;
+			}
+		}
+	}
+}
+
+vector<vector<vector<vector<long long>>>> DP;
+
+long long dp(long long xl, long long xr, long long yl, long long yr) {
+	if (DP[xl][xr][yl][yr] != -1)return DP[xl][xr][yl][yr];
+	long long ans = 0;
+	for (int n = 0; n < N; n++) {
+		if (machines[n].x < xl || machines[n].x > xr || machines[n].y < yl || machines[n].y > yr)continue;
+		long long x = machines[n].x;
+		long long y = machines[n].y;
+		long long tempans = (X[xr].second - X[xl].first + 1) + (Y[yr].second - Y[yl].first + 1) - 1;
+		if (x > xl&& y > yl) {
+			tempans += dp(xl, x - 1, yl, y - 1);
+		}
+		if (x > xl&& yr > y) {
+			tempans += dp(xl, x - 1, y + 1, yr);
+		}
+		if (x < xr && y > yl) {
+			tempans += dp(x + 1, xr, yl, y - 1);
+		}
+		if (x < xr && y < yr) {
+			tempans += dp(x + 1, xr, y + 1, yr);
+		}
+		ans = max(tempans, ans);
+	}
+	DP[xl][xr][yl][yr] = ans;
+	return ans;
+}
+
+
+int main() {
+	cin >> W >> H >> N;
+	machines.resize(N);
+	//cout << 1000000 << " " << 1000000 << " " << 30 << endl;
+	//for (int n = 0; n < 30; n++) {
+	//	cout << 10000 * n+1 << " " << 1000 * n+1 << endl;
+	//}
+	for (long long n = 0; n < N; n++)cin >> machines[n].x >> machines[n].y;
+	compress();
+	conv();
+	//for (int xl = 0; xl < X.size(); xl++) {
+	//	for (int xr = 0; xr < X.size(); xr++) {
+	//		for (int yl = 0; yl < Y.size(); yl++) {
+	//			for (int yr = 0; yr < Y.size(); yr++) {
+	//				DP[xl][xr][yl][yr] = -1;
+	//			}
+	//		}
+	//	}
+	//}
+	DP.resize(X.size(), vector<vector<vector<long long>>>(X.size(), vector<vector<long long>>(Y.size(), vector<long long>(Y.size(), -1))));
+	cout << dp(0, X.size() - 1, 0, Y.size() - 1) << endl;
+	return 0;
+}
