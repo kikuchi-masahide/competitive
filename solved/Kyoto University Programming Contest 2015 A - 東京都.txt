@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+long long calc(string S) {
+	long long N = S.size();
+	stack<long long> starts;
+	for (long long n = 0; n + 4 < N; n++) {
+		string sub = S.substr(n, 5);
+		if (sub == string("tokyo") || sub == string("kyoto"))
+			starts.push(n+4);
+	}
+	long long n = N-1;
+	long long ans = 0;
+	while (!starts.empty()) {
+		long long next = starts.top();
+		starts.pop();
+		if (next <= n) {
+			ans++;
+			n = next - 5;
+		}
+	}
+	return ans;
+}
+
+long long T;
+int main() {
+	cin >> T;
+	for (long long t = 0; t < T; t++) {
+		string S;
+		cin >> S;
+		cout << calc(S) << endl;
+	}
+	return 0;
+}

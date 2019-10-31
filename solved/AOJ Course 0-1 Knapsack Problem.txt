@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+
+
+long long N, Wmax;
+vector<long long> V, W;
+
+int main() {
+	cin >> N >> Wmax;
+	V.resize(N);
+	W.resize(N);
+	for (long long n = 0; n < N; n++)cin >> V[n] >> W[n];
+	vector<vector<long long>> DP;
+	DP.resize(N + 1, vector<long long>(Wmax + 1, -1));
+	DP[0][0] = 0;
+	for (long long n = 1; n <= N; n++) {
+		for (long long w = 0; w <= Wmax; w++) {
+			DP[n][w] = DP[n - 1][w];
+			if (w >= W[n - 1]) {
+				DP[n][w] = max(DP[n][w], DP[n - 1][w - W[n - 1]] + V[n - 1]);
+			}
+		}
+	}
+	long long ans = 0;
+	for (long long w = 0; w <= Wmax; w++) {
+		ans = max(ans, DP[N][w]);
+	}
+	cout << ans << endl;
+	return 0;
+}

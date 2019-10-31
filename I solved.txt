@@ -1,3 +1,13 @@
+ARC 083 E - Bichrome Tree
+AOJ Course Knapsack Problem
+AOJ Course 0-1 Knapsack Problem
+ABC 009 C - 辞書式順序ふたたび
+Kyoto University Programming Contest 2015 A - 東京都
+ABC 100 D - Patisserie ABC
+ABC 100 C - *3 or /2
+ABC 100 B - Ringo's Favorite Numbers
+ABC 100 A - Happy Birthday!
+ARC 025 B - チョコレート
 ABC 063 D - Widespread
 ABC 063 C - Bugged
 ABC 063 B - Varied

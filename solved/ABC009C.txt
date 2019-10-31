@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+long long N, K;
+
+long long difcount(string S1, string S2) {
+	long long ans = 0;
+	for (long long n = 0; n < S1.size(); n++) {
+		if (S1[n] != S2[n])ans++;
+	}
+	return ans;
+}
+
+string calc(string S, string S0,long long k) {
+	if (S.size() == 0)return string("");
+	string olds = S;
+	long long minpos = -1;
+	for (long long n = 0; n < S.size(); n++) {
+		swap(S[0], S[n]);
+		long long dif = 0;
+		if (S[0] != S0[0])dif++;
+		vector<long long>check(26, 0);
+		for (long long n = 1; n < S.size(); n++) {
+			check[S[n] - 'a']++;
+		}
+		for (long long n = 1; n < S0.size(); n++) {
+			if (check[S0[n] - 'a'] == 0)dif++;
+			else check[S0[n] - 'a']--;
+		}
+		if (dif <= k) {
+			if (minpos == -1)minpos = n;
+			else if (olds[minpos] > olds[n])minpos = n;
+		}
+		swap(S[0], S[n]);
+	}
+	swap(S[minpos], S[0]);
+	if (S0[0] != S[0])k--;
+	return S.substr(0,1) + calc(S.substr(1), S0.substr(1), k);
+}
+
+int main() {
+	string S0;
+	cin >> N >> K >> S0;
+	cout << calc(S0, S0, K) << endl;
+	return 0;
+}

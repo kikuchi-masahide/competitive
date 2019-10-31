@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+
+long long H, W;
+vector<vector<long long>> C;
+
+long long sum(long long xl, long long yl, long long xr, long long yr) {
+	if (xl > xr || yl > yr)return 0;
+	return C[xr][yr] - C[xl - 1][yr] - C[xr][yl - 1] + C[xl - 1][yl - 1];
+}
+
+long long calc(long long XL, long long XR) {
+	long long S0 = sum(XL, 1, XR, H);
+	vector<long long> V(9900 * 2 + 1, -1);
+	V[9900] = H + 1;
+	for (long long y = H; y >= 1; y--) {
+		long long s = sum(XL, y, XR, H);
+		V[s + 9900] = max(y, V[s + 9900]);
+	}
+	long long ans = 0;
+	for (int y = 1; y <= H; y++) {
+		long long yy = V[S0 - sum(XL, 1, XR, y - 1) + 9900];
+		if (yy == -1)continue;
+		ans = max(ans, yy - y);
+	}
+	return ans * (XR - XL + 1);
+}
+
+int main() {
+	cin >> H >> W;
+	C.resize(W + 1, vector<long long>(H + 1, 0));
+	for (int y = 1; y <= H; y++) {
+		for (int x = 1; x <= W; x++) {
+			cin >> C[x][y];
+			if ((x + y) & 1)C[x][y] *= -1;
+		}
+	}
+	for (int x = 1; x <= W; x++) {
+		for (int y = 1; y <= H; y++) {
+			C[x][y] += C[x][y - 1] + C[x - 1][y] - C[x - 1][y - 1];
+		}
+	}
+	long long ans = 0;
+	for (long long xl = 1; xl <= W; xl++) {
+		for (long long xr = xl; xr <= W; xr++) {
+			ans = max(ans, calc(xl, xr));
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}
