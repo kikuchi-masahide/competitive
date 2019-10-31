@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+using namespace std;
+int MOD = 1e9 + 7;
+
+long long N;
+vector<long long> T;
+set<long long> S;
+
+int main() {
+	cin >> N;
+	for (long long n = 0; n < N; n++) {
+		int t;
+		cin >> t;
+		S.insert(t);
+	}
+	for (auto t : S)T.push_back(t);
+	sort(T.begin(), T.end(), [](long long a, long long b) {
+		return a < b;
+	});
+	for (long long n = 0; n + 2 < T.size(); n++) {
+		if (T[n] == T[n + 1] - 1 && T[n + 1] == T[n + 2] - 1) {
+			cout << "YES" << endl;
+			return 0;
+		}
+	}
+	cout << "NO" << endl;
+	return 0;
+}
