@@ -1,16 +1,31 @@
 //拡張拡張Euclidの互除法による(階乗)逆元の求め方
 //O(N)
-int N = ,M = 1e9+7;
-vector<long long> inv, sinv;   //inv[i]*i%M = 1,sinv[i]*(i!)%M = 1(0<=i<=N)
-inv.resize(N + 1);
-sinv.resize(N + 1);
-inv[1] = 1;
-sinv[0] = 1;
-sinv[1] = 1;
-for (int n = 2; n <= N; n++) {
-	inv[n] = M - (inv[M%n]*(M/n)) % M;
-	sinv[n] = (sinv[n - 1] * inv[n]) % M;
+void stairs(long long N, vector<long long>& st,long long mod = 1e9+7) {
+	st.resize(N + 1,1);
+	for (long long n = 2; n <= N; n++) {
+		st[n] = (st[n - 1] * n) % mod;
+	}
 }
+
+void modinvs(long long N, vector<long long>& inv, vector<long long>& sinv, long long mod = 1e9 + 7) {
+	inv.resize(N + 1);
+	sinv.resize(N + 1);
+	inv[1] = 1;
+	sinv[0] = 1;
+	sinv[1] = 1;
+	for (int n = 2; n <= N; n++) {
+		inv[n] = mod - (inv[mod % n] * (mod / n)) % mod;
+		sinv[n] = (sinv[n - 1] * inv[n]) % mod;
+	}
+}
+
+long long Comb(long long n, long long k, vector<long long>& st,vector<long long>& sinv,long long mod=1e9+7) {
+	long long ans = st[n];
+	ans = (ans * sinv[n - k]) % mod;
+	ans = (ans * sinv[k]) % mod;
+	return ans;
+}
+
 
 //フェルマーの三角形を用いた、n,kが小さい場合のdp的解法(mod Mが素数じゃなくても使える)
 //O(N*N)

@@ -1,3 +1,5 @@
+Educational DP Contest / DP まとめコンテスト U - Grouping
+Educational DP Contest / DP まとめコンテスト T - Permutation
 ARC 083 E - Bichrome Tree
 AOJ Course Knapsack Problem
 AOJ Course 0-1 Knapsack Problem

@@ -19,16 +19,24 @@
 using namespace std;
 long long MOD = 1e9 + 7;
 
-//使い勝手・安全性について要修正
+//置換群を表すクラス
+//V[n]がN(n) = {0,1,...,n-1}に対する置換を表す
 class Replacement {
 public:
 	vector<int> V;
 	int N;
-	int sgn = 1;
+	int sgn = 1;   //偶置換->1 奇置換->-1
 	Replacement(int n) {
 		N = n;
 		V.resize(N);
 		for (n = 0; n < N; n++)V[n] = n;
+	}
+	//互換(a,b)
+	Replacement(int n, int a, int b) {
+		N = n;
+		V.resize(N);
+		for (n = 0; n < N; n++)V[n] = n;
+		swap(V[a], V[b]);
 	}
 	Replacement(vector<int> v) {
 		N = v.size();
@@ -47,10 +55,9 @@ public:
 				counter++;
 			}
 		}
-		sgn = (counter % 2 == 1 ? -1 : 1);
+		sgn = (counter & 1 ? -1 : 1);
 	}
-	int& operator[](int n) {
-		assert(n >= 0 && n < N);
+	int operator()(int n) {
 		return V[n];
 	}
 	void print() {
@@ -58,125 +65,156 @@ public:
 		for (int n = 0; n < N - 1; n++) cout << V[n] << ",";
 		cout << V[N - 1] << ")" << endl;
 	}
+	//逆元を返す
 	Replacement inv() {
 		Replacement i(N);
 		i.sgn = sgn;
-		for (int n = 0; n < N; n++)i[V[n]] = n;
+		for (int n = 0; n < N; n++)i.V[V[n]] = n;
 		return i;
 	}
 };
 
-class Replacement2 {
-public:
-	int N, A, B;
-	int sgn = -1;
-	Replacement2(int n, int a, int b) {
-		N = n;
-		assert(a >= 0 && a < N);
-		A = min(a, b);
-		assert(b >= 0 && b < N);
-		B = max(a, b);
-	}
-	void print() {
-		cout << "(" << A << "," << B << ")" << endl;
-	}
-};
-
-Replacement operator*(Replacement A, Replacement2 B) {   //AにBを食わせる
-	assert(A.N == B.N);
-	Replacement C(A);
-	C[B.A] = C[B.A] ^ C[B.B];
-	C[B.B] = C[B.A] ^ C[B.B];
-	C[B.A] = C[B.A] ^ C[B.B];
-	C.sgn *= -1;
-	return C;
-}
-
-//A(B)
-Replacement operator*(Replacement2& A, Replacement2& B) {
-	assert(A.N == B.N);
+//A(B(n))を返す(使う機会があるのかはわからない)
+Replacement operator*(Replacement A, Replacement B) {
 	Replacement C(A.N);
-	C[B.A] = C[B.A] ^ C[B.B];
-	C[B.B] = C[B.A] ^ C[B.B];
-	C[B.A] = C[B.A] ^ C[B.B];
-	C[A.A] = C[A.A] ^ C[A.B];
-	C[A.B] = C[A.A] ^ C[A.B];
-	C[A.A] = C[A.A] ^ C[A.B];
+	for (int n = 0; n < C.N; n++) {
+		C.V[n] = A.V[B.V[n]];
+	}
+	C.sgn = A.sgn * B.sgn;
 	return C;
 }
 
-template<class T>
-class Matrix {
-public:
-	long long W, H;
-	vector<vector<T>> V;
-	void print() {
-		cout << "[" << endl;
-		for (int y = 0; y < H; y++) {
-			cout << "[";
-			for (int x = 0; x < W; x++)cout << V[y][x] << ",";
-			cout << "]" << endl;
+//ei1333様の行列ライブラリを独自改良させていただきました。ありがとうございます
+template< class T >
+struct Matrix {
+	vector< vector< T > > A;
+
+	Matrix() {}
+
+	Matrix(size_t n, size_t m) : A(n, vector< T >(m, 0)) {}
+
+	Matrix(size_t n) : A(n, vector< T >(n, 0)) {};
+
+	//置換rから行列を表す
+	//M = (e_r(0), e_r(1),..., e_r(n-1) )
+	//(M(r_1 )*M(r_2 )=M(r_1 (r_2 ))
+	Matrix(Replacement r) : A(r.N, vector< T >(r.N, 0)) {
+		for (int x = 0; x < A[0].size(); x++) {
+			A[r(x)][x] = 1;
 		}
-		cout << "]" << endl;
+	};
+
+	size_t height() const {
+		return (A.size());
 	}
-	Matrix(int h, int w) {
-		W = w, H = h;
-		V.resize(H, vector<T>(W, 0));
+
+	size_t width() const {
+		return (A[0].size());
 	}
-	Matrix(int n) {
-		W = n, H = n;
-		V.resize(H, vector<T>(W, 0));
+
+	inline const vector< T >& operator[](int k) const {
+		return (A.at(k));
 	}
-	Matrix(Replacement R) {
-		W = R.N; H = R.N;
-		V.resize(H, vector<T>(W, 0));
-		for (int x = 0; x < W; x++) {
-			V[R[x]][x] = 1;
+
+	inline vector< T >& operator[](int k) {
+		return (A.at(k));
+	}
+
+	static Matrix I(size_t n) {
+		Matrix mat(n);
+		for (int i = 0; i < n; i++) mat[i][i] = 1;
+		return (mat);
+	}
+
+	Matrix& operator+=(const Matrix& B) {
+		size_t n = height(), m = width();
+		assert(n == B.height() && m == B.width());
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				(*this)[i][j] += B[i][j];
+		return (*this);
+	}
+
+	Matrix& operator-=(const Matrix& B) {
+		size_t n = height(), m = width();
+		assert(n == B.height() && m == B.width());
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				(*this)[i][j] -= B[i][j];
+		return (*this);
+	}
+
+	Matrix& operator*=(const Matrix& B) {
+		size_t n = height(), m = B.width(), p = width();
+		assert(p == B.height());
+		vector< vector< T > > C(n, vector< T >(m, 0));
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				for (int k = 0; k < p; k++)
+					C[i][j] = (C[i][j] + (*this)[i][k] * B[k][j]);
+		A.swap(C);
+		return (*this);
+	}
+
+	Matrix& operator^=(long long k) {
+		Matrix B = Matrix::I(height());
+		while (k > 0) {
+			if (k & 1) B *= *this;
+			*this *= *this;
+			k >>= 1LL;
 		}
+		A.swap(B.A);
+		return (*this);
 	}
-	vector<T>& operator[](int y) {
-		return V.at(y);
-	}
-	template<class T2>
-	Matrix operator*=(T2 k) {
-		for (int x = 0; x < W; x++) {
-			for (int y = 0; y < H; y++)V[x][y] *= k;
+
+	Matrix& operator%=(long long mod) {
+		for (int y = 0; y < A.size(); y++) {
+			for (int x = 0; x < A[0].size(); x++) {
+				A[y][x] %= mod;
+			}
 		}
-		return *this;
+		return (*this);
 	}
-	Matrix operator+=(Matrix<T>& A) {
-		assert(A.W == W && A.H == H);
-		for (int y = 0; y < H; y++) {
-			for (int x = 0; x < W; x++)V[x][y] += A[x][y];
+
+	Matrix operator+(const Matrix& B) const {
+		return (Matrix(*this) += B);
+	}
+
+	Matrix operator-(const Matrix& B) const {
+		return (Matrix(*this) -= B);
+	}
+
+	Matrix operator*(const Matrix& B) const {
+		return (Matrix(*this) *= B);
+	}
+
+	Matrix operator^(const long long k) const {
+		return (Matrix(*this) ^= k);
+	}
+
+	friend ostream& operator<<(ostream& os, Matrix& p) {
+		size_t n = p.height(), m = p.width();
+		for (int i = 0; i < n; i++) {
+			os << "[";
+			for (int j = 0; j < m; j++) {
+				os << p[i][j] << (j + 1 == m ? "]\n" : ",");
+			}
 		}
-		return *this;
+		return (os);
 	}
-	Matrix operator-=(Matrix<T>& A) {
-		assert(A.W == W && A.H == H);
-		for (int y = 0; y < H; y++) {
-			for (int x = 0; x < W; x++)V[y][x] -= A[y][x];
-		}
-		return *this;
+
+	Matrix operator%(const long long mod) const {
+		return (Matrix(*this) %= mod);
 	}
-	static Matrix<T> E(int N) {
-		Matrix e(N);
-		for (int n = 0; n < N; n++)e[n][n] = 1;
-		return e;
-	}
-	T static det(Matrix<T> A, bool fl = false) {
-		assert(A.W == A.H);
-		Matrix<long double> B(A.W);
-		for (int y = 0; y < B.W; y++) {
-			for (int x = 0; x < B.W; x++)B[y][x] = A[y][x];
-		}
-		long double ret = 1;
-		for (int i = 0; i < B.W; i++) {
+
+	T determinant() {
+		Matrix B(*this);
+		assert(width() == height());
+		T ret = 1;
+		for (int i = 0; i < width(); i++) {
 			int idx = -1;
-			for (int j = i; j < B.W; j++) {
-				if (B[j][i] != 0) {
-					idx = j;
-					break;
-				}
+			for (int j = i; j < width(); j++) {
+				if (B[j][i] != 0) idx = j;
 			}
 			if (idx == -1) return (0);
 			if (i != idx) {
@@ -184,68 +222,22 @@ public:
 				swap(B[i], B[idx]);
 			}
 			ret *= B[i][i];
-			long double vv = B[i][i];
-			for (int j = 0; j < B.W; j++) {
+			T vv = B[i][i];
+			for (int j = 0; j < width(); j++) {
 				B[i][j] /= vv;
 			}
-			for (int j = i + 1; j < B.W; j++) {
-				long double a = B[j][i];
-				for (int k = 0; k < B.W; k++) {
+			for (int j = i + 1; j < width(); j++) {
+				T a = B[j][i];
+				for (int k = 0; k < width(); k++) {
 					B[j][k] -= B[i][k] * a;
 				}
 			}
-			if (fl)B.print();
 		}
-		return round(ret);
+		return (ret);
 	}
-
 };
 
-template<class T>
-Matrix<T> operator*(Matrix<T> A, Matrix<T> B) {
-	assert(A.W == B.H);
-	Matrix<T> C(A.H, B.W);
-	for (int x = 0; x < C.W; x++) {
-		for (int y = 0; y < C.H; y++) {
-			for (int k = 0; k < A.W; k++)
-				C[y][x] += A[y][k] * B[k][x];
-		}
-	}
-	return C;
-}
-Matrix<int> operator%(Matrix<int>& A, int mod) {
-	assert(mod >= 1);
-	Matrix<int> C(A);
-	for (int x = 0; x < A.W; x++) {
-		for (int y = 0; y < A.H; y++)C[x][y] %= mod;
-	}
-	return C;
-}
-Matrix<long long> operator%(Matrix<long long>& A, long long mod) {
-	assert(mod >= 1);
-	Matrix<long long> C(A);
-	for (int x = 0; x < A.W; x++) {
-		for (int y = 0; y < A.H; y++)C[x][y] %= mod;
-	}
-	return C;
-}
-
-template<class T>
-Matrix<T> operator+(Matrix<T>& A, Matrix<T>& B) {
-	assert(A.W == B.W && A.H == B.H);
-	Matrix<T> C(A);
-	C += B;
-	return C;
-}
-
-template<class T>
-Matrix<T> operator-(Matrix<T>& A, Matrix<T>& B) {
-	assert(A.W == B.W && A.H == B.H);
-	Matrix<T> C(A);
-	C -= B;
-	return C;
-}
-
+//L*U*M_R = Aとなる行列L,U,置換Rを求める O(N^3)
 //A:分解する行列
 //L,U:分解後の行列(2つ併せて格納) 一応Uの対角成分が1
 //R:右から掛ける、置換の行列
@@ -254,7 +246,7 @@ template<class T>
 bool LUdecomposition(Matrix<T>& A, Matrix<T>& L, Matrix<T>& U, Replacement& R) {
 	int N = A.W;
 	U = A;
-	L = Matrix<T>::E(A.W);
+	L = Matrix<T>::I(A.W);
 	for (int q = 0; q < N - 1; q++) {
 		int ix = q;
 		while (ix < N) {
@@ -268,7 +260,7 @@ bool LUdecomposition(Matrix<T>& A, Matrix<T>& L, Matrix<T>& U, Replacement& R) {
 				U[y][q] = U[y][ix];
 				U[y][ix] = t;
 			}
-			R = R * Replacement2(N, q, ix);
+			R = R * Replacement(N, q, ix);
 		}
 		for (int y = q; y < N; y++)L[y][q] = U[y][q];
 		for (int x = q; x < N; x++)U[q][x] /= L[q][q];
@@ -283,7 +275,7 @@ bool LUdecomposition(Matrix<T>& A, Matrix<T>& L, Matrix<T>& U, Replacement& R) {
 	return true;
 }
 
-//LUx = Bなる方程式を解く
+//LUx = Bなる方程式を解く O(N^2)
 //(LUx = L(Ux) = Ly = B ---> Ux = y)
 template<class T>
 Matrix<T> solveLUEquation(Matrix<T>& L, Matrix<T>& U, Matrix<T>& B) {
@@ -307,6 +299,7 @@ Matrix<T> solveLUEquation(Matrix<T>& L, Matrix<T>& U, Matrix<T>& B) {
 	return X;
 }
 
+//LU分解の結果A=L*U*M_Rから逆行列を計算する O(N^3)
 template<class T>
 Matrix<T> InverseMatrix(Matrix<T>& L, Matrix<T>& U, Replacement& R) {
 	//R^-1
@@ -334,45 +327,66 @@ Matrix<T> InverseMatrix(Matrix<T>& L, Matrix<T>& U, Replacement& R) {
 	return LL;
 }
 
+//行列Aから直接逆行列を求める O(N^3)
+//非正則の場合Eを返す
 template<class T>
 Matrix<T> InverseMatrix(Matrix<T>& A) {
 	int N = A.H;
 	Matrix<T> U(N), L(N);
 	Replacement R(N);
-	if (!LUdecomposition(A, L, U, R))return A;
+	if (!LUdecomposition(A, L, U, R))return Matrix<T>::I(N);
 	return InverseMatrix(L, U, R);
 }
 
-template<class T>
-Matrix<T> mypow(Matrix<T> base, long long p, long long mod = 1e9 + 7) {
-	if (p == 0)return Matrix<T>::E(base.H);
-	else if (p == 1)return base;
-	Matrix<T> ans = mypow(base, p/2, mod);
-	ans = ans*ans;
-	ans = ans % mod;
-	if (p & 1) {
-		ans = ans*base;
-		ans = ans%mod;
+long long N, K;
+
+vector<vector<long long>> multiply(vector<vector<long long>> A, vector<vector<long long>> B) {
+	long long N = A.size();
+	vector<vector<long long>> ans;
+	ans.resize(N, vector<long long>(N, 0));
+	for (long long y = 0; y < N; y++) {
+		for (long long x = 0; x < N; x++) {
+			for (long long k = 0; k < N; k++) {
+				ans[y][x] = (ans[y][x] + A[y][k] * B[k][x]) % MOD;
+			}
+		}
 	}
 	return ans;
 }
 
-long long N,K;
+vector<vector<long long>> modpow(vector<vector<long long>> M, long long p) {
+	if (p == 0) {
+		vector<vector<long long>> ans;
+		ans.resize(M.size(), vector<long long>(M.size(), 0));
+		for (long long n = 0; n < M.size(); n++)ans[n][n] = 1;
+		return ans;
+	}
+	else if (p == 1)return M;
+	auto ans = modpow(M, p / 2);
+	ans = multiply(ans, ans);
+	if (p & 1)ans = multiply(ans, M);
+	return ans;
+}
+
+vector<vector<long long>> M;
+
 int main() {
 	cin >> N >> K;
-	Matrix<long long> mat(N);
-	for (int y = 0; y < N; y++) {
-		for (int x = 0; x < N; x++) {
-			cin >> mat[x][y];
+	M.resize(N, vector<long long>(N, 0));
+	for (long long y = 0; y < N; y++) {
+		for (long long x = 0; x < N; x++) {
+			long long a;
+			cin >> a;
+			if(a == 1)M[x][y] = 1;
 		}
 	}
-	mat = mypow(mat, K,MOD);
-	long long ans = 0;
-	for (int x = 0; x < N; x++) {
-		for (int y = 0; y < N; y++) {
-			ans = (ans + mat[x][y]) % MOD;
+	vector<vector<long long>> ans = modpow(M,K);
+	long long count = 0;
+	for (long long y = 0; y < N; y++) {
+		for (long long x = 0; x < N; x++) {
+			count = (count + ans[x][y]) % MOD;
 		}
 	}
-	cout << ans << endl;
+	cout << count << endl;
 	return 0;
 }
