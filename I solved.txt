@@ -1,3 +1,21 @@
+ARC 049 B - 高橋ノルム君
+ARC 049 A - "強調"
+Codeforces Round #595 (Div. 3) C2 - Good Numbers (hard version)
+Codeforces Round #595 (Div. 3) C1 - Good Numbers (easy version)
+Codeforces Round #595 (Div. 3) B2 - Books Exchange (hard version)
+Codeforces Round #595 (Div. 3) B1 - Books Exchange (easy version)
+Codeforces Round #595 (Div. 3) A - Yet Another Dividing into Teams
+AGC 017 A - Biscuits
+AGC 017 B - Moderate Differences
+ABC 118 D - Match Matching
+ABC 118 C - Monsters Battle Royale
+ABC 118 B - Foods Loved by Everyone
+ABC 118 A - B +/- A
+Codeforces Round #597 (Div. 2) E. Hyakugoku and Ladders
+Codeforces Round #597 (Div. 2) D. Shichikuji and Power Grid
+Codeforces Round #597 (Div. 2) C. Constanze's Machine
+Codeforces Round #597 (Div. 2) B. Restricted RPS
+Codeforces Round #597 (Div. 2) A. Good ol' Numbers Coloring
 Educational DP Contest / DP まとめコンテスト U - Grouping
 Educational DP Contest / DP まとめコンテスト T - Permutation
 ARC 083 E - Bichrome Tree

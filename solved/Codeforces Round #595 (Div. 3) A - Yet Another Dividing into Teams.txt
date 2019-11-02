@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+using namespace std;
+long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef pair<ll, ll> pll;
+//typedef boost::multiprecision::cpp_int bigint;
+ 
+int main() {
+	ll Q;
+	cin >> Q;
+	for (ll q = 0; q < Q; q++) {
+		ll N;
+		cin >> N;
+		vector<ll> A;
+		A.resize(N);
+		for (ll n = 0; n < N; n++) {
+			cin >> A[n];
+		}
+		sort(A.begin(), A.end(), [](ll a, ll b) {
+			return a < b;
+		});
+		bool flag = false;
+		for (ll n = 1; n < N; n++) {
+			if (A[n] - A[n - 1] == 1) {
+				flag = true;
+				break;
+			}
+		}
+		if (flag)cout << 2 << endl;
+		else cout << 1 << endl;
+	}
+	return 0;
+}

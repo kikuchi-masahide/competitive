@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef pair<ll, ll> pll;
+
+ll solvefor(ll L, ll R) {
+	ll ans = 0;
+	for (ll nr = 29; nr >= 0; nr--) {
+		if (!((R >> nr) & 1))continue;
+		for (ll nl = 29; nl >= 0; nl--) {
+			if ((L >> nl) & 1)continue;
+			vector<ll> digit1(30, -1);
+			for (ll n = 29; n > nr; n--) {
+				digit1[n] = (R >> n) & 1;
+			}
+			digit1[nr] = 0;
+			vector<ll> digit2(30, -1);
+			for (ll n = 29; n > nl; n--) {
+				digit2[n] = (L >> n) & 1;
+			}
+			digit2[nl] = 1;
+			bool flag = false;
+			for (ll n = 29; n >= min(nl, nr)&&!false; n--) {
+				if (digit1[n] == -1 && digit2[n] == -1)continue;
+				if (digit1[n] == -1 && digit2[n] != -1)digit1[n] = digit2[n];
+				if (digit1[n] != -1 && digit2[n] == -1)continue;
+				if (digit1[n] != digit2[n])flag = true;
+			}
+			if (flag)continue;
+			ll na = min(nl, nr);
+			vector<ll> digita(digit1);
+			digit1.clear();
+			digit2.clear();
+			for (ll nnr = 29; nnr >= 0; nnr--) {
+				if (!((R >> nnr) & 1))continue;
+				for (ll nnl = 29; nnl >= 0; nnl--) {
+					if ((L >> nnl) & 1)continue;
+					
+				}
+			}
+
+		}
+	}
+}
+
+int main() {
+	ll T;
+	cin >> T;
+	for (ll t = 0; t < T; t++) {
+
+	}
+	return 0;
+}

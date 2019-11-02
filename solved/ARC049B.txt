@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+using namespace std;
+long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+vector<pdd> X, Y;
+
+ld calc(vector<pdd>& vec) {
+	sort(vec.begin(), vec.end(), [](pdd a, pdd b) {
+		return a.first < b.first;
+	});
+	//X_sep <= X <=X_(sep+1)‚Æ‚µ‚Ä’è‚ß‚ç‚ê‚é‚©?
+	ld s = 0, e = 1e8;
+	for (ll time = 0; time < 100; time++) {
+		ld m = (e + s) / 2;
+		bool able = false;
+		for (ll sep = 0; sep <= N; sep++) {
+			ld up = vec[sep + 1].first;
+			ld down = vec[sep].first;
+			for (ll n = sep; n >= 1; n--) {
+				up = min(up, vec[n].first + m / vec[n].second);
+			}
+			for (ll n = sep + 1; n <= N; n++) {
+				down = max(down, vec[n].first - m / vec[n].second);
+			}
+			if (down <= up) {
+				able = true;
+				break;
+			}
+		}
+		if (able)e = m;
+		else s = m;
+	}
+	return (e + s) / 2;
+}
+
+int main() {
+	cin >> N;
+	X.resize(N + 2);
+	Y.resize(N + 2);
+	X[0] = pdd(-100000 - 1, 1e9);
+	Y[0] = pdd(-100000 - 1, 1e9);
+	for (ll n = 1; n <= N; n++) {
+		ll x, y, c;
+		cin >> x >> y >> c;
+		X[n] = pdd(x, c);
+		Y[n] = pdd(y, c);
+	}
+	X[N+1] = pdd(100000 + 1, 1e9);
+	Y[N+1] = pdd(100000 + 1, 1e9);
+	ld x = calc(X);
+	ld y = calc(Y);
+	ld ans = max(x, y);
+	cout << setprecision(12) << ans << endl;
+	return 0;
+}

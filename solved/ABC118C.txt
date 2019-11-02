@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+using namespace std;
+long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef pair<ll, ll> pll;
+
+//ç≈ëÂåˆñÒêî
+//O(log max(a,b))
+template<class T>
+T GCD(T a, T b) {
+	if (b == 0)return a;
+	return GCD(b, (T)(a % b));
+}
+
+ll N;
+vector<ll> A;
+
+int main() {
+	cin >> N;
+	A.resize(N);
+	for (ll n = 0; n < N; n++) {
+		cin >> A[n];
+	}
+	ll G = GCD(A[0], A[1]);
+	for (ll n = 2; n < N; n++) {
+		G = GCD(G, A[n]);
+	}
+	cout << G << endl;
+	return 0;
+}
