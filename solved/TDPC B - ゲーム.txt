@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+using namespace std;
+long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll A, B;
+vector<ll> a,b;
+vector<vector<ll>> DP;
+
+int main() {
+	cin >> A >> B;
+	a.resize(A + 1);
+	b.resize(B + 1);
+	for (ll n = 1; n <= A; n++)cin >> a[n];
+	for (ll n = 1; n <= B; n++)cin >> b[n];
+	DP.resize(A + 2, vector<ll>(B + 2));
+	DP[A+1][B+1] = 0;
+	for (ll p = A+1; p >= 1; p--) {
+		for (ll q = B+1; q >= 1; q--) {
+			if (p == A+1 && q == B+1)continue;
+			if ((p + q) & 1) {
+				DP[p][q] = LLONG_MAX;
+				if (p <= A)DP[p][q] = min(DP[p][q], DP[p + 1][q]);
+				if (q <= B)DP[p][q] = min(DP[p][q], DP[p][q + 1]);
+			}
+			else {
+				DP[p][q] = -1;
+				if (p <= A)DP[p][q] = max(a[p] + DP[p + 1][q], DP[p][q]);
+				if (q <= B)DP[p][q] = max(b[q] + DP[p][q + 1], DP[p][q]);
+			}
+		}
+	}
+	cout << DP[1][1] << endl;
+	return 0;
+}

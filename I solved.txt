@@ -1,3 +1,12 @@
+AGC 040 C - Neither AB nor BA
+AGC 040 B - Two Contests
+AGC 040 A - ><
+CPSCO2019 Session2 D - Two Piles
+ARC 038 B - マス目と駒
+TDPC B - ゲーム
+ARC 072 D - Alice&Brown
+ARC 046 B - 石取り大作戦
+ARC 038 A - カードと兄妹
 ARC 049 B - 高橋ノルム君
 ARC 049 A - "強調"
 Codeforces Round #595 (Div. 3) C2 - Good Numbers (hard version)
