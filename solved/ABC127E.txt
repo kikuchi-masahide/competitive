@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+using namespace std;
+const long long MOD = 1e9+7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//ägí£ägí£EuclidÇÃå›èúñ@Ç…ÇÊÇÈ(äKèÊ)ãtå≥ÇÃãÅÇﬂï˚
+//O(N)
+void stairs(long long N, vector<long long>& st, long long mod = 1e9 + 7) {
+	st.resize(N + 1, 1);
+	for (long long n = 2; n <= N; n++) {
+		st[n] = (st[n - 1] * n) % mod;
+	}
+}
+
+void modinvs(long long N, vector<long long>& inv, vector<long long>& sinv, long long mod = 1e9 + 7) {
+	inv.resize(N + 1);
+	sinv.resize(N + 1);
+	inv[1] = 1;
+	sinv[0] = 1;
+	sinv[1] = 1;
+	for (int n = 2; n <= N; n++) {
+		inv[n] = mod - (inv[mod % n] * (mod / n)) % mod;
+		sinv[n] = (sinv[n - 1] * inv[n]) % mod;
+	}
+}
+
+long long Comb(long long n, long long k, vector<long long>& st, vector<long long>& sinv, long long mod = 1e9 + 7) {
+	long long ans = st[n];
+	ans = (ans * sinv[n - k]) % mod;
+	ans = (ans * sinv[k]) % mod;
+	return ans;
+}
+
+ll N, M, K;
+vector<ll> stair, inv, sinv;
+
+int main() {
+	cin >> N >> M >> K;
+	stairs(M*N, stair);
+	modinvs(max(M * N,(ll)6), inv, sinv);
+	ll temp1 = ((N - 1) * N * M) % MOD;
+	temp1 = (temp1 * M) % MOD;
+	temp1 = (temp1 * (N + 1)) % MOD;
+	temp1 = (temp1 * inv[6]) % MOD;
+	ll temp2 = ((M - 1) * M * N) % MOD;
+	temp2 = (temp2 * N) % MOD;
+	temp2 = (temp2 * (M + 1)) % MOD;
+	temp2 = (temp2 * inv[6]) % MOD;
+	ll ans = (temp1 + temp2) % MOD;
+	ans = (ans * Comb(N * M - 2, K - 2, stair, sinv))%MOD;
+	cout << ans << endl;
+	return 0;
+}

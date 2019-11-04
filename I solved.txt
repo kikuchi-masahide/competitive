@@ -1,3 +1,9 @@
+ABC 127 E - Cell Distance
+ABC 139 E - League
+ABC 109 D - Make Them Even
+ABC 109 C - Skip
+ABC 109 B - Shiritori
+ABC 109 A - ABC333
 AGC 040 C - Neither AB nor BA
 AGC 040 B - Two Contests
 AGC 040 A - ><
