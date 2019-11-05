@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+using namespace std;
+const long long MOD = 1e9+7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+string S;
+int main() {
+	cin >> S;
+	ll y = stoi(S.substr(0, 4));
+	ll m = stoi(S.substr(5, 2));
+	ll d = stoi(S.substr(8, 2));
+	if (y < 2019)goto heisei;
+	if (y > 2019)goto tbd;
+	if (m < 4)goto heisei;
+	if (m > 4)goto tbd;
+	if (d <= 30)goto heisei;
+	if (d > 30)goto tbd;
+heisei:
+	cout << "Heisei" << endl;
+	return 0;
+tbd:
+	cout << "TBD" << endl;
+	return 0;
+}
