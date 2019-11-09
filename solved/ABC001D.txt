@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+using namespace std;
+const long long MOD = 1e9+7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+int main() {
+	ll N;
+	cin >> N;
+	priority_queue<pll,vector<pll>,greater<pll>> q;
+	for (ll n = 0; n < N; n++) {
+		string S;
+		cin >> S;
+		ll h1 = stoi(S.substr(0, 2));
+		ll m1 = stoi(S.substr(2, 2));
+		ll h2 = stoi(S.substr(5, 2));
+		ll m2 = stoi(S.substr(7, 2));
+		m1 = floor((ld)m1 / 5) * 5;
+		m2 = ceil((ld)m2 / 5) * 5;
+		if (m2 == 60) {
+			m2 = 0;
+			h2++;
+		}
+		q.push(pll(h1 * 100 + m1, h2 * 100 + m2));
+	}
+	vector<pll> ans;
+	while (q.size() >= 2) {
+		pll f = q.top();
+		q.pop();
+		pll s = q.top();
+		q.pop();
+		if (f.second >= s.first) {
+			q.push(pll(f.first, max(f.second, s.second)));
+		}
+		else {
+			ans.push_back(f);
+			q.push(s);
+		}
+	}
+	ans.push_back(q.top());
+	q.pop();
+	for (ll n = 0; n < ans.size(); n++) {
+		if (ans[n].first < 10)cout << "000" << ans[n].first;
+		else if (ans[n].first < 100)cout << "00" << ans[n].first;
+		else if (ans[n].first < 1000)cout << "0" << ans[n].first;
+		else cout << ans[n].first;
+		cout << "-";
+		if (ans[n].second < 10)cout << "000" << ans[n].second;
+		else if (ans[n].second < 100)cout << "00" << ans[n].second;
+		else if (ans[n].second < 1000)cout << "0" << ans[n].second;
+		else cout << ans[n].second;
+		cout << endl;
+	}
+	return 0;
+}
