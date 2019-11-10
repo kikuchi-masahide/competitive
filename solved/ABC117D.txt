@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N, K;
+vector<ll> A;
+vector<ll> D;
+vector<ll> KK;
+vector<vector<ll>> DP;
+
+int main() {
+	cin >> N >> K;
+	A.resize(N);
+	for (ll n = 0; n < N; n++)cin >> A[n];
+	D.resize(41,0);
+	for(ll n = 0;n < N;n++){
+		for (ll d = 0; d <= 40; d++) {
+			if (A[n] & ((ll)1 << (40 - d)))D[d]++;
+		}
+	}
+	KK.resize(41, 0);
+	for (ll d = 0; d <= 40; d++) {
+		if (K & ((ll)1 << (40 - d)))KK[d]++;
+	}
+	DP.resize(41, vector<ll>(2, 0));
+	DP[0][0] = 0;
+	DP[0][1] = 0;
+	for (ll d = 1; d <= 40; d++) {
+		//DP[d][1]
+		ll from1 = 0;
+		if(DP[d-1][1] != 0)from1 = 2 * DP[d - 1][1] + max(D[d], N - D[d]);
+		ll from2 = 0;
+		if (KK[d] == 1)from2 = 2 * DP[d - 1][0] + D[d];
+		DP[d][1] = max(from1, from2);
+		//DP[d][0]
+		if (KK[d] == 0) {
+			DP[d][0] = 2 * DP[d - 1][0] + D[d];
+		}
+		else {
+			DP[d][0] = 2 * DP[d - 1][0] + N - D[d];
+		}
+	}
+	cout << max(DP[40][0], DP[40][1]) << endl;
+	return 0;
+}

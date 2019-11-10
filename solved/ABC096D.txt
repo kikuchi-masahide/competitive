@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//Osa_k–@
+//arr[n] := n‚ÌÅ¬‚Ì‘fˆö”‚ğ0‚©‚çn‚Ü‚Å
+//‘fˆö”•ª‰ğ‚ªO(ln(N))‚Å‚Å‚«‚é‚Á‚Û‚¢
+void Osa_k(int N, vector<int>& vect) {
+	vect.resize(N + 1);
+	for (int n = 0; n <= N; n++)vect[n] = n;
+	for (int n = 2; n <= N; n++) {
+		if (vect[n] != n)continue;   //‘f”‚¶‚á‚È‚¢ê‡
+		int t = 2 * n;
+		while (t <= N) {
+			if (vect[t] == t)vect[t] = n;
+			t += n;
+		}
+	}
+	return;
+}
+
+int main() {
+	ll N;
+	cin >> N;
+	vector<int> osak;
+	Osa_k(55555, osak);
+	vector<ll> primes[10];
+	for (ll n = 0; n < 10; n++)primes[n] = vector<ll>();
+	for (ll p = 2; p <= 55555; p++) {
+		if (osak[p] != p)continue;
+		primes[p % 10].push_back(p);
+	}
+	for (ll n = 0; n < N; n++) {
+		cout << primes[1][n] << " ";
+	}
+	cout << endl;
+	return 0;
+}
