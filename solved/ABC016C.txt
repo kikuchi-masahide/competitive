@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+vector<set<ll>> friends;
+ll N, M;
+
+int main() {
+	cin >> N >> M;
+	friends.resize(N, set<ll>());
+	for (ll m = 0; m < M; m++) {
+		ll a, b;
+		cin >> a >> b;
+		a--; b--;
+		friends[a].insert(b);
+		friends[b].insert(a);
+	}
+	for (ll n = 0; n < N; n++) {
+		set<ll> ans;
+		for (ll f : friends[n]) {
+			for (ll p : friends[f])ans.insert(p);
+		}
+		ans.erase(n);
+		for (ll f : friends[n])ans.erase(f);
+		cout << ans.size() << endl;
+	}
+	return 0;
+}

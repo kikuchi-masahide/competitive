@@ -1,3 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
 typedef complex<ld> Point;
 const ld eps = 1e-8;
 const ld pi = acos(-1.0);
@@ -144,51 +174,36 @@ ld abs(Point p) {
 	return sqrtl(p.real() * p.real() + p.imag() * p.imag());
 }
 
-//í∏ì_Ç™îΩéûåvâÒÇËÇ…ó^Ç¶ÇÁÇÍÇƒÇ¢ÇÈëΩäpå`
-using Polygon = vector<Point>;
-
-//éOäpå`ÇÃñ êœ
-ld area(Point a, Point b, Point c) {
-	return fabsl(cross(b-a, c-a)) / 2;
-}
-
-//ëΩäpå`ÇÃñ êœ
-ld area(Polygon P) {
-	ld ans = 0;
-	for (ll n = 1; n < P.size() - 1; n++) {
-		ll iscl = threePointsPosition(P[0], P[n], P[n + 1]);
-		if (abs(iscl) != 1)continue;
-		if (iscl == 1) {
-			ans += area(P[0], P[n], P[n + 1]);
+int main() {
+	Circle C;
+	cin >> C.p >> C.r;
+	ll Q;
+	cin >> Q;
+	for (ll q = 0; q < Q; q++) {
+		Line l;
+		cin >> l;
+		Point y1, y2;
+		if (isis_lp(l, C.p)) {
+			Point e = l.e - l.s;
+			e /= abs(e);
+			y1 = C.p + e * C.r;
+			y2 = C.p - e * C.r;
 		}
 		else {
-			ans -= area(P[0], P[n], P[n + 1]);;
+			Point x = proj(l, C.p);
+			ld theta = acosl(abs(x-C.p)/C.r);
+			y1 = (x - C.p) * C.r / abs(x - C.p) * eitheta(theta);
+			y2 = (x - C.p) * C.r / abs(x - C.p) * eitheta(-theta);
+			y1 += C.p;
+			y2 += C.p;
 		}
-	}
-	return ans;
-}
-
-//ëΩäpå`ÇÃì ê´îªíË
-bool isConvex(Polygon P) {
-	for (ll n = 0; n < P.size(); n++) {
-		if (threePointsPosition(P[n], P[(n + 1) % P.size()], P[(n + 2) % P.size()]) == -1) {
-			return false;
+		if (y1.real() > y2.real())swap(y1, y2);
+		else if (equal(y1.real(), y2.real())) {
+			if (y1.imag() > y2.imag())swap(y1, y2);
 		}
+		cout << fixed;
+		cout << setprecision(16) << y1.real() << " " << y1.imag() << " ";
+		cout << setprecision(16) << y2.real() << " " << y2.imag() << endl;
 	}
-	return true;
+	return 0;
 }
-
-//ëΩäpå`Ç…ëŒÇµÇƒì_Ç™Ç«Ç±Ç…Ç†ÇÈÇ©
-//0->ì‡ïî 1->ï”è„ 2->äOïî
-ll isPointin(Polygon Poly,Point P) {
-	bool in = false;
-	for (ll i = 0; i < Poly.size(); i++) {
-		Point a = Poly[i] - P;
-		Point b = Poly[(i + 1) % Poly.size()] - P;
-		if (a.imag() > b.imag())swap(a, b);
-		if (a.imag() <= 0 && 0 < b.imag() && cross(a, b) < 0) in = !in;
-		if (cross(a, b) == 0 && dot(a, b) <= 0) return 1;
-	}
-	return in ? 0 : 2;
-}
-

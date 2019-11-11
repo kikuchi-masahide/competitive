@@ -1,3 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
 typedef complex<ld> Point;
 const ld eps = 1e-8;
 const ld pi = acos(-1.0);
@@ -168,27 +198,12 @@ ld area(Polygon P) {
 	return ans;
 }
 
-//多角形の凸性判定
-bool isConvex(Polygon P) {
-	for (ll n = 0; n < P.size(); n++) {
-		if (threePointsPosition(P[n], P[(n + 1) % P.size()], P[(n + 2) % P.size()]) == -1) {
-			return false;
-		}
-	}
-	return true;
+int main() {
+	ll N;
+	cin >> N;
+	Polygon P(N);
+	for (ll n = 0; n < N; n++)cin >> P[n];
+	cout << fixed;
+	cout << setprecision(1) << area(P) << endl;
+	return 0;
 }
-
-//多角形に対して点がどこにあるか
-//0->内部 1->辺上 2->外部
-ll isPointin(Polygon Poly,Point P) {
-	bool in = false;
-	for (ll i = 0; i < Poly.size(); i++) {
-		Point a = Poly[i] - P;
-		Point b = Poly[(i + 1) % Poly.size()] - P;
-		if (a.imag() > b.imag())swap(a, b);
-		if (a.imag() <= 0 && 0 < b.imag() && cross(a, b) < 0) in = !in;
-		if (cross(a, b) == 0 && dot(a, b) <= 0) return 1;
-	}
-	return in ? 0 : 2;
-}
-
