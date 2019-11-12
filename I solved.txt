@@ -1,3 +1,14 @@
+AGC 002 C - Knot Puzzle
+ARC 067 D - Walk and Teleport
+AGC 024 B - Backfront
+ABC 080 D - Recording
+ABC 080 C - Shopping Street
+ABC 080 B - Harshad Number
+ABC 080 A - Parking
+ABC 094 D - Binomial Coefficients
+ABC 094 C - Many Medians
+ABC 094 B - Toll Gates
+ABC 094 A - Cats and Dogs
 キーエンス プログラミング コンテスト 2019 D - Double Landscape
 AOJ Course Polygon-Point Containment
 AOJ Course Area

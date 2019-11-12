@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+vector<ll> F;
+vector<vector<ll>> P;
+
+ll calc(ll shift) {
+	ll ans =0;
+	for (ll n = 0; n < N; n++) {
+		ll sh = shift & F[n];
+		ll b = 0;
+		for (ll t = 0; t <= 10; t++) {
+			b += (sh>>t) & 1;
+		}
+		ans += P[n][b];
+	}
+	return ans;
+}
+
+int main() {
+	cin >> N;
+	F.resize(N,0);
+	P.resize(N, vector<ll>(11));
+	for (ll n = 0; n < N; n++) {
+		for (ll t = 0; t < 10; t++) {
+			ll f;
+			cin >> f;
+			F[n] |= (f << t);
+		}
+	}
+	for (ll n = 0; n < N; n++) {
+		for (ll t = 0; t <= 10; t++)cin >> P[n][t];
+	}
+	ll ans = LLONG_MIN;
+	for (ll code = 1; code < (1 << 10); code++) {
+		ans = max(ans, calc(code));
+	}
+	cout << ans << endl;
+	return 0;
+}

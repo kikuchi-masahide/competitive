@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+vector<pll> X;   //óvëfÅAìYÇ¶éö
+vector<ll> ans;
+
+int main() {
+	cin >> N;
+	X.resize(N);
+	for (ll n = 0; n < N; n++) {
+		cin >> X[n].first;
+		X[n].second = n;
+	}
+	sort(X.begin(), X.end(), [](pll a, pll b) {
+		return a.first < b.first;
+	});
+	ans.resize(N, 0);
+	for (ll n = 0; n < N/2; n++) {
+		ans[X[n].second] = X[N / 2].first;
+	}
+	for (ll n = N / 2; n < N; n++) {
+		ans[X[n].second] = X[N / 2 - 1].first;
+	}
+	for (ll n = 0; n < N; n++)cout << ans[n] << endl;
+	return 0;
+}
