@@ -1,3 +1,16 @@
+AGC 020 B - Ice Rink Game
+Tenka1 Programmer Beginner Contest 2018 D - Crossing
+ABC 067 D - Fennec VS. Snuke
+ABC 067 C - Splitting Pile
+ABC 067 B - Snake Toy
+ABC 067 A - Sharing Cookies
+ABC 069 D - Grid Coloring
+ABC 069 C - 4-adjacent
+ABC 069 B - i18n
+ABC 069 A - K-City
+ABC 038 C - 単調増加
+ABC 038 B - ディスプレイ
+ABC 038 A - お茶
 AGC 002 C - Knot Puzzle
 ARC 067 D - Walk and Teleport
 AGC 024 B - Backfront

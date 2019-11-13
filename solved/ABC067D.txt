@@ -1,0 +1,99 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+vector<vector<ll>> nodes;
+vector<ll> parents;
+vector<vector<ll>> childs;
+vector<ll> CNUM;
+
+
+//si:頂点数
+//root:根
+//ch:子供の集合
+//pa:親(根の親=-1)
+//no:前提情報
+void treeconstruct(ll si, ll root,vector<vector<ll>>& ch, vector<ll>& pa, vector<vector<ll>>& no) {
+	ch.resize(si,vector<ll>(0));
+	pa.resize(si,-2);
+	queue<pll> q;
+	q.push(pll(root, -1));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll p = q.front().second;
+		q.pop();
+		pa[cur] = p;
+		for (ll next : no[cur]) {
+			if (next == p)continue;
+			ch[cur].push_back(next);
+			q.push(pll(next, cur));
+		}
+	}
+	return;
+}
+
+ll cnum(ll n) {
+	if (CNUM[n] != -1)return CNUM[n];
+	ll ans = 0;
+	for (ll c : childs[n])ans += cnum(c);
+	CNUM[n] = ans + 1;
+	return CNUM[n];
+}
+
+int main() {
+	cin >> N;
+	nodes.resize(N);
+	for (ll n = 0; n < N - 1; n++) {
+		ll a, b;
+		cin >> a >> b;
+		nodes[--a].push_back(--b);
+		nodes[b].push_back(a);
+	}
+	treeconstruct(N, 0, childs, parents, nodes);
+	CNUM.resize(N, -1);
+	for (ll n = 0; n < N; n++) {
+		cnum(n);
+	}
+	ll dist = 0;
+	{
+		ll cur = N - 1;
+		while (cur != 0) {
+			cur = parents[cur];
+			dist++;
+		}
+	}
+	ll top = N - 1;
+	for (ll d = 1; d <= (dist - 1) / 2; d++)top = parents[top];
+	ll sn = cnum(top);
+	ll fe = N - cnum(top);
+	if (fe > sn)cout << "Fennec" << endl;
+	else cout << "Snuke" << endl;
+	return 0;
+}

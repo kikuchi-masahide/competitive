@@ -14,6 +14,30 @@ void treeConstruct(int N,int root,vector<vector<int>>& childs,vector<int>& paren
 	}
 }
 
+//si:頂点数
+//root:根
+//ch:子供の集合
+//pa:親(根の親=-1)
+//no:前提情報
+void treeconstruct(ll si, ll root,vector<vector<ll>>& ch, vector<ll>& pa, vector<vector<ll>>& no) {
+	ch.resize(si,vector<ll>(0));
+	pa.resize(si,-2);
+	queue<pll> q;
+	q.push(pll(root, -1));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll p = q.front().second;
+		q.pop();
+		pa[cur] = p;
+		for (ll next : no[cur]) {
+			if (next == p)continue;
+			ch[cur].push_back(next);
+			q.push(pll(next, cur));
+		}
+	}
+	return;
+}
+
 void doublingConstruct(int N,vector<int>& parents,vector<vector<int>>& doubling){
 	doubling.push_back(parents);
 	while (true) {

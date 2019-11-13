@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll H, W;
+ll N;
+queue<ll> A;
+
+int main() {
+	cin >> H >> W;
+	cin >> N;
+	for (ll n = 1; n <= N; n++) {
+		ll a;
+		cin >> a;
+		A.push(a);
+	}
+	vector<vector<ll>> ans(H, vector<ll>(W, 0));
+	ll n = 1;
+	for (ll y = 0; y < H; y++) {
+		for (ll x = 0; x < W; x++) {
+			ans[y][x] = n;
+			A.front()--;
+			if (A.front() == 0) {
+				A.pop();
+				n++;
+			}
+		}
+	}
+	for (ll y = 0; y < H; y++) {
+		if (y & 1) {
+			for (ll x = W - 1; x >= 0; x--)cout << ans[y][x] << " ";
+		}
+		else {
+			for (ll x = 0; x < W; x++)cout << ans[y][x] << " ";
+		}
+		cout << endl;
+	}
+	return 0;
+}
