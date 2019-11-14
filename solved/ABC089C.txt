@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll head[5] = {
+	'M','A','R','C','H'
+};
+ll co[5] = {
+	0,0,0,0,0
+};
+
+int main() {
+	ll N;
+	cin >> N;
+	for (ll n = 0; n < N; n++) {
+		string S;
+		cin >> S;
+		for (ll h = 0; h < 5; h++) {
+			if (S[0] == head[h])co[h]++;
+		}
+	}
+	ll ans = 0;
+	ans += co[0] * co[1] * co[2];
+	ans += co[0] * co[1] * co[3];
+	ans += co[0] * co[1] * co[4];
+	ans += co[0] * co[2] * co[3];
+	ans += co[0] * co[2] * co[4];
+	ans += co[0] * co[3] * co[4];
+	ans += co[1] * co[2] * co[3];
+	ans += co[1] * co[2] * co[4];
+	ans += co[1] * co[3] * co[4];
+	ans += co[2] * co[3] * co[4];
+	cout << ans << endl;
+	return 0;
+}

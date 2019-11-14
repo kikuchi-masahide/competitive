@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll H, W, D;
+vector<pll> where;
+vector<ll> DP;
+
+int main() {
+	cin >> H >> W >> D;
+	where.resize(H * W);
+	for (ll y = 0; y < H; y++) {
+		for (ll x = 0; x < W; x++) {
+			ll l;
+			cin >> l;
+			where[--l] = pll(x, y);
+		}
+	}
+	DP.resize(W * H);
+	for (ll n = 0; n < W * H; n++) {
+		if (n < D)DP[n] = 0;
+		else {
+			ll plus = abs(where[n].first - where[n - D].first) + abs(where[n].second - where[n - D].second);
+			DP[n] = DP[n - D] + plus;
+		}
+	}
+	ll Q;
+	cin >> Q;
+	for (ll q = 0; q < Q; q++) {
+		ll L, R;
+		cin >> L >> R;
+		cout << DP[--R] - DP[--L] << endl;
+	}
+	return 0;
+}

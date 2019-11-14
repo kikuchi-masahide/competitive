@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+vector<ll> count(8, 0);
+ll morethan = 0;
+
+int main() {
+	ll N;
+	cin >> N;
+	for (ll n = 0; n < N; n++) {
+		ll a;
+		cin >> a;
+		if (a >= 3200)morethan++;
+		else ::count[a / 400]++;
+	}
+	if (morethan == N)cout << "1 " << N << endl;
+	else {
+		ll c = 0;
+		for (ll n = 0; n < 8; n++) {
+			if (::count[n] > 0)c++;
+		}
+		cout << c << " " << c+morethan << endl;
+	}
+	return 0;
+}

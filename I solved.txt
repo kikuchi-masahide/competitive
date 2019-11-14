@@ -1,3 +1,15 @@
+ABC 032 C - —ñ
+CODE FESTIVAL 2017 qual B C - 3 Steps
+AtCoder Petrozavodsk Contest 001 D - Forest
+AGC 029 B - Powers of two
+ABC 064 D - Insertion
+ABC 064 C - Colorful Leaderboard
+ABC 064 B - Traveling AtCoDeer Problem
+ABC 064 A - RGB Cards
+ABC 089 D - Practical Skill Test
+ABC 089 C - March
+ABC 089 B - Hina Arare
+ABC 089 A - Grouping 2
 AGC 020 B - Ice Rink Game
 Tenka1 Programmer Beginner Contest 2018 D - Crossing
 ABC 067 D - Fennec VS. Snuke
