@@ -13,76 +13,6 @@
 #include <cassert>
 #include <random>
 #include <functional>
-using namespace std;
-
-vector<long long> seg;
-
-void add(int n, long long x,int k = 1,int l = 0,int r = seg.size()/2-1) {
-	if (n < l|| n > r)return;
-	if (k >= seg.size())return;
-	seg[k] += x;
-	add(n, x, 2 * k, l, (l + r) / 2);
-	add(n, x, 2 * k + 1, (l + r) / 2 + 1, r);
-	return;
-}
-
-long long getSum(int a, int b, int k = 1, int l = 0, int r = seg.size() / 2 - 1) {
-	if (b < l || a > r)return 0;
-	if (a <= l && r <= b)return seg[k];
-	else return getSum(a, b, 2 * k, l, (l + r) / 2) + getSum(a, b, 2 * k + 1, (l + r) / 2 + 1, r);
-}
-
-void solve() {
-	int N, Q;
-	cin >> N >> Q;
-	int RN = 1;
-	while (RN < N)RN *= 2;
-	seg.resize(2 * RN);
-	for (int query = 0; query < Q; query++) {
-		int com, x, y;
-		cin >> com >> x >> y;
-		if (com == 0) {
-			add(--x, y);
-		}
-		else {
-			cout << getSum(--x, --y) << endl;
-		}
-	}
-	return;
-}
-
-//////////////////////////////
-//////////////////////////////
-
-int main() {
-#ifdef DEBUGTIME
-	for (int time = 0; time < DEBUGTIME; time++) {
-		solve();
-		cout << "####################" << endl;
-	}
-#else
-	solve();
-#endif
-	return 0;
-}
-
-##############################
-##############################
-#include <iostream>
-#include <vector>
-#include <limits.h>
-#include <algorithm>
-#include <string>
-#include <math.h>
-#include <limits.h>
-#include <queue>
-#include <map>
-#include <set>
-#include <iomanip>
-#include <bitset>
-#include <cassert>
-#include <random>
-#include <functional>
 #include <stack>
 #include <iomanip>
 #include <cassert>
@@ -103,6 +33,29 @@ typedef vector<ll> VLL;
 typedef vector<VLL> VVLL;
 //typedef boost::multiprecision::cpp_int bigint;
 
+ll P[200000 + 1];
+
+class Ab {
+public:
+	ll v;
+	ll len;
+	Ab(ll v_) :v(v_) {
+		len = 1;
+	};
+	Ab(ll v_, ll l_) :v(v_), len(l_) {};
+	ll operator()() {
+		return v;
+	}
+	static Ab E;
+	Ab() :v(0),len(0) {};
+};
+Ab Ab::E = Ab(0,0);
+Ab operator+(Ab a,Ab b) {
+	ll newv = a.v + b.v * P[a.len];
+	newv %= MOD;
+	ll newl = a.len + b.len;
+	return Ab(newv, newl);
+}
 //数列タイプのtreap
 //Xorshift
 unsigned int Xorshift() {
@@ -113,41 +66,49 @@ unsigned int Xorshift() {
 }
 
 struct node_t {
-	ll val;   //値
+	Ab val;   //値
 	node_t* ch[2];   //子
 	ll pri;   //優先度
 	ll cnt;   //子の個数
-	ll sum;   //値の和
+	Ab sum;   //値の和
 	static ll node_count;   //プール用の要素を数える変数
-	static const ll MAX_N = 1000000 + 10;   //プールのサイズ
-	/*void* operator new(std::size_t) {
+	static const ll MAX_N = 4000000 + 10;   //プールのサイズ
+	void* operator new(std::size_t) {
 		static node_t pool[MAX_N];   //プール
 		return pool + node_count++;
-	}*/
-	/*static void delete_all() {
+	}
+	static void delete_all() {
 		node_count = 0;
-	}*/
-	node_t(ll v) {
+	}
+	node_t(Ab v) {
 		val = v;
 		ch[0] = ch[1] = NULL;
 		cnt = 1;
 		sum = v;
 		pri = Xorshift();
 	}
-	node_t() {}
+	node_t() {
+		val = Ab();
+		ch[0] = ch[1] = NULL;
+		cnt = 1;
+		sum = val;
+		pri = Xorshift();
+	}
 	node_t* update() {
 		node_t* t = this;
 		t->cnt = (t->ch[0] ? t->ch[0]->cnt : 0) + (t->ch[1] ? t->ch[1]->cnt : 0) + 1;
-		t->sum = (t->ch[0] ? t->ch[0]->sum : 0)+(t->ch[1] ? t->ch[1]->sum : 0)+t->val;
+		t->sum = (t->ch[0] ? t->ch[0]->sum : Ab::E)+ t->val;
+		t->sum = t->sum + (t->ch[1] ? t->ch[1]->sum : Ab::E);
 		return t;
 	}
 };
+ll node_t::node_count = 0;
 
-void delete_all(node_t* root) {
+void print(node_t* root) {
 	if (root == NULL)return;
-	delete_all(root->ch[0]);
-	delete_all(root->ch[1]);
-	delete root;
+	print(root->ch[0]);
+	cout << " " << root->val();
+	print(root->ch[1]);
 	return;
 }
 
@@ -190,21 +151,18 @@ node_t* insert(node_t* tr, ll k, node_t* t) {
 
 //treap trの場所kの要素を消去
 node_t* erase(node_t* tr, ll k) {
-	auto sp = split(tr, k - 1);
+	auto sp = split(tr, k);
+	//print(sp.first);
 	auto sp2 = split(sp.second, 1);
-	delete sp2.first;
+	//cout << "+";
+	//print(sp2.first);
+	//cout << "+";
+	//print(sp2.second);
+	//cout << "\n";
 	return merge(sp.first, sp2.second);
 }
 
-void print(node_t* root) {
-	if (root == NULL)return;
-	print(root->ch[0]);
-	cout << " " << root->val;
-	print(root->ch[1]);
-	return;
-}
-
-node_t* index(node_t* root,ll n) {
+node_t* index(node_t* root, ll n) {
 	if (!root)return NULL;
 	ll ln = (root->ch[0] ? root->ch[0]->cnt : 0);
 	ll rn = (root->ch[1] ? root->ch[1]->cnt : 0);
@@ -214,7 +172,7 @@ node_t* index(node_t* root,ll n) {
 	else return index(root->ch[1], n - (ln + 1));
 }
 
-node_t* change(node_t* root, ll n, ll x) {
+node_t* change(node_t* root, ll n, Ab x) {
 	if (!root)return NULL;
 	ll ln = (root->ch[0] ? root->ch[0]->cnt : 0);
 	ll rn = (root->ch[1] ? root->ch[1]->cnt : 0);
@@ -225,7 +183,7 @@ node_t* change(node_t* root, ll n, ll x) {
 		return r;
 	}
 	else if (n == ln) {
-		root->val += x;
+		root->val = x;
 		root->update();
 		return root;
 	}
@@ -236,39 +194,62 @@ node_t* change(node_t* root, ll n, ll x) {
 	}
 }
 
-ll rangesum(node_t* root, ll l, ll r) {
-	if (root == NULL)return 0;
+Ab rangesum(node_t* root, ll l, ll r) {
+	if (root == NULL)return Ab::E;
 	ll ln = (root->ch[0] ? root->ch[0]->cnt : 0);
 	ll rn = (root->ch[1] ? root->ch[1]->cnt : 0);
-	if (r < 0 || l > ln + rn)return 0;
+	if (r < 0 || l > ln + rn)return Ab::E;
 	l = max((ll)0, l);
 	r = min(ln + rn, r);
 	if (l == 0 && r == ln + rn)return root->sum;
-	ll ans = rangesum(root->ch[0], l, r);
-	if (l <= ln && ln <= r)ans += root->val;
-	ans += rangesum(root->ch[1], l - ln - 1, r - ln - 1);
+	Ab ans = rangesum(root->ch[0], l, r);
+	if (l <= ln && ln <= r)ans = ans + root->val;
+	ans = ans + rangesum(root->ch[1], l - ln - 1, r - ln - 1);
 	return ans;
 }
+
+VLL ansv;
 
 int main() {
 	std::ios::sync_with_stdio(false);
 	std::cin.tie(0);
-	ll N, Q;
-	cin >> N >> Q;
-	node_t* root = NULL;
-	for (ll n = 0; n < N; n++) {
-		root = merge(root, new node_t(0));
+	P[0] = 1;
+	for (ll p = 1; p <= 200000; p++) {
+		P[p] = (P[p - 1] * 1000000) % MOD;
 	}
-	ll c, x, y;
+	ll N, M;
+	cin >> N >> M;
+	vector<node_t*> roots(M, NULL);
+	for (ll m = 0; m < M; m++) {
+		string s;
+		cin >> s;
+		for (ll n = 0; n < N; n++) {
+			roots[m] = merge(roots[m], new node_t(Ab(s[n] - 'a' + 1)));
+		}
+	}
+	ll Q;
+	cin >> Q;
+	ll type, x, y, l, r;
 	for (ll q = 0; q < Q; q++) {
-		cin >> c >> x >> y;
-		if (c == 0) {
-			change(root,x-1, y);
+		cin >> type >> x >> y >> l >> r;
+		if (type == 1) {
+			x--; l--; r--; y--;
+			auto spx = split(roots[x], r+1);
+			auto spx2 = split(spx.first, l);
+			auto spy = split(roots[y], r + 1);
+			auto spy2 = split(spy.first, l);
+			spx2.first = merge(spx2.first, spy2.second);
+			spx2.first = merge(spx2.first, spx.second);
+			spy2.first = merge(spy2.first, spx2.second);
+			spy2.first = merge(spy2.first, spy.second);
+			roots[x] = spx2.first;
+			roots[y] = spy2.first;
 		}
 		else {
-			cout << rangesum(root, x-1, y-1) << "\n";
+			x--; l--; r--;
+			auto res = rangesum(roots[x], l, r);
+			cout << res.v << "\n";
 		}
 	}
-	delete_all(root);
 	return 0;
 }

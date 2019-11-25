@@ -1,0 +1,109 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+VLL XV, YV;
+VLL newx, newy;
+struct query {
+	pll a, b;
+};
+vector<query> querys;
+VVLL imos;
+
+//vec[n] <= x < vec[n+1]‚È‚én
+ll get(VLL& vec, ll x) {
+	ll s = 0, e = vec.size();
+	while (e - s > 1) {
+		ll m = (e + s) / 2;
+		if (vec[m] <= x)s = m;
+		else e = m;
+	}
+	return s;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	cin >> N;
+	querys.resize(N);
+	XV.push_back(0);
+	YV.push_back(0);
+	for (ll n = 0; n < N; n++) {
+		cin >> querys[n].a.first >> querys[n].a.second >> querys[n].b.first >> querys[n].b.second;
+		XV.push_back(querys[n].a.first);
+		XV.push_back(querys[n].b.first);
+		YV.push_back(querys[n].a.second);
+		YV.push_back(querys[n].b.second);
+	}
+	XV.push_back(1000);
+	YV.push_back(1000);
+	sort(XV.begin(), XV.end(), [](ll a, ll b) {
+		return a < b;
+	});
+	sort(YV.begin(), YV.end(), [](ll a, ll b) {
+		return a < b;
+	});
+	newx.push_back(XV[0]);
+	for (ll n = 1; n < XV.size(); n++) {
+		if (XV[n] != XV[n - 1])newx.push_back(XV[n]);
+	}
+	newy.push_back(YV[0]);
+	for (ll n = 1; n < YV.size(); n++) {
+		if (YV[n] != YV[n - 1])newy.push_back(YV[n]);
+	}
+	imos.resize(newx.size(), VLL(newy.size(), 0));
+	for (ll n = 0; n < N; n++) {
+		querys[n].a.first = get(newx, querys[n].a.first);
+		querys[n].a.second = get(newy, querys[n].a.second);
+		querys[n].b.first = get(newx, querys[n].b.first);
+		querys[n].b.second = get(newy, querys[n].b.second);
+		auto q = querys[n];
+		imos[q.a.first][q.a.second]++;
+		imos[q.a.first][q.b.second]--;
+		imos[q.b.first][q.a.second]--;
+		imos[q.b.first][q.b.second]++;
+	}
+	ll ans = 0;
+	for (ll x = 0; x < newx.size(); x++) {
+		for (ll y = 0; y < newy.size(); y++) {
+			if (y > 0)imos[x][y] += imos[x][y - 1];
+			if (x > 0)imos[x][y] += imos[x - 1][y];
+			if (x > 0 && y > 0)imos[x][y] -= imos[x - 1][y - 1];
+			ans = max(ans, imos[x][y]);
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}

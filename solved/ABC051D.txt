@@ -1,0 +1,110 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template< typename T >
+struct edge {
+	ll src, to;
+	T cost;
+
+	edge(ll to, T cost) : src(-1), to(to), cost(cost) {}
+
+	edge(ll src,ll to, T cost) : src(src), to(to), cost(cost) {}
+
+	edge& operator=(const int& x) {
+		to = x;
+		return *this;
+	}
+
+	operator int() const { return to; }
+};
+
+template< typename T >
+using Edges = vector< edge< T > >;
+template< typename T >
+using WeightedGraph = vector< Edges< T > >;
+using UnWeightedGraph = vector< vector< int > >;
+template< typename T >
+using Matrix = vector< vector< T > >;
+
+vector<vector<bool>> check;
+
+template< typename T >
+void warshall_floyd(Matrix< T >& g, T INF) {
+	for (int k = 0; k < g.size(); k++) {
+		for (int i = 0; i < g.size(); i++) {
+			for (int j = 0; j < g.size(); j++) {
+				if (g[i][k] == INF || g[k][j] == INF) continue;
+				g[i][j] = min(g[i][j], g[i][k] + g[k][j]);
+			}
+		}
+	}
+}
+
+ll N, M;
+
+int main() {
+	cin >> N >> M;
+	vector<vector<ll>> G,was;
+	G.resize(N,vector<ll>(N,1e6));
+	was.resize(N, vector<ll>(N, 1e6));
+	for (ll n = 0; n < N; n++) {
+		G[n][n] = 0;
+		was[n][n] = 0;
+	}
+	for (ll m = 0; m < M; m++) {
+		ll a, b, c;
+		cin >> a >> b >> c;
+		G[--a][--b] = c;
+		G[b][a] = c;
+		was[a][b] = c;
+		was[b][a] = c;
+	}
+	warshall_floyd(was, (ll)1e6);
+	check.resize(N, vector<bool>(N, false));
+	for (ll s = 0; s < N; s++) {
+		for (ll t = 0; t < N; t++) {
+			if (s == t)continue;
+			for (ll k = 0; k < N; k++) {
+				if (G[s][k] == 1e6)continue;   //•Ó‚È‚µ
+				if (G[s][k] + was[k][t] == was[s][t])check[s][k] = true;
+			}
+		}
+	}
+	ll ans = 0;
+	for (ll s = 0; s < N; s++) {
+		for (ll t = 0; t < N; t++) {
+			if (s == t)continue;
+			if (G[s][t] == 1e6)continue;
+			if (check[s][t])ans++;
+		}
+	}
+	cout << M - ans / 2 << endl;
+	return 0;
+}

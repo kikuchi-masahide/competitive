@@ -1,0 +1,133 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+struct query {
+	ll type;
+	ll a, b;
+};
+
+vector<query> querys;
+ll N,RN;
+vector<pll> seg;
+VLL A;
+
+void setorder() {
+	VLL temp;
+	temp.reserve(N);
+	for (ll n = 0; n < N; n++) {
+		if (querys[n].type == 1) {
+			temp.push_back(querys[n].a);
+		}
+	}
+	sort(temp.begin(), temp.end(), [](ll a, ll b) {
+		return a < b;
+	});
+	A.reserve(N);
+	A.push_back(temp[0]);
+	for (ll n = 1; n < temp.size(); n++) {
+		if (temp[n] != temp[n - 1])A.push_back(temp[n]);
+	}
+}
+
+//”a‚ð’Ç‰Á
+void add(ll a) {
+	ll s = 0, e = A.size();
+	while (e - s > 1) {
+		ll m = (e + s) / 2;
+		if (A[m] > a)e = m;
+		else s = m;
+	}
+	ll ind = s;
+	ll k = RN + ind;
+	while (k != 0) {
+		seg[k].first++;
+		seg[k].second += a;
+		k /= 2;
+	}
+}
+
+pll get(ll n) {
+	ll p = (n + 1) / 2;
+	pll ans = pll(0, 0);
+	ll k = 1;
+	while (k < RN) {
+		if (ans.first + seg[2 * k].first < p) {
+			ans.first += seg[2 * k].first;
+			ans.second += seg[2 * k].second;
+			k = 2 * k + 1;
+		}else k *= 2;
+	}
+	ll i = k + 1;
+	ll sum = A[k-RN]*ans.first;
+	sum -= ans.second;
+	sum += (seg[1].second - ans.second);
+	sum -= A[k - RN] * (n - ans.first);
+	return pll(A[k - RN], sum);
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N;
+	querys.reserve(N);
+	for (ll n = 0; n < N; n++) {
+		ll t;
+		cin >> t;
+		if (t == 1) {
+			ll a, b;
+			cin >> a >> b;
+			querys.push_back({ t,a,b });
+		}
+		else querys.push_back({ t,0,0 });
+	}
+	setorder();
+	RN = 1;
+	while (RN < A.size())RN *= 2;
+	seg.resize(RN * 2, pll(0, 0));
+	ll B = 0,n = 0;
+	for (ll q = 0; q < N; q++) {
+		auto que = querys[q];
+		if (que.type == 1) {
+			B += que.b;
+			add(que.a);
+			n++;
+		}
+		else {
+			pll ans = get(n);
+			cout << ans.first << " " << ans.second + B << "\n";
+		}
+	}
+	return 0;
+}

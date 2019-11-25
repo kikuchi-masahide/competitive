@@ -1,0 +1,168 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+struct node {
+	ll val;
+	ll pri;
+	node* l;
+	node* r;
+	node(ll v, ll pr) {
+		val = v;
+		l = NULL;
+		r = NULL;
+		pri = pr;
+	}
+};
+
+node* rightRotate(node* t) {
+	node* s = t->l;
+	t->l = s->r;
+	s->r = t;
+	return s;
+}
+
+node* leftRotate(node* t) {
+	node* s = t->r;
+	t->r = s->l;
+	s->l = t;
+	return s;
+}
+
+node* insert(node* T, ll x,ll pri) {
+	if (T == NULL)return new node(x, pri);
+	if (x < T->val) {
+		T->l = insert(T->l, x, pri);
+		if (T->l != NULL) {
+			if (T->pri < T->l->pri)T = rightRotate(T);
+		}
+	}
+	else {
+		T->r = insert(T->r, x, pri);
+		if (T->r != NULL) {
+			if (T->pri < T->r->pri)T = leftRotate(T);
+		}
+	}
+	return T;
+}
+
+node* find(node* T, ll x) {
+	if (T == NULL)return NULL;
+	if (T->val == x)return T;
+	if (x < T->val)return find(T->l, x);
+	else return find(T->r, x);
+}
+
+node* erase(node*, ll);
+
+node* _erase(node* t, ll key) {
+	if (t->l == NULL && t->r == NULL) {
+		delete t;
+		return NULL;
+	}
+	else if (t->l == NULL)t = leftRotate(t);
+	else if (t->r == NULL)t = rightRotate(t);
+	else {
+		if (t->l->pri > t->r->pri)t = rightRotate(t);
+		else t = leftRotate(t);
+	}
+	return erase(t, key);
+}
+
+node* erase(node* t, ll key) {
+	if (t == NULL)return NULL;
+	if (key < t->val)t->l = erase(t->l, key);
+	else if (key > t->val)t->r = erase(t->r, key);
+	else return _erase(t, key);
+	return t;
+}
+
+void inoprint(node* t) {
+	if (t == NULL)return;
+	inoprint(t->l);
+	cout << " " << t->val;
+	inoprint(t->r);
+	return;
+}
+
+void preoprint(node* t) {
+	if (t == NULL)return;
+	cout << " " << t->val;
+	preoprint(t->l);
+	preoprint(t->r);
+	return;
+}
+
+void cleanup(node* T) {
+	if (T == NULL)return;
+	cleanup(T->l);
+	cleanup(T->r);
+	delete T;
+	return;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	cin >> N;
+	string ins;
+	ll x,pri;
+	node* root = NULL;
+	for (ll n = 0; n < N; n++) {
+		cin >> ins;
+		if (ins[0] == 'i') {
+			cin >> x >> pri;
+			root = insert(root, x,pri);
+		}
+		else if (ins[0] == 'f') {
+			cin >> x;
+			if (find(root, x))cout << "yes" << endl;
+			else cout << "no" << endl;
+		}
+		else if (ins[0] == 'd') {
+			cin >> x;
+			auto old = root;
+			root = erase(old, x);
+		}
+		else {
+			inoprint(root);
+			cout << "\n";
+			preoprint(root);
+			cout << "\n";
+		}
+	}
+	cleanup(root);
+	return 0;
+}

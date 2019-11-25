@@ -1,0 +1,118 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//‹óvector‚ğ—v‘f”N‚ÌsegTree‚Æ‚µ‚Äz‚Å‰Šú‰»
+template<class T>
+void segTree_init(vector<T>& vec, int N, T z) {
+	int RN = 1;
+	while (RN < N)RN *= 2;
+	vec.resize(2 * RN, z);
+}
+
+//vec‚ğsegTree‚Æ‚µ‚Än”Ô–Ú‚ğx‚É
+template<class T>
+void segTree_set(vector<T>& vec, int n, T x, function<T(T, T)> f, int k = -1) {
+	int RN = (vec.size() + 1) / 2;
+	if (k == -1) {
+		k = n + RN;
+		vec[k] = x;
+		segTree_set(vec, n, x, f, k / 2);
+	}
+	else if (k != 0) {
+		vec[k] = f(vec[2 * k], vec[2 * k + 1]);
+		segTree_set(vec, n, x, f, k / 2);
+	}
+}
+
+//vec‚ªsegTree‚Ì‚ÌAn”Ô–Ú‚Ì—v‘f
+template<class T>
+T segTree_at(vector<T>& vec, int n) {
+	int RN = (vec.size()) / 2;
+	return vec[RN + n];
+}
+
+//get [a,b]
+template<class T>
+T segTree_get(vector<T>& vec, int a, int b, function<T(T, T)> f, T e, int k = 1, int l = 0, int r = -1) {
+	if (r == -1)r = vec.size() / 2 - 1;
+	if (b < l || r < a)return e;
+	else if (a <= l && r <= b)return vec[k];
+	else return f(
+		segTree_get(vec, a, b, f, e, 2 * k, l, (l + r) / 2),
+		segTree_get(vec, a, b, f, e, 2 * k + 1, (l + r) / 2 + 1, r)
+	);
+}
+
+function<ll(ll, ll)> lambda = [](ll a, ll b) {
+	return min(a, b);
+};
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N,K;
+	cin >> N >> K;
+	vector<ll> A(N+1, 0);
+	for (ll n = 0; n < N; n++)cin >> A[n];
+	vector<ll> seg;
+	segTree_init(seg, (ll)1e5 + 1, (ll)0);
+	ll ans = LLONG_MAX;
+	ll s = 0, e = 0;
+	segTree_set(seg, A[0], (ll)1, lambda);
+	while (e < N) {
+		ll cur = segTree_get(seg, 1, K, lambda,N);
+		if (cur == 0) {
+			ll now = segTree_at(seg, A[e+1]);
+			segTree_set(seg, A[e + 1], now + 1, lambda);
+			e++;
+		}
+		else {
+			ans = min(ans, e - s + 1);
+			if (s == e) {
+				ll now = segTree_at(seg, A[e + 1]);
+				segTree_set(seg, A[e + 1], now + 1, lambda);
+				e++;
+			}
+			else {
+				ll now = segTree_at(seg, A[s]);
+				segTree_set(seg, A[s], now - 1, lambda);
+				s++;
+			}
+		}
+	}
+	if (ans == LLONG_MAX)cout << 0 << "\n";
+	else cout << ans << "\n";
+	return 0;
+}

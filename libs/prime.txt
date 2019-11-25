@@ -39,3 +39,20 @@ void Osa_k(int N,vector<int>& vect) {
 	}
 	return;
 }
+
+//–ñ”—ñ‹“(d•¡•ª‚àŒÂ”‰ñ’Ç‰Á)
+void enumerateFactors(ll N,vector<ll>& V) {
+	ll p = 2;
+	while (N > 1) {
+		if (p * p > N) {
+			V.push_back(N);
+			return;
+		}
+		if (N % p == 0) {
+			V.push_back(p);
+			N /= p;
+		}
+		else p++;
+	}
+	return;
+}

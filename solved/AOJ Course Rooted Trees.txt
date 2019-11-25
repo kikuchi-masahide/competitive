@@ -1,0 +1,119 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//si:頂点数
+//root:根
+//ch:子供の集合
+//pa:親(根の親=-1)
+//no:前提情報
+void treeconstruct(ll si, ll root, vector<vector<ll>>& ch, vector<ll>& pa, vector<vector<ll>>& no) {
+	ch.resize(si, vector<ll>(0));
+	pa.resize(si, -2);
+	queue<pll> q;
+	q.push(pll(root, -1));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll p = q.front().second;
+		q.pop();
+		pa[cur] = p;
+		for (ll next : no[cur]) {
+			if (next == p)continue;
+			ch[cur].push_back(next);
+			q.push(pll(next, cur));
+		}
+	}
+	return;
+}
+
+void setRank(ll N, ll root, vector<vector<ll>>& childs, vector<ll>& rank) {
+	rank.resize(N, -1);
+	queue<pll> q;
+	q.push(pll(root, 0));
+	while (!q.empty()) {
+		int cur = q.front().first;
+		int dist = q.front().second;
+		rank[cur] = dist;
+		q.pop();
+		for (int child : childs[cur]) {
+			if (rank[child] != -1)continue;
+			q.push(pll(child, dist + 1));
+		}
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	cin >> N;
+	VVLL G(N);
+	ll parent;
+	VLL parents(N,-1);
+	VLL ord(N);
+	VVLL childs(N);
+	for (ll n = 0; n < N; n++) {
+		ll id, deg;
+		cin >> id >> deg;
+		if (n == 0)parent = id;
+		for (ll m = 0; m < deg; m++) {
+			ll c;
+			cin >> c;
+			parents[c] = id;
+			childs[id].push_back(c);
+		}
+		ord[id] = n;
+	}
+	VLL rank;
+	for (ll n = 0; n < N; n++) {
+		if (parents[n] == -1)parent = n;
+	}
+	setRank(N, parent, childs, rank);
+	for (ll n = 0; n < N; n++) {
+		cout << "node " << n;
+		cout << ": parent = " << parents[n];
+		cout << ", depth = " << rank[n];
+		cout << ", ";
+		if (n == parent)cout << "root, ";
+		else if (childs[n].size() == 0)cout << "leaf, ";
+		else cout << "internal node, ";
+		cout << "[";
+		for (ll c = 0; c + 1 < childs[n].size(); c++) {
+			cout << childs[n][c] << ", ";
+		}
+		if (childs[n].size() > 0)cout << childs[n].back();
+		cout << "]\n";
+	}
+	return 0;
+}

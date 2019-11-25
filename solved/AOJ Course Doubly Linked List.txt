@@ -1,0 +1,125 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+struct element {
+	ll key;
+	element* front;
+	element* back;
+};
+element* top = NULL;
+element* back = NULL;
+
+void insert(ll x) {
+	element* ins = new element;
+	top->back->front = ins;
+	*ins = { x,top,top->back };
+	top->back = ins;
+	return;
+}
+
+void del(ll x) {
+	element* cur = top->back;
+	while (cur!=back) {
+		if (cur->key == x) {
+			cur->front->back = cur->back;
+			cur->back->front = cur->front;
+			element* next = cur->back;
+			delete cur;
+			return;
+		}
+		else cur = cur->back;
+	}
+}
+
+void delfirst() {
+	element* fir = top->back;
+	element* sec = fir->back;
+	top->back = sec;
+	sec->front = top;
+	delete fir;
+	return;
+}
+
+void dellast() {
+	element* fir = back->front;
+	element* sec = fir->front;
+	sec->back = back;
+	back->front = sec;
+	delete fir;
+	return;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	top = new element;
+	back = new element;
+	*top = { -1,NULL,back };
+	*back = { -1,top,NULL };
+	ll Q;
+	cin >> Q;
+	for (ll q = 0; q < Q; q++) {
+		string s;
+		cin >> s;
+		if (s[0] == 'i') {
+			ll x;
+			cin >> x;
+			insert(x);
+		}
+		else if (s.size() == 6) {
+			ll x;
+			cin >> x;
+			del(x);
+		}
+		else if (s[6] == 'F') {
+			delfirst();
+		}
+		else {
+			dellast();
+		}
+	}
+	element* cur = top->back;
+	while (cur != back->front) {
+		cout << cur->key << " ";
+		cur = cur->back;
+	}
+	cout << cur->key << "\n";
+	cur = top->back;
+	delete top;
+	while (cur != NULL) {
+		element* temp = cur->back;
+		delete cur;
+		cur = temp;
+	}
+	return 0;
+}

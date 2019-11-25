@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+vector<pdd> A;
+
+ld calc(vector<ll> V) {
+	ld sum = 0;
+	for (ll n = 1; n < N; n++) {
+		ld dd = (A[n].first - A[n - 1].first) * (A[n].first - A[n - 1].first) + (A[n].second - A[n - 1].second) * (A[n].second - A[n - 1].second);
+		sum += sqrtl(dd);
+	}
+	return sum;
+}
+
+int main() {
+	cin >> N;
+	A.resize(N);
+	for (ll n = 0; n < N; n++) {
+		cin >> A[n].first >> A[n].second;
+	}
+	vector<ll> V(N);
+	for (ll n = 0; n < N; n++)V[n] = n;
+	ld sum = 0;
+	do {
+		for (ll n = 1; n < N; n++) {
+			ld dd = (A[V[n]].first - A[V[n - 1]].first) * (A[V[n]].first - A[V[n - 1]].first) + (A[V[n]].second - A[V[n - 1]].second) * (A[V[n]].second - A[V[n - 1]].second);
+			sum += sqrtl(dd);
+		}
+	} while (next_permutation(V.begin(), V.end()));
+	ll st = 1;
+	for (ll n = 2; n <= N; n++)st *= n;
+	cout << setprecision(16) << sum / st << endl;
+	return 0;
+}

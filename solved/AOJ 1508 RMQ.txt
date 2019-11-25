@@ -1,104 +1,3 @@
-void solve();
-
-int main() {
-	solve();
-	return 0;
-}
-
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <set>
-#include <queue>
-#include <functional>
-#include <map>
-#include <string>
-#include <boost/multiprecision/cpp_int.hpp>
-#include <limits.h>
-#include <iomanip>
-#include <stack>
-
-using namespace std;
-using namespace boost::multiprecision;
-
-template<class T>
-class segTree {
-public:
-	int N;   //中身のある要素数
-	int RN;   //2の累乗数にするために合わせた、ゴミデータ含めた要素数
-	T* array;
-	pair<int, int>* range;
-	std::function<T(T, T)> f;
-	//コンストラクタ:要素数、計算用ラムダ、初期化用の数
-	segTree(int n, function<T(T, T)> F, T z) {
-		N = n;
-		RN = 1;
-		while (RN < N)RN *= 2;
-		array = new T[2 * RN];
-		for (int i = 0; i < 2 * RN; i++)array[i] = z;
-		range = new pair<int, int>[2 * RN];
-		range[1] = pair<int, int>(0, RN);
-		for (int i = 1; i < RN; i++) {
-			range[2 * i] = pair<int, int>(range[i].first, (range[i].first + range[i].second) / 2);
-			range[2 * i + 1] = pair<int, int>((range[i].first + range[i].second) / 2, range[i].second);
-		}
-		f = F;
-	}
-	~segTree() {
-		delete array;
-		delete range;
-	}
-	void set(int n, T t) {   //n番目の要素にtを設定
-		n = RN + n;
-		array[n] = t;
-		while (n != 1) {
-			n = n / 2;
-			array[n] = f(array[2 * n], array[2 * n + 1]);
-		}
-	}
-	T call(int l, int r, int id) {
-		if (l == range[id].first && r == range[id].second)return array[id];
-		int m = (range[id].first + range[id].second) / 2;
-		if (r <= m)return call(l, r, 2 * id);
-		if (m <= l)return call(l, r, 2 * id + 1);
-		else if (l < m && m < r) {
-			return f(call(l, m, 2 * id), call(m, r, 2 * id + 1));
-		}
-	}
-	T get(int l, int r) {   //[a_l,a_r)
-		return call(l, r, 1);
-	}
-	T operator[](int a) {
-		return get(a, a + 1);
-	}
-};
-
-int N, Q;
-vector<int> ans;
-
-void solve() {
-	cin >> N >> Q;
-	segTree<int> seg(N, [](int a, int b) {return min(a, b);},(int)pow(2,31)-1);
-	for (int q = 0; q < Q; q++) {
-		int c, x, y;
-		cin >> c >> x >> y;
-		if (c == 0) {
-			seg.set(x, y);
-		}
-		else {
-			ans.push_back(seg.get(min(x,y),max(x,y)+1));
-		}
-	}
-	int i = 0;
-	for (; i < ans.size()-1; i++)cout << ans[i] << endl;
-	cout << ans[i];
-	return;
-}
-
-########################################
-########################################
 #include <iostream>
 #include <vector>
 #include <limits.h>
@@ -134,6 +33,21 @@ typedef vector<ll> VLL;
 typedef vector<VLL> VVLL;
 //typedef boost::multiprecision::cpp_int bigint;
 
+class Ab {
+public:
+	ll v;
+	Ab(ll v_) :v(v_) {};
+	Ab operator+(Ab b) {
+		return Ab(min(v, b()));
+	}
+	ll operator()() {
+		return v;
+	}
+	static ll E;
+	Ab() :v(Ab::E) {};
+};
+ll Ab::E = LLONG_MAX;
+
 //数列タイプのtreap
 //Xorshift
 unsigned int Xorshift() {
@@ -144,11 +58,11 @@ unsigned int Xorshift() {
 }
 
 struct node_t {
-	ll val;   //値
+	Ab val;   //値
 	node_t* ch[2];   //子
 	ll pri;   //優先度
 	ll cnt;   //子の個数
-	ll sum;   //値の和
+	Ab sum;   //値の和
 	static ll node_count;   //プール用の要素を数える変数
 	static const ll MAX_N = 1000000 + 10;   //プールのサイズ
 	/*void* operator new(std::size_t) {
@@ -158,7 +72,7 @@ struct node_t {
 	/*static void delete_all() {
 		node_count = 0;
 	}*/
-	node_t(ll v) {
+	node_t(Ab v) {
 		val = v;
 		ch[0] = ch[1] = NULL;
 		cnt = 1;
@@ -169,8 +83,7 @@ struct node_t {
 	node_t* update() {
 		node_t* t = this;
 		t->cnt = (t->ch[0] ? t->ch[0]->cnt : 0) + (t->ch[1] ? t->ch[1]->cnt : 0) + 1;
-		t->sum = min((t->ch[0] ? t->ch[0]->sum : LLONG_MAX),(t->ch[1] ? t->ch[1]->sum : LLONG_MAX));
-		t->sum = min(t->sum, t->val);
+		t->sum = (t->ch[0] ? t->ch[0]->sum : Ab::E)+(t->ch[1] ? t->ch[1]->sum : Ab::E)+ t->val;
 		return t;
 	}
 };
@@ -231,12 +144,12 @@ node_t* erase(node_t* tr, ll k) {
 void print(node_t* root) {
 	if (root == NULL)return;
 	print(root->ch[0]);
-	cout << " " << root->val;
+	cout << " " << root->val();
 	print(root->ch[1]);
 	return;
 }
 
-node_t* index(node_t* root,ll n) {
+node_t* index(node_t* root, ll n) {
 	if (!root)return NULL;
 	ll ln = (root->ch[0] ? root->ch[0]->cnt : 0);
 	ll rn = (root->ch[1] ? root->ch[1]->cnt : 0);
@@ -246,7 +159,7 @@ node_t* index(node_t* root,ll n) {
 	else return index(root->ch[1], n - (ln + 1));
 }
 
-node_t* change(node_t* root, ll n, ll x) {
+node_t* change(node_t* root, ll n, Ab x) {
 	if (!root)return NULL;
 	ll ln = (root->ch[0] ? root->ch[0]->cnt : 0);
 	ll rn = (root->ch[1] ? root->ch[1]->cnt : 0);
@@ -268,18 +181,33 @@ node_t* change(node_t* root, ll n, ll x) {
 	}
 }
 
-ll rangesum(node_t* root, ll l, ll r) {
-	if (root == NULL)return LLONG_MAX;
+Ab rangesum(node_t* root, ll l, ll r) {
+	if (root == NULL)return Ab::E;
 	ll ln = (root->ch[0] ? root->ch[0]->cnt : 0);
 	ll rn = (root->ch[1] ? root->ch[1]->cnt : 0);
-	if (r < 0 || l > ln + rn)return LLONG_MAX;
+	if (r < 0 || l > ln + rn)return Ab::E;
 	l = max((ll)0, l);
 	r = min(ln + rn, r);
 	if (l == 0 && r == ln + rn)return root->sum;
-	ll ans = rangesum(root->ch[0], l, r);
-	if (l <= ln && ln <= r)ans = min(ans, root->val);
-	ans = min(ans, rangesum(root->ch[1], l - ln - 1, r - ln - 1));
+	Ab ans = rangesum(root->ch[0], l, r);
+	if (l <= ln && ln <= r)ans = ans + root->val;
+	ans = ans + rangesum(root->ch[1], l - ln - 1, r - ln - 1);
 	return ans;
+}
+
+node_t* query0(node_t* root, ll l, ll r) {
+	auto sp = split(root, r);
+	auto sp2 = split(sp.second, 1);
+	auto ans = insert(sp.first, l, sp2.first);
+	return merge(ans, sp2.second);
+}
+
+ll query1(node_t* root, ll l, ll r) {
+	return rangesum(root, l, r)();
+}
+
+void query2(node_t* root, ll n, ll x) {
+	change(root, n, x);
 }
 
 int main() {
@@ -288,18 +216,24 @@ int main() {
 	ll N, Q;
 	cin >> N >> Q;
 	node_t* root = NULL;
+	ll a;
 	for (ll n = 0; n < N; n++) {
-		root = merge(root, new node_t(((ll)1 << 31) - 1));
+		cin >> a;
+		root = merge(root, new node_t(a));
 	}
 	ll c, x, y;
 	for (ll q = 0; q < Q; q++) {
 		cin >> c >> x >> y;
 		if (c == 0) {
-			change(root,x, y);
+			root = query0(root, x, y);
+		}
+		else if (c == 1) {
+			cout << query1(root, x, y) << "\n";
 		}
 		else {
-			cout << rangesum(root, x, y) << "\n";
+			query2(root, x, y);
 		}
 	}
+	delete_all(root);
 	return 0;
 }

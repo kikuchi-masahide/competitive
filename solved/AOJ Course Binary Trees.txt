@@ -1,0 +1,150 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//si:頂点数
+//root:根
+//ch:子供の集合
+//pa:親(根の親=-1)
+//no:前提情報
+void treeconstruct(ll si, ll root, vector<vector<ll>>& ch, vector<ll>& pa, vector<vector<ll>>& no) {
+	ch.resize(si, vector<ll>(0));
+	pa.resize(si, -2);
+	queue<pll> q;
+	q.push(pll(root, -1));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll p = q.front().second;
+		q.pop();
+		pa[cur] = p;
+		for (ll next : no[cur]) {
+			if (next == p)continue;
+			ch[cur].push_back(next);
+			q.push(pll(next, cur));
+		}
+	}
+	return;
+}
+
+//木の各要素の深さ(根からの距離)を求める
+void setDepth(ll N, ll root, vector<vector<ll>>& childs, vector<ll>& rank) {
+	rank.resize(N, -1);
+	queue<pll> q;
+	q.push(pll(root, 0));
+	while (!q.empty()) {
+		int cur = q.front().first;
+		int dist = q.front().second;
+		rank[cur] = dist;
+		q.pop();
+		for (int child : childs[cur]) {
+			if (child == -1)continue;
+			if (rank[child] != -1)continue;
+			q.push(pll(child, dist + 1));
+		}
+	}
+}
+
+//木の各要素の高さ(葉からの距離最大値)を求める
+void setHeight(ll N, ll root, VVLL& childs, VLL& heights,ll cur = -1){
+	if (cur == -1) {
+		heights.resize(N,-1);
+		setHeight(N, root, childs, heights, root);
+		return;
+	}
+	ll hei = -1;
+	for (ll child : childs[cur]) {
+		if (child == -1)continue;
+		if (heights[child] == -1) {
+			setHeight(N, root, childs, heights, child);
+		}
+		hei = max(hei, heights[child]);
+	}
+	heights[cur] = hei + 1;
+	return;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	cin >> N;
+	VVLL childs(N);
+	VLL parents(N,-1);
+	for (ll n = 0; n < N; n++) {
+		ll id, l, r;
+		cin >> id >> l >> r;
+		childs[id] = { l,r };
+		if (l != -1)parents[l] = id;
+		if (r != -1)parents[r] = id;
+	}
+	ll root = -1;
+	for (ll n = 0; n < N; n++) {
+		if (parents[n] == -1) {
+			root = n;
+			break;
+		}
+	}
+	VLL depths;
+	setDepth(N, root, childs, depths);
+	VLL heights;
+	setHeight(N, root,childs,heights);
+	for (ll n = 0; n < N; n++) {
+		cout << "node " << n << ": ";
+		cout << "parent = " << parents[n];
+		cout << ", sibling = ";
+		ll sib;
+		if (parents[n] == -1)sib = -1;
+		else {
+			if (childs[parents[n]][0] == n)sib = childs[parents[n]][1];
+			else sib = childs[parents[n]][0];
+		}
+		cout << sib;
+		cout << ", degree = ";
+		ll count = 0;
+		for (ll child : childs[n]) {
+			if (child != -1)count++;
+		}
+		cout << count;
+		cout << ", depth = ";
+		cout << depths[n];
+		cout << ", height = ";
+		cout << heights[n];
+		cout << ", ";
+		if (root == n)cout << "root";
+		else if (count == 0)cout << "leaf";
+		else cout << "internal node";
+		cout << "\n";
+	}
+	return 0;
+}

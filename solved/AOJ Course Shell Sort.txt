@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+vector<ll> A;
+
+int main() {
+	cin >> N;
+	A.resize(N);
+	for (ll n = 0; n < N; n++)cin >> A[n];
+	vector<ll> G;
+	G.push_back(1);
+	while (G.back()*3+1 < N)G.push_back(G.back() * 3 + 1);
+	ll cnt = 0;
+	for (ll gg = G.size() - 1; gg >= 0; gg--) {
+		ll g = G[gg];
+		for (ll i = g; i < N; i++) {
+			ll v = A[i];
+			ll j = i - g;
+			while (j >= 0 && A[j] > v) {
+				A[j + g] = A[j];
+				j -= g;
+				cnt++;
+			}
+			A[j + g] = v;
+		}
+	}
+	cout << G.size() << endl;
+	for (ll g = G.size() - 1; g > 0; g--)cout << G[g] << " ";
+	cout << G[0] << endl;
+	cout << cnt << endl;
+	for (ll n = 0; n < N; n++)cout << A[n] << endl;
+	return 0;
+}

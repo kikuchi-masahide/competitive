@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+
+void enumerateFactors(ll N,vector<ll>& V) {
+	ll p = 2;
+	while (N > 1) {
+		if (p * p > N) {
+			V.push_back(N);
+			return;
+		}
+		if (N % p == 0) {
+			V.push_back(p);
+			N /= p;
+		}
+		else p++;
+	}
+	return;
+}
+
+int main() {
+	cin >> N;
+	ll p = 2;
+	cout << N << ":";
+	vector<ll> V;
+	enumerateFactors(N, V);
+	for (ll p : V) {
+		cout << " " << p;
+	}
+	cout << endl;
+	return 0;
+}

@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+typedef pair<ll, string> P;
+ll N;
+vector<P> A0;
+vector<deque<string>> ord;
+
+vector<P> bubble(vector<P> A) {
+	bool flag = true;
+	while (flag) {
+		flag = false;
+		for (ll j = N - 1; j >= 1; j--) {
+			if (A[j].first < A[j - 1].first) {
+				swap(A[j], A[j - 1]);
+				flag = true;
+			}
+		}
+	}
+	return A;
+}
+
+vector<P> select(vector<P> A) {
+	for (ll i = 0; i < N; i++) {
+		ll minj = i;
+		for (ll j = i; j < N; j++) {
+			if (A[j].first < A[minj].first)minj = j;
+		}
+		if (i != minj) {
+			swap(A[i], A[minj]);
+		}
+	}
+	return A;
+}
+
+int main() {
+	cin >> N;
+	A0.resize(N);
+	ord.resize(14);
+	for (ll n = 0; n < N; n++) {
+		string a;
+		cin >> a;
+		string s = a.substr(0, 1);
+		ll num = stoi(a.substr(1));
+		A0[n] = P(num, s);
+		ord[num].push_back(s);
+	}
+	auto bub = bubble(A0);
+	bool st = true;
+	auto old = ord;
+	for (ll n = 0; n < N; n++) {
+		if (bub[n].second != ord[bub[n].first][0]) {
+			st = false;
+			break;
+		}
+		else ord[bub[n].first].pop_front();
+	}
+	for (ll n = 0; n < N-1; n++) {
+		cout << bub[n].second << bub[n].first << " ";
+	}
+	cout << bub[N-1].second << bub[N-1].first << endl;
+	cout << (st ? "Stable" : "Not stable") << endl;
+	auto sel = select(A0);
+	st = true;
+	ord = old;
+	for (ll n = 0; n < N; n++) {
+		if (sel[n].second != ord[sel[n].first][0]) {
+			st = false;
+			break;
+		}
+		else ord[sel[n].first].pop_front();
+	}
+	for (ll n = 0; n < N - 1; n++) {
+		cout << sel[n].second << sel[n].first << " ";
+	}
+	cout << sel[N - 1].second << sel[N - 1].first << endl;
+	cout << (st ? "Stable" : "Not stable") << endl;
+	return 0;
+}

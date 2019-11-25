@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll sx, sy, tx, ty;
+
+int main() {
+	cin >> sx >> sy >> tx >> ty;
+	ll dx = tx - sx;
+	ll dy = ty - sy;
+	for (ll d = 0; d < dx; d++)cout << "R";
+	for (ll d = 0; d < dy; d++)cout << "U";
+	for (ll d = 0; d < dx; d++)cout << "L";
+	for (ll d = 0; d < dy; d++)cout << "D";
+	cout << "D";
+	for (ll d = 0; d <= dx; d++)cout << "R";
+	for (ll d = 0; d <= dy; d++)cout << "U";
+	cout << "L";
+	cout << "U";
+	for (ll d = 0; d <= dx; d++)cout << "L";
+	for (ll d = 0; d <= dy; d++)cout << "D";
+	cout << "R" << endl;
+	return 0;
+}

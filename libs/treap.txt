@@ -1,0 +1,150 @@
+//数列タイプのtreap
+//Xorshift
+unsigned int Xorshift() {
+	static unsigned int tx = 123456789, ty = 362436069, tz = 521288629, tw = 88675123;
+	unsigned int tt = (tx ^ (tx << 11));
+	tx = ty; ty = tz; tz = tw;
+	return (tw = (tw ^ (tw >> 19)) ^ (tt ^ (tt >> 8)));
+}
+
+struct node_t {
+	Ab val;   //値
+	node_t* ch[2];   //子
+	ll pri;   //優先度
+	ll cnt;   //子の個数
+	Ab sum;   //値の和
+	static ll node_count;   //プール用の要素を数える変数
+	static const ll MAX_N = 4000000 + 10;   //プールのサイズ
+	void* operator new(std::size_t) {
+		static node_t pool[MAX_N];   //プール
+		return pool + node_count++;
+	}
+	static void delete_all() {
+		node_count = 0;
+	}
+	node_t(Ab v) {
+		val = v;
+		ch[0] = ch[1] = NULL;
+		cnt = 1;
+		sum = v;
+		pri = Xorshift();
+	}
+	node_t() {
+		val = Ab();
+		ch[0] = ch[1] = NULL;
+		cnt = 1;
+		sum = val;
+		pri = Xorshift();
+	}
+	node_t* update() {
+		node_t* t = this;
+		t->cnt = (t->ch[0] ? t->ch[0]->cnt : 0) + (t->ch[1] ? t->ch[1]->cnt : 0) + 1;
+		t->sum = (t->ch[0] ? t->ch[0]->sum : Ab::E)+ t->val;
+		t->sum = t->sum + (t->ch[1] ? t->ch[1]->sum : Ab::E);
+		return t;
+	}
+};
+ll node_t::node_count = 0;
+
+
+//2つのtreapをマージ
+node_t* merge(node_t* l, node_t* r) {
+	if (!l || !r)return !l ? r : l;
+	if (l->pri > r->pri) {
+		l->ch[1] = merge(l->ch[1], r);
+		return l->update();
+	}
+	else {
+		r->ch[0] = merge(l, r->ch[0]);
+		return r->update();
+	}
+}
+
+//treapを[0,k)と[k,n)にsplit
+pair<node_t*, node_t*> split(node_t* t, ll k) {
+	typedef pair<node_t*, node_t*> P;
+	if (!t)return P(NULL, NULL);
+	ll count = t->ch[0] ? t->ch[0]->cnt : 0;
+	if (k <= count) {
+		P s = split(t->ch[0], k);
+		t->ch[0] = s.second;
+		return P(s.first, t->update());
+	}
+	else {
+		P s = split(t->ch[1], k - count - 1);
+		t->ch[1] = s.first;
+		return P(t->update(), s.second);
+	}
+}
+
+//treap trの場所kに要素tを追加
+node_t* insert(node_t* tr, ll k, node_t* t) {
+	auto sp = split(tr, k);
+	sp.first = merge(sp.first, t);
+	return merge(sp.first, sp.second);
+}
+
+//treap trの場所kの要素を消去
+node_t* erase(node_t* tr, ll k) {
+	auto sp = split(tr, k - 1);
+	auto sp2 = split(sp.second, 1);
+	delete sp2.first;
+	return merge(sp.first, sp2.second);
+}
+
+void print(node_t* root) {
+	if (root == NULL)return;
+	print(root->ch[0]);
+	cout << " " << root->val;
+	print(root->ch[1]);
+	return;
+}
+
+node_t* index(node_t* root, ll n) {
+	if (!root)return NULL;
+	ll ln = (root->ch[0] ? root->ch[0]->cnt : 0);
+	ll rn = (root->ch[1] ? root->ch[1]->cnt : 0);
+	if (n >= ln + rn)return NULL;
+	if (n < ln)return index(root->ch[0], n);
+	else if (n == ln)return root;
+	else return index(root->ch[1], n - (ln + 1));
+}
+
+node_t* change(node_t* root, ll n, ll x) {
+	if (!root)return NULL;
+	ll ln = (root->ch[0] ? root->ch[0]->cnt : 0);
+	ll rn = (root->ch[1] ? root->ch[1]->cnt : 0);
+	if (n >= ln + rn + 1)return NULL;
+	if (n < ln) {
+		node_t* r = change(root->ch[0], n, x);
+		root->update();
+		return r;
+	}
+	else if (n == ln) {
+		root->val = x;
+		root->update();
+		return root;
+	}
+	else {
+		node_t* r = change(root->ch[1], n - (ln + 1), x);
+		root->update();
+		return r;
+	}
+}
+
+ll rangesum(node_t* root, ll l, ll r) {
+	if (root == NULL)return LLONG_MAX;
+	ll ln = (root->ch[0] ? root->ch[0]->cnt : 0);
+	ll rn = (root->ch[1] ? root->ch[1]->cnt : 0);
+	if (r < 0 || l > ln + rn)return LLONG_MAX;
+	l = max((ll)0, l);
+	r = min(ln + rn, r);
+	if (l == 0 && r == ln + rn)return root->sum;
+	ll ans = rangesum(root->ch[0], l, r);
+	if (l <= ln && ln <= r)ans = min(ans, root->val);
+	ans = min(ans, rangesum(root->ch[1], l - ln - 1, r - ln - 1));
+	return ans;
+}
+
+############################################################
+############################################################

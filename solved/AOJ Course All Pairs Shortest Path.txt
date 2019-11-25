@@ -1,0 +1,122 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template< typename T >
+struct edge {
+	ll src, to;
+	T cost;
+
+	edge(ll to, T cost) : src(-1), to(to), cost(cost) {}
+
+	edge(ll src, ll to, T cost) : src(src), to(to), cost(cost) {}
+
+	edge& operator=(const int& x) {
+		to = x;
+		return *this;
+	}
+
+	operator int() const { return to; }
+};
+
+template< typename T >
+using Edges = vector< edge< T > >;
+template< typename T >
+using WeightedGraph = vector< Edges< T > >;
+using UnWeightedGraph = vector< vector< int > >;
+template< typename T >
+using Matrix = vector< vector< T > >;
+
+template< typename T >
+vector< T > bellman_ford(Edges< T >& edges, ll V, ll s) {
+	const auto INF = numeric_limits< T >::max();
+	vector< T > dist(V, INF);
+	dist[s] = 0;
+	for (int i = 0; i < V - 1; i++) {
+		for (auto& e : edges) {
+			if (dist[e.src] == INF) continue;
+			dist[e.to] = min(dist[e.to], dist[e.src] + e.cost);
+		}
+	}
+	for (auto& e : edges) {
+		if (dist[e.src] == INF) continue;
+		if (dist[e.src] + e.cost < dist[e.to]) return vector< T >();
+	}
+	return dist;
+}
+
+template< typename T >
+void warshall_floyd(Matrix< T >& g, T INF) {
+	for (int k = 0; k < g.size(); k++) {
+		for (int i = 0; i < g.size(); i++) {
+			for (int j = 0; j < g.size(); j++) {
+				if (g[i][k] == INF || g[k][j] == INF) continue;
+				g[i][j] = min(g[i][j], g[i][k] + g[k][j]);
+			}
+		}
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N,M;
+	cin >> N >> M;
+	Edges<ll> G;
+	Matrix<ll> G2;
+	G.reserve(M);
+	G2.resize(N,VLL(N, LLONG_MAX));
+	for (ll m = 0; m < M; m++) {
+		ll s, t, d;
+		cin >> s >> t >> d;
+		G.push_back({ s,t,d });
+		G2[s][t] = min(G2[s][t], d);
+	}
+	VLL ans = bellman_ford(G, N,0);
+	if (ans.size() == 0) {
+		cout << "NEGATIVE CYCLE\n";
+		return 0;
+	}
+	warshall_floyd(G2, LLONG_MAX);
+	for (ll s = 0; s < N; s++) {
+		for (ll t = 0; t < N; t++) {
+			if (s == t)cout << 0;
+			else if (G2[s][t] == LLONG_MAX)cout << "INF";
+			else cout << G2[s][t];
+			if (t == N - 1)cout << "\n";
+			else cout << " ";
+		}
+	}
+	return 0;
+}

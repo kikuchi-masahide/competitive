@@ -1,0 +1,103 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+VVLL G;
+ll N,M;
+vector<vector<pll>> mind;
+
+void bfsfrom(ll s) {
+	queue<ll> que;
+	mind[s][s] = pll(0,s);
+	que.push(s);
+	while (!que.empty()) {
+		ll cur = que.front();
+		que.pop();
+		for (ll child : G[cur]) {
+			if (mind[s][child].first == -1) {
+				mind[s][child] = pll(mind[s][cur].first + 1, cur);
+				que.push(child);
+			}
+		}
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N >> M;
+	G.resize(N);
+	for (ll m = 0; m < M; m++) {
+		ll s, t;
+		cin >> s >> t;
+		s--; t--;
+		G[s].push_back(t);
+	}
+	mind.resize(N, vector<pll>(N,pll(-1,-1)));
+	for (ll n = 0; n < N; n++) {
+		bfsfrom(n);
+	}
+	ll ansd = 10000;
+	ll anss, anst;
+	for (ll s = 0; s < N; s++) {
+		for (ll t = s + 1; t < N; t++) {
+			if (mind[s][t].first == -1 || mind[t][s].first == -1)continue;
+			if (ansd > mind[s][t].first + mind[t][s].first) {
+				anss = s, anst = t;
+				ansd = mind[s][t].first + mind[t][s].first;
+			}
+		}
+	}
+	if (ansd == 10000) {
+		cout << -1 << "\n";
+		return 0;
+	}
+	ll cur = anst;
+	set<ll> ans;
+	ans.insert(anst);
+	while (cur != anss) {
+		cur = mind[anss][cur].second;
+		ans.insert(cur);
+	}
+	cur = anss;
+	while (cur != anst) {
+		cur = mind[anst][cur].second;
+		ans.insert(cur);
+	}
+	cout << ans.size() << "\n";
+	for (ll c : ans) {
+		cout << c+1 << "\n";
+	}
+	return 0;
+}

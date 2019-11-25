@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+map<ll, ll> MAP[2];
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	cin >> N;
+	VLL V[2];
+	V[0].reserve(N);
+	V[1].reserve(N);
+	for (ll n = 0; n < N; n++) {
+		ll v;
+		cin >> v;
+		V[n & 1].push_back(v);
+	}
+	sort(V[0].begin(), V[0].end(), [](ll a, ll b) {
+		return a < b;
+	});
+	sort(V[1].begin(), V[1].end(), [](ll a, ll b) {
+		return a < b;
+	});
+	vector<pll> VV[2];
+	VV[0].reserve(N);
+	VV[1].reserve(N);
+	VV[0].push_back(pll(V[0][0], 1));
+	for (ll n = 1; n < V[0].size(); n++) {
+		if (V[0][n] == V[0][n - 1])VV[0].back().second++;
+		else VV[0].push_back(pll(V[0][n], 1));
+	}
+	VV[1].push_back(pll(V[1][0], 1));
+	for (ll n = 1; n < V[1].size(); n++) {
+		if (V[1][n] == V[1][n - 1])VV[1].back().second++;
+		else VV[1].push_back(pll(V[1][n], 1));
+	}
+	sort(VV[0].begin(), VV[0].end(), [](pll a, pll b) {
+		return a.second > b.second;
+	});
+	sort(VV[1].begin(), VV[1].end(), [](pll a, pll b) {
+		return a.second > b.second;
+	});
+	ll ans = 0;
+	if (VV[0][0].first != VV[1][0].first) {
+		ans = N - (VV[0][0].second + VV[1][0].second);
+	}
+	else {
+		//0でマックスを使う
+		ll ans1 = VV[0][0].second;
+		if (VV[1].size() != 1)ans1 += VV[1][1].second;
+		//1でマックスを使う
+		ll ans2 = VV[1][0].second;
+		if (VV[0].size() != 1)ans2 += VV[0][1].second;
+		ans = N - max(ans1, ans2);
+	}
+	cout << ans << "\n";
+	return 0;
+}

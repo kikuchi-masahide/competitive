@@ -1,3 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+
+using namespace std;
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll X, Y;
+
 //拡張拡張Euclidの互除法による(階乗)逆元の求め方
 //O(N)
 void stairs(long long N, vector<long long>& st, long long mod = 1e9 + 7) {
@@ -52,22 +84,17 @@ ll Comb(ll N, ll K, ll mod = 1e9 + 7) {
 	return ans;
 }
 
-
-
-//フェルマーの三角形を用いた、n,kが小さい場合のdp的解法(mod Mが素数じゃなくても使える)
-//O(N*N)
-int  N = ,M = 1e9 + 7;
-vector<vector<long long>> dp;
-dp.resize(N + 1);
-dp[1].resize(3);
-dp[1][0] = 1;
-dp[1][1] = 1;
-dp[1][2] = 0;
-for (int n = 2; n <= N; n++) {
-	dp[n].resize(n + 2);
-	dp[n][0] = 1;
-	for (int r = 1; r <= n; r++) {
-		dp[n][r] = (dp[n - 1][r - 1] + dp[n - 1][r])%M;
+int main() {
+	cin >> X >> Y;
+	ll x = X + Y;
+	ll y = 2 * Y - X;
+	if (y >= 0 && x % 3 == 0 && y % 3 == 0 && y <= x) {
+		x /= 3;
+		y /= 3;
+		cout << Comb(x, y) << endl;
 	}
-	dp[n][n + 1] = 0;
+	else {
+		cout << 0 << endl;
+	}
+	return 0;
 }

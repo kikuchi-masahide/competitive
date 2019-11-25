@@ -1,0 +1,107 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//si:頂点数
+//root:根
+//ch:子供の集合
+//pa:親(根の親=-1)
+//no:前提情報
+void treeconstruct(ll si, ll root, vector<vector<ll>>& ch, vector<ll>& pa, vector<vector<ll>>& no) {
+	ch.resize(si, vector<ll>(0));
+	pa.resize(si, -2);
+	queue<pll> q;
+	q.push(pll(root, -1));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll p = q.front().second;
+		q.pop();
+		pa[cur] = p;
+		for (ll next : no[cur]) {
+			if (next == p)continue;
+			ch[cur].push_back(next);
+			q.push(pll(next, cur));
+		}
+	}
+	return;
+}
+
+vector < vector <pll>> edges;
+VLL ans;
+ll N;
+
+void calc(ll n) {
+	ll des = -1;
+	for (ll c = 0; c < edges[n].size(); c++) {
+		if (ans[edges[n][c].second] != -1) {
+			des = ans[edges[n][c].second];
+			break;
+		}
+	}
+	ll c = 0;
+	for (ll child = 0; child < edges[n].size(); child++) {
+		if (c == des)c++;
+		if (ans[edges[n][child].second] == -1) {
+			ans[edges[n][child].second] = c;
+			calc(edges[n][child].first);
+		c++;
+		}
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N;
+	edges.resize(N);
+	for (ll n = 0; n < N - 1; n++) {
+		ll a, b;
+		cin >> a >> b;
+		a--; b--;
+		edges[a].push_back(pll(b,n));
+		edges[b].push_back(pll(a,n));
+	}
+	for (ll n = 0; n < N; n++) {
+		sort(edges[n].begin(), edges[n].end());
+	}
+	ans.resize(N-1,-1);
+	calc(0);
+	ll K = 0;
+	for (ll n = 0; n < N; n++)K = max(K, (ll)edges[n].size());
+	cout << K << "\n";
+	vector<ll> anse(N);
+	for (ll n = 0; n < N - 1; n++)cout << ans[n]+1 << "\n";
+	return 0;
+}
