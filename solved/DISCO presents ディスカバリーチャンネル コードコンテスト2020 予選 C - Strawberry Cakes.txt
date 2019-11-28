@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll H, W, K;
+	cin >> H >> W >> K;
+	VVLL MAP;   //1->‚ ‚è
+	MAP.resize(W+1, VLL(H+1,0));
+	VVLL MAPP;
+	MAPP.resize(W + 1, VLL(H + 1, 0));
+	for (ll y = 1; y <=H; y++) {
+		string S;
+		cin >> S;
+		for (ll x = 1; x <= W; x++) {
+			if (S[x - 1] == '#') {
+				MAP[x][y] = 1;
+				MAPP[x][y] = 1;
+			}
+			
+		}
+	}
+	for (ll y = 1; y <= H; y++) {
+		for (ll x = 1; x <= W; x++) {
+			MAPP[x][y] += MAPP[x - 1][y] + MAPP[x][y - 1] - MAPP[x - 1][y - 1];
+		}
+	}
+	VVLL ans;
+	ans.resize(W+1, VLL(H+1, 0));
+	ll sy = 1;
+	for (; sy <= H; sy++) {
+		if (MAPP[W][sy] != 0)break;
+	}
+	ll count = 0;
+	for (ll y = sy; y <= H; y++) {
+		//‚»‚Ì’i‚ÉƒCƒ`ƒS‚ª‚ ‚é
+		if (MAPP[W][y] != MAPP[W][y - 1]) {
+			count++;
+			ll x = 1;
+			for (; x <= W; x++) {
+				if (MAP[x][y] == 0)ans[x][y] = count;
+				else break;
+			}
+			ans[x++][y] = count;
+			for (; x <= W; x++) {
+				if (MAP[x][y] == 0)ans[x][y] = count;
+				else {
+					count++;
+					ans[x][y] = count;
+				}
+			}
+		}
+		else {
+			for (ll x = 1; x <= W; x++) {
+				ans[x][y] = ans[x][y-1];
+			}
+		}
+	}
+	for (ll y = sy - 1; y >= 1; y--) {
+		for (ll x = 1; x <= W; x++) {
+			ans[x][y] = ans[x][y + 1];
+		}
+	}
+	for (ll y = 1; y <= H; y++) {
+		for (ll x = 1; x <= W; x++) {
+			cout << ans[x][y] << " ";
+		}
+		cout << "\n";
+	}
+	return 0;
+}
