@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll calc1(ll t1, ll t2, ll a1, ll a2, ll b1, ll b2) {
+	if (a2 < b2) {
+		swap(a2, b2);
+		swap(a1, b1);
+	}
+	ll D = t1 * (b1 - a1) + t2 * (b2 - a2);
+	if (D > 0) {
+		return 0;
+	}
+	if (D == 0) {
+		return -1;
+	}
+	else {
+		if (b1 - a1 < 0)return 0;
+		ll c = -t1 * (b1 - a1);
+		if (c % D == 0) {
+			return c / D;
+		}
+		else {
+			return c / D + 1;
+		}
+	}
+}
+
+ll calc2(ll t1, ll t2, ll a1, ll a2, ll b1, ll b2) {
+	if (a1 < b1) {
+		swap(a1, b1);
+		swap(a2, b2);
+	}
+	ll D = t1 * (b1 - a1) + t2 * (b2 - a2);
+	if (D > 0) {
+		return t1 * (a1 - b1) / D;
+	}
+	else if (D <= 0) {
+		return 0;
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll T1, T2, A1, A2, B1, B2;
+	cin >> T1 >> T2 >> A1 >> A2 >> B1 >> B2;
+	ll ans = calc1(T1, T2, A1, A2, B1, B2);
+	if (ans == -1) {
+		cout << "infinity\n";
+		return 0;
+	}
+	ans += calc2(T1, T2, A1, A2, B1, B2);
+	cout << ans << "\n";
+	return 0;
+}

@@ -1,3 +1,25 @@
+class Ab {
+public:
+	ll v;
+	ll len;
+	Ab(ll v_) :v(v_) {
+		len = 1;
+	};
+	Ab(ll v_, ll l_) :v(v_), len(l_) {};
+	ll operator()() {
+		return v;
+	}
+	static Ab E;
+	Ab() :v(0),len(0) {};
+};
+Ab Ab::E = Ab(0,0);
+Ab operator+(Ab a,Ab b) {
+	ll newv = a.v + b.v * P[a.len];
+	newv %= MOD;
+	ll newl = a.len + b.len;
+	return Ab(newv, newl);
+}
+
 //êîóÒÉ^ÉCÉvÇÃtreap
 //Xorshift
 unsigned int Xorshift() {

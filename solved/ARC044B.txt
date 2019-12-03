@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll di(ll p) {
+	if (p == 0)return 1;
+	if (p == 1)return 2;
+	ll ans = di(p / 2);
+	ans = (ans * ans) % MOD;
+	if (p & 1)ans = (ans * 2) % MOD;
+	return ans;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	VLL A;
+	cin >> N;
+	A.resize(N);
+	VLL count(N + 1, 0);
+	for (ll n = 0; n < N; n++) {
+		cin >> A[n];
+		count[A[n]]++;
+	}
+	if (N == 1) {
+		if (A[0] == 0)cout << 1 << "\n";
+		else cout << 0 << "\n";
+		return 0;
+	}
+	sort(A.begin(), A.end(), [](ll a, ll b) {
+		return a < b;
+	});
+	if (A[0] != 0 || A[1] != 1) {
+		cout << 0 << "\n";
+		return 0;
+	}
+	for (ll n = 1; n < N; n++) {
+		if (A[n] - A[n - 1] >= 2) {
+			cout << 0 << "\n";
+			return 0;
+		}
+	}
+	ll ans = 1;
+	for (ll d = 1; d < N; d++) {
+		ll C = count[d] * (count[d] - 1) / 2;
+		ans = (ans * di(C)) % MOD;
+		ll each = (di(count[d - 1]) + MOD - 1) % MOD;
+		for (ll t = 0; t < count[d]; t++) {
+			ans = (ans * each) % MOD;
+		}
+	}
+	cout << ans << "\n";
+	return 0;
+}

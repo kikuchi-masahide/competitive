@@ -1,0 +1,149 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template< typename T >
+struct edge {
+	ll src, to;
+	T cost;
+
+	edge(int to, T cost) : src(-1), to(to), cost(cost) {}
+
+	edge(ll src, ll to, T cost) : src(src), to(to), cost(cost) {}
+
+	edge& operator=(const int& x) {
+		to = x;
+		return *this;
+	}
+
+	operator int() const { return to; }
+};
+
+template< typename T >
+using Edges = vector< edge< T > >;
+template< typename T >
+using WeightedGraph = vector< Edges< T > >;
+using UnWeightedGraph = vector< vector< int > >;
+template< typename T >
+using Matrix = vector< vector< T > >;
+template< typename T >
+vector< T > dijkstra(WeightedGraph< T >& g, int s) {
+	const auto INF = numeric_limits< T >::max();
+	vector< T > dist(g.size(), INF);
+
+	using Pi = pair< T, int >;
+	priority_queue< Pi, vector< Pi >, greater< Pi > > que;
+	dist[s] = 0;
+	que.emplace(dist[s], s);
+	while (!que.empty()) {
+		T cost;
+		int idx;
+		tie(cost, idx) = que.top();
+		que.pop();
+		if (dist[idx] < cost) continue;
+		for (auto& e : g[idx]) {
+			auto next_cost = cost + e.cost;
+			if (dist[e.to] <= next_cost) continue;
+			dist[e.to] = next_cost;
+			que.emplace(dist[e.to], e.to);
+		}
+	}
+	return dist;
+}
+
+ll H, W, T;
+VVLL MAP;
+pll start, goal;
+
+struct query {
+	ll x, y;
+	ll t;
+	query(ll xx,ll yy,ll tt):x(xx),y(yy),t(tt){}
+};
+auto lambda = [](query a, query b) {
+	return a.t > b.t;
+};
+
+bool judge(ll X) {
+	VVLL res;
+	res.resize(W, VLL(H, -1));
+	priority_queue < query, vector<query>, decltype(lambda)> q(lambda);
+	q.push({ start.first,start.second,0 });
+	while (!q.empty()) {
+		auto e = q.top();
+		q.pop();
+		if (res[e.x][e.y] != -1)continue;
+		res[e.x][e.y] = e.t;
+		ll vect[4][2] = {
+			{1,0},{-1,0},{0,1},{0,-1}
+		};
+		for (ll v = 0; v < 4; v++) {
+			ll x = e.x + vect[v][0];
+			ll y = e.y + vect[v][1];
+			if (x >= 0 && x < W && y >= 0 && y < H) {
+				if (res[x][y] != -1)continue;
+				q.push({ x,y,e.t + (MAP[x][y] == 1 ? X : 1) });
+			}
+		}
+	}
+	if (res[goal.first][goal.second] <= T)return true;
+	else return false;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> H >> W >> T;
+	MAP.resize(W, VLL(H, 0));
+	for (ll y = 0; y < H; y++){
+		string S;
+		cin >> S;
+		for (ll x = 0; x < W; x++) {
+			if (S[x] == 'S')start = pll(x, y);
+			else if (S[x] == 'G')goal = pll(x, y);
+			if (S[x] == '#')MAP[x][y] = 1;
+			else MAP[x][y] = 0;
+		}
+	}
+	ll s = 1, e = 1e9;
+	while (e - s > 1) {
+		ll m = (e + s) / 2;
+		if (judge(m))s = m;
+		else e = m;
+	}
+	cout << s << "\n";
+	return 0;
+}

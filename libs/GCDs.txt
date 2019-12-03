@@ -30,3 +30,16 @@ T LCM(vector<T> v) {
 	}
 	return v[v.size()-1];
 }
+
+//ax+by=gcd(a,b)‚Ì‰ð
+ll extgcd(ll a, ll b, ll& x, ll& y) {
+	ll d = a;
+	if (b != 0) {
+		d = extgcd(b, a % b, y, x);
+		y -= (a / b) * x;
+	}
+	else {
+		x = 1; y = 0;
+	}
+	return d;
+}
