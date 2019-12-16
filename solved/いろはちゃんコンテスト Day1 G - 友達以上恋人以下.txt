@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//–ñ”—ñ‹“(d•¡•ª‚àŒÂ”‰ñ’Ç‰Á)
+void enumerateFactors(ll N, vector<ll>& V) {
+	ll p = 2;
+	while (N > 1) {
+		if (p * p > N) {
+			V.push_back(N);
+			return;
+		}
+		if (N % p == 0) {
+			V.push_back(p);
+			N /= p;
+		}
+		else p++;
+	}
+	return;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N, M, K;
+	cin >> N >> M >> K;
+	VLL A(N + 1);
+	for (ll n = 1; n <= N; n++)cin >> A[n];
+	VVLL DP;
+	DP.resize(N + 1, VLL(M+1,-1));
+	DP[0][0] = 0;
+	for (ll n = 1; n <= N; n++) {
+		for (ll m = 1; m <= M; m++) {
+			ll ans = -1;
+			for (ll k = max((ll)0, n - K); k < n; k++) {
+				if (DP[k][m - 1] == -1)continue;
+				ans = max(ans, DP[k][m - 1]);
+			}
+			if (ans == -1)DP[n][m] = ans;
+			else DP[n][m] = ans+A[n];
+		}
+	}
+	ll ans = -1;
+	for (ll n = N; n > N-K; n--) {
+		ans = max(ans, DP[n][M]);
+	}
+	cout << ans << "\n";
+	return 0;
+}

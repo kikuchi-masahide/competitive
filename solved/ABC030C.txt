@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N, M;
+	ll X, Y;
+	queue<ll> A;
+	queue<ll> B;
+	cin >> N >> M >> X >> Y;
+	for (ll n = 0; n < N; n++) {
+		ll a;
+		cin >> a;
+		A.push(a);
+	}
+	for (ll m = 0; m < M; m++) {
+		ll b;
+		cin >> b;
+		B.push(b);
+	}
+	ll ans = 0;
+	ll now = 0;
+	while (true) {
+		while (!A.empty()) {
+			if (A.front() < now)A.pop();
+			else break;
+		}
+		if (A.empty())break;
+		now = A.front()+X;
+		while (!B.empty()) {
+			if (B.front() < now)B.pop();
+			else break;
+		}
+		if (B.empty())break;
+		now = B.front()+Y;
+		ans++;
+	}
+	cout << ans << "\n";
+	return 0;
+}

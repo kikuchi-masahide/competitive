@@ -1,0 +1,85 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+vector<vector<pll>> A;   //íNÇ™Ç»Ç…ÅAsecond==1->ê≥íº
+ll ans = 0;
+
+void judge(ll c) {
+	VLL res(N,0);
+	ll sum = 0;
+	for (ll n = 0; n < N; n++) {
+		if (c & ((ll)1 << n)) {
+			res[n] = 1;
+			sum++;
+		}
+	}
+	for (ll n = 0; n < N; n++) {
+		if (res[n] == 0)continue;
+		for (ll t = 0; t < A[n].size(); t++) {
+			ll x = A[n][t].first;
+			ll y = A[n][t].second;
+			if (res[x] != y) {
+				return;
+			}
+		}
+	}
+	ans = max(ans, sum);
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N;
+	A.resize(N);
+	for (ll n = 0; n < N; n++) {
+		ll a;
+		cin >> a;
+		A[n].resize(a);
+		for (ll t = 0; t < a; t++) {
+			ll x, y;
+			cin >> x >> y;
+			x--;
+			A[n][t] = pll(x, y);
+		}
+	}
+	for (ll c = 0; c < ((ll)1 << N); c++) {
+		judge(c);
+	}
+	cout << ans << "\n";
+	return 0;
+}

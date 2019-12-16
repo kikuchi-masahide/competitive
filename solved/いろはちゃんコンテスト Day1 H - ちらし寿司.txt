@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll f(ll X) {
+	ll ans = 0;
+	while (X > 0) {
+		ans += X % 10;
+		X /= 10;
+	}
+	return ans;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	cin >> N;
+	ll F0 = f(N);
+	ll fc = F0;
+	ll ans0 = fc % 9;
+	fc -= ans0;
+	while (fc > 0) {
+		ans0 = ans0 * 10 + 9;
+		fc -= 9;
+	}
+	if (N != ans0) {
+		cout << ans0 << "\n";
+		return 0;
+	}
+	if (ans0 <= 9) {
+		cout << 1 << ans0 - 1 << "\n";
+		return 0;
+	}
+	if (F0 % 9 == 0) {
+		cout << 18 << (ans0 - 9) / 10 << "\n";
+		return 0;
+	}
+	if (F0 % 9 != 0) {
+		cout << F0 % 9 + 1;
+		F0 -= F0 % 9 + 1;
+		cout << 8;
+		F0 -= 8;
+		while (F0 > 0) {
+			cout << 9;
+			F0 -= 9;
+		}
+		cout << "\n";
+		return 0;
+	}
+	return 0;
+}

@@ -1,0 +1,92 @@
+//0-1ナップザック問題を分岐限定法で解く際の参考に
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N, Wmax;
+vector<pll> VW;
+ll vstar = 0;
+
+//部分問題 : 荷物n~(N-1)で重さ制限Wmax-w0,価値+v0最大化
+ll solve(ll n,ll w0, ll v0) {
+	if (n == N)return v0;
+	ll w = w0;
+	ll k = n;
+	ld v = v0;
+	//緩和問題での最大値を求める
+	while (k < N) {
+		if (w + VW[k].second <= Wmax) {
+			v += VW[k].first;
+			w += VW[k].second;
+			k++;
+		}
+		else {
+			//緩和問題で整数解が得られたのでそのまま返す
+			if (Wmax == w) {
+				vstar = max(vstar, (ll)v);
+				return v;
+			}
+			ld x = (ld)(Wmax - w) / VW[k].second;
+			v += x * VW[k].first;
+			break;
+		}
+	}
+	//現状で得られているナップザック問題のほうの最大値より
+	//小さかったらそれ以降の枝は無視
+	if (v <= vstar)return v0;
+	ll in = 0;
+	if(w0+VW[n].second <= Wmax)in = solve(n + 1, w0 + VW[n].second, v0 + VW[n].first);
+	ll out = solve(n + 1, w0, v0);
+	vstar = max(vstar,max(in, out));
+	return max(in, out);
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N >> Wmax;
+	VW.resize(N);
+	for (ll n = 0; n < N; n++) {
+		cin >> VW[n].first >> VW[n].second;
+	}
+	// v/wの降順でソート
+	sort(VW.begin(), VW.end(), [](pll a, pll b) {
+		return (a.first * b.second > b.first * a.second);
+	});
+	solve(0, 0, 0);
+	cout << vstar << "\n";
+	return 0;
+}
