@@ -1,0 +1,366 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//unionFind
+class unionFind {
+private:
+	int* p;   //親配列のポインタ
+	int* rank;
+	int N;   //要素数
+	int* check;   //同値な要素の数
+public:
+	unionFind(int);   //コンストラクタ
+	int parent(int);   //親要素を返す
+	void unit(int, int);   //2要素をつなぐ
+	int operator[](int);   //parentの省略形
+	~unionFind();
+	int size(int n);   //頂点nと同値な要素数を返す
+};
+
+unionFind::unionFind(int n) {
+	N = n;
+	p = new int[N];
+	rank = new int[N];
+	for (int i = 0; i < N; i++) {
+		p[i] = i;
+		rank[i] = 0;
+	}
+	check = new int[N];
+	for (int n = 0; n < N; n++)check[n] = 1;
+	return;
+}
+
+int unionFind::parent(int n) {
+	if (n < 0 || n >= N)return -1;
+	if (p[n] == n)return n;   //自分が一番上の親
+	return p[n] = parent(p[n]);   //つなぎ直しと上にたどる操作
+}
+
+int unionFind::operator[](int n) {
+	return parent(n);
+}
+
+void unionFind::unit(int x, int y) {
+	x = parent(x), y = parent(y);
+	if (x == y)return;   //根が同じだから何もせずに帰る
+	int sum = check[x] + check[y];
+	if (rank[x] < rank[y])p[x] = y;
+	else {
+		p[y] = x;
+		if (rank[x] == rank[y])rank[x]++;
+	}
+	check[x] = sum;
+	check[y] = sum;
+	return;
+}
+
+unionFind::~unionFind() {
+	delete(p);
+	delete(rank);
+	delete(check);
+	return;
+}
+
+int unionFind::size(int n) {
+	return check[parent(n)];
+}
+
+
+ll N,M,Q;
+vector<pll> edges0;
+struct tp {
+	ll tree;
+	ll p;
+};
+vector<tp> pointsconv;
+vector<VVLL> childs;
+VVLL parents;
+ll T;
+
+void composetrees() {
+	unionFind UF(N);
+	for (ll m = 0; m < M; m++) UF.unit(edges0[m].first, edges0[m].second);
+	struct pq {
+		ll tree, p, ord;
+	};
+	vector<pq> V(N);
+	for (ll n = 0; n < N; n++) {
+		V[n].ord = n;
+		V[n].tree = UF[n];
+	}
+	sort(V.begin(), V.end(), [](pq a, pq b) {
+		if (a.tree == b.tree)return a.ord < b.ord;
+		return a.tree < b.tree;
+	});
+	V[0].p = 0;
+	ll curt = 0;
+	for (ll n = 1; n < N; n++) {
+		if (V[n].tree == V[n - 1].tree) {
+			V[n].tree = V[n - 1].tree;
+			V[n].p = V[n - 1].p + 1;
+			V[n - 1].tree = curt;
+		}
+		else {
+			V[n - 1].tree = curt;
+			curt++;
+			V[n].p = 0;
+		}
+	}
+	V.back().tree = curt;
+	T = V.back().tree + 1;
+	pointsconv.resize(N);
+	for (ll n = 0; n < N; n++) {
+		pointsconv[V[n].ord] = { V[n].tree,V[n].p };
+	}
+	vector<VVLL> edges(T);
+	childs.resize(T);
+	parents.resize(T);
+	for (ll n = 0; n < N; n++) {
+		edges[V[n].tree].push_back(VLL());
+		childs[V[n].tree].push_back(VLL());
+		parents[V[n].tree].push_back(-2);
+	}
+	for (ll m = 0; m < M; m++) {
+		ll tree = pointsconv[edges0[m].first].tree;
+		ll s = pointsconv[edges0[m].first].p;
+		ll t = pointsconv[edges0[m].second].p;
+		edges[tree][s].push_back(t);
+		edges[tree][t].push_back(s);
+	}
+	for (ll t = 0; t < T; t++) {
+		queue<pll> q;
+		q.push(pll(0, -1));
+		while (!q.empty()) {
+			ll cur = q.front().first;
+			ll p = q.front().second;
+			q.pop();
+			parents[t][cur] = p;
+			for (ll c : edges[t][cur]) {
+				if (c == p)continue;
+				childs[t][cur].push_back(c);
+				q.push(pll(c, cur));
+			}
+		}
+	}
+}
+
+void doublingConstruct(ll N, vector<ll>& parents, vector<vector<ll>>& doubling) {
+	doubling.push_back(parents);
+	while (true) {
+		vector<ll> temp(N, -1);
+		vector<ll>& back = doubling.back();
+		bool flag = false;
+		for (ll n = 0; n < N; n++) {
+			if (doubling.back()[n] == -1)continue;
+			temp[n] = back[back[n]];
+			if (temp[n] != -1)flag = true;
+		}
+		if (!flag)break;
+		doubling.push_back(temp);
+	}
+}
+
+ll LowestCommonAncestor(ll N, ll root, vector<ll>& parents, vector<ll>& rank, vector<vector<ll>>& doubling, ll c1, ll c2) {
+	if (c1 == c2)return c1;
+	if (rank[c1] > rank[c2])return LowestCommonAncestor(N, root, parents, rank, doubling, c2, c1);
+	if (rank[c1] != rank[c2]) {
+		ll dif = rank[c2] - rank[c1];
+		ll p = 0;
+		while (dif >= (1 << p)) {
+			if ((dif & (1 << p)))c2 = doubling[p][c2];
+			p++;
+		}
+		if (c1 == c2)return c1;
+	}
+	ll log = doubling.size() - 1;
+	for (; log >= 0; log--) {
+		if (c1 == c2)break;
+		if (doubling[log][c1] != doubling[log][c2]) {
+			ll temp1 = doubling[log][c1];
+			ll temp2 = doubling[log][c2];
+			if (temp1 != temp2) {
+				c1 = temp1;
+				c2 = temp2;
+			}
+		}
+	}
+	return parents[c1];
+}
+
+//木の各要素の深さ(根からの距離)を求める
+void setDepth(ll N, ll root, vector<vector<ll>>& childs, vector<ll>& rank) {
+	rank.resize(N, -1);
+	queue<pll> q;
+	q.push(pll(root, 0));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll dist = q.front().second;
+		rank[cur] = dist;
+		q.pop();
+		for (ll child : childs[cur]) {
+			if (child == -1)continue;
+			if (rank[child] != -1)continue;
+			q.push(pll(child, dist + 1));
+		}
+	}
+}
+
+VVLL wv;
+VVLL W, WW;
+VVLL X, XX;
+
+void WXDP(ll tree, ll n) {
+	ll wans = 0, xans = 0;
+	for (ll c = 0; c < childs[tree][n].size(); c++) {
+		WXDP(tree, childs[tree][n][c]);
+		wans += W[tree][childs[tree][n][c]];
+	}
+	wans += wv[tree][n];
+	W[tree][n] = wans;
+	for (ll c = 0; c < childs[tree][n].size(); c++) {
+		xans += X[tree][childs[tree][n][c]] + W[tree][childs[tree][n][c]];
+	}
+	X[tree][n] = xans;
+}
+
+void WWXXDP(ll tree, ll n) {
+	if (n == 0) {
+		WW[tree][n] = wv[tree][n];
+		XX[tree][n] = 0;
+	}
+	if (childs[tree][n].size() == 0)return;
+	VLL forward(childs[tree][n].size());
+	forward[0] = W[tree][childs[tree][n][0]];
+	for (ll c = 1; c < childs[tree][n].size(); c++) {
+		forward[c] = forward[c - 1] + W[tree][childs[tree][n][c]];
+	}
+	VLL backward(childs[tree][n].size());
+	backward.back() = W[tree][childs[tree][n].back()];
+	for (ll c = (ll)childs[tree][n].size() - 2; c >= 0; c--) {
+		backward[c] = backward[c + 1]+ W[tree][childs[tree][n][c]];
+	}
+	for (ll c = 0; c < childs[tree][n].size(); c++) {
+		ll temp = 0;
+		if (c > 0)temp += forward[c - 1];
+		if (c < childs[tree][n].size() - 1)temp += backward[c+1];
+		temp += WW[tree][n]+wv[tree][childs[tree][n][c]];
+		WW[tree][childs[tree][n][c]] = temp;
+	}
+	forward[0] = X[tree][childs[tree][n][0]] + 2 * W[tree][childs[tree][n][0]];
+	for (ll c = 1; c < childs[tree][n].size(); c++) {
+		forward[c] = forward[c-1]+ X[tree][childs[tree][n][c]] + 2 * W[tree][childs[tree][n][c]];
+	}
+	backward.back() = X[tree][childs[tree][n].back()] + 2 * W[tree][childs[tree][n].back()];
+	for (ll c = (ll)childs[tree][n].size() - 2; c >= 0; c--) {
+		backward[c] = backward[c+1]+ X[tree][childs[tree][n][c]] + 2 * W[tree][childs[tree][n][c]];
+	}
+	for (ll c = 0; c < childs[tree][n].size(); c++) {
+		ll temp = 0;
+		if (c > 0)temp += forward[c - 1];
+		if (c < childs[tree][n].size() - 1)temp += backward[c + 1];
+		temp += XX[tree][n] + WW[tree][n];
+		XX[tree][childs[tree][n][c]] = temp;
+	}
+	for (ll c = 0; c < childs[tree][n].size(); c++) {
+		WWXXDP(tree,childs[tree][n][c]);
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N >> M >> Q;
+	edges0.resize(M);
+	for (ll m = 0; m < M; m++) {
+		cin >> edges0[m].first >> edges0[m].second;
+		edges0[m].first--;
+		edges0[m].second--;
+	}
+	composetrees();
+	vector<VVLL> doublings(T);
+	for (ll t = 0; t < T; t++) {
+		doublingConstruct(parents[t].size(), parents[t], doublings[t]);
+	}
+	VVLL ranks(T);
+	for (ll t = 0; t < T; t++) setDepth(parents[t].size(), 0, childs[t], ranks[t]);
+	ll ans = 0;
+	wv.resize(T);
+	W.resize(T);
+	WW.resize(T);
+	X.resize(T);
+	XX.resize(T);
+	for (ll t = 0; t < T; t++) {
+		wv[t].resize(parents[t].size(),0);
+		W[t].resize(parents[t].size(), -1);
+		WW[t].resize(parents[t].size(), -1);
+		X[t].resize(parents[t].size(), -1);
+		XX[t].resize(parents[t].size(), -1);
+	}
+	for (ll q = 0; q < Q; q++) {
+		tp s, t;
+		cin >> s.p >> t.p;
+		s.p--;
+		t.p--;
+		s = pointsconv[s.p];
+		t = pointsconv[t.p];
+		if (s.tree == t.tree) {
+			ll p = LowestCommonAncestor(parents[s.tree].size(), 0, parents[s.tree], ranks[s.tree], doublings[s.tree], s.p, t.p);
+			ll tr = s.tree;
+			ans += ranks[tr][s.p] + ranks[tr][t.p] - 2 * ranks[tr][p];
+		}
+		else {
+			wv[t.tree][t.p]++;
+			wv[s.tree][s.p]++;
+		}
+	}
+	if (T > 1) {
+		for (ll t = 0; t < T; t++) {
+			WXDP(t, 0);
+			WWXXDP(t, 0);
+		}
+		for (ll t = 0; t < T; t++) {
+			ll temp = LLONG_MAX;
+			for (ll n = 0; n < parents[t].size(); n++) {
+				temp = min(temp, X[t][n] + XX[t][n]);
+			}
+			ans += temp;
+		}
+	}
+	cout << ans << "\n";
+	return 0;
+}

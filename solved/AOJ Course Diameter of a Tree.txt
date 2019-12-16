@@ -1,0 +1,257 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template< typename T >
+struct edge {
+	ll src, to;
+	T cost;
+
+	edge(int to, T cost) : src(-1), to(to), cost(cost) {}
+
+	edge(ll src, ll to, T cost) : src(src), to(to), cost(cost) {}
+
+	edge& operator=(const int& x) {
+		to = x;
+		return *this;
+	}
+
+	operator int() const { return to; }
+};
+
+template< typename T >
+using Edges = vector< edge< T > >;
+template< typename T >
+using WeightedGraph = vector< Edges< T > >;
+using UnWeightedGraph = vector< vector< int > >;
+template< typename T >
+using Matrix = vector< vector< T > >;
+
+template< typename T >
+vector< T > dijkstra(WeightedGraph< T >& g, int s) {
+	const auto INF = numeric_limits< T >::max();
+	vector< T > dist(g.size(), INF);
+
+	using Pi = pair< T, int >;
+	priority_queue< Pi, vector< Pi >, greater< Pi > > que;
+	dist[s] = 0;
+	que.emplace(dist[s], s);
+	while (!que.empty()) {
+		T cost;
+		int idx;
+		tie(cost, idx) = que.top();
+		que.pop();
+		if (dist[idx] < cost) continue;
+		for (auto& e : g[idx]) {
+			auto next_cost = cost + e.cost;
+			if (dist[e.to] <= next_cost) continue;
+			dist[e.to] = next_cost;
+			que.emplace(dist[e.to], e.to);
+		}
+	}
+	return dist;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	cin >> N;
+	WeightedGraph<ll> G(N);
+	for (ll n = 0; n < N - 1; n++) {
+		ll s, t, w;
+		cin >> s >> t >> w;
+		G[s].push_back({ s,t,w });
+		G[t].push_back({ t,s,w });
+	}
+	VLL res1 = dijkstra(G, 0);
+	ll p = 0;
+	for (ll n = 1; n < N; n++) {
+		if (res1[p] < res1[n])p = n;
+	}
+	VLL res2 = dijkstra(G, p);
+	ll ans = 0;
+	for (ll n = 0; n < N; n++) {
+		ans = max(ans, res2[n]);
+	}
+	cout << ans << "\n";
+	return 0;
+}
+########################################
+########################################
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+VLL parent;
+vector<vector<pll>> childs;
+VLL DP0,DP1;
+
+ll dp0(ll n) {
+	if (DP0[n] != -1)return DP0[n];
+	ll ans = 0;
+	for (pll c : childs[n]) {
+		ans = max(ans, c.second + dp0(c.first));
+	}
+	DP0[n] = ans;
+	return DP0[n];
+}
+
+void dp1(ll n) {
+	if (childs[n].size() == 0) return;
+	VLL forward(childs[n].size());
+	forward[0] = DP0[childs[n][0].first]+childs[n][0].second;
+	for (ll c = 1; c < childs[n].size(); c++) {
+		forward[c] = max(DP0[childs[n][c].first]+childs[n][c].second,forward[c-1]);
+	}
+	VLL backword(childs[n].size());
+	backword.back() = DP0[childs[n].back().first]+childs[n].back().second;
+	for (ll c = (ll)childs[n].size() - 2; c >= 0; c--) {
+		backword[c] = max(backword[c + 1], DP0[childs[n][c].first]+childs[n][c].second);
+	}
+	ll P = DP1[n];
+	for (ll c = 0; c < childs[n].size(); c++) {
+		ll ans = 0;
+		if (c > 0)ans = max(ans, forward[c - 1]);
+		if (c < childs[n].size() - 1)ans = max(ans, backword[c + 1]);
+		ans = max(ans, P);
+		DP1[childs[n][c].first] = ans+childs[n][c].second;
+		dp1(childs[n][c].first);
+	}
+	return;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N;
+	vector<vector<pll>> in0(N);
+	for (ll n = 0; n < N - 1; n++) {
+		ll s, t, w;
+		cin >> s >> t >> w;
+		in0[s].push_back(pll(t, w));
+		in0[t].push_back(pll(s, w));
+	}
+	parent.resize(N,-2);
+	childs.resize(N);
+	queue<pll> q;
+	q.push(pll(0, -1));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll p = q.front().second;
+		q.pop();
+		parent[cur] = p;
+		for (pll c : in0[cur]) {
+			if (c.first == p)continue;
+			childs[cur].push_back(c);
+			q.push(pll(c.first, cur));
+		}
+	}
+	DP0.resize(N,-1);
+	dp0(0);
+	DP1.resize(N,-1);
+	DP1[0] = 0;
+	dp1(0);
+	ll ans = 0;
+	if (childs[0].size() >= 2) {
+		ll max1 = 0, max2 = 0;
+		for (ll c = 0; c < childs[0].size(); c++) {
+			if (DP0[childs[0][c].first] + childs[0][c].second > max1) {
+				max2 = max1;
+				max1 = DP0[childs[0][c].first] + childs[0][c].second;
+			}
+			else if (DP0[childs[0][c].first] + childs[0][c].second > max2)max2 = DP0[childs[0][c].first] + childs[0][c].second;
+		}
+		ans = max1 + max2;
+	}
+	for (ll n = 1; n < N; n++) {
+		if (childs[n].size() == 0)continue;
+		ll max1 = 0, max2 = 0;
+		for (ll c = 0; c < childs[n].size(); c++) {
+			if (DP0[childs[n][c].first] + childs[n][c].second >= max1) {
+				max2 = max1;
+				max1 = DP0[childs[n][c].first] + childs[n][c].second;
+			}
+			else if (DP0[childs[n][c].first] + childs[n][c].second >= max2)max2 = DP0[childs[n][c].first] + childs[n][c].second;
+		}
+		if (DP1[n] >= max1) {
+			max2 = max1;
+			max1 = DP1[n];
+		}
+		else if (DP1[n] >= max2) {
+			max2 = DP1[n];
+		}
+		ans = max(ans, max1 + max2);
+	}
+	cout << ans << "\n";
+	return 0;
+}

@@ -22,13 +22,13 @@ void treeconstruct(ll si, ll root,vector<vector<ll>>& ch, vector<ll>& pa, vector
 	return;
 }
 
-void doublingConstruct(int N,vector<int>& parents,vector<vector<int>>& doubling){
+void doublingConstruct(ll N,vector<ll>& parents,vector<vector<ll>>& doubling){
 	doubling.push_back(parents);
 	while (true) {
-		vector<int> temp(N, -1);
-		vector<int>& back = doubling.back();
+		vector<ll> temp(N, -1);
+		vector<ll>& back = doubling.back();
 		bool flag = false;
-		for (int n = 0; n < N; n++) {
+		for (ll n = 0; n < N; n++) {
 			if (doubling.back()[n] == -1)continue;
 			temp[n] = back[back[n]];
 			if (temp[n] != -1)flag = true;
@@ -44,11 +44,11 @@ void setDepth(ll N, ll root, vector<vector<ll>>& childs, vector<ll>& rank) {
 	queue<pll> q;
 	q.push(pll(root, 0));
 	while (!q.empty()) {
-		int cur = q.front().first;
-		int dist = q.front().second;
+		ll cur = q.front().first;
+		ll dist = q.front().second;
 		rank[cur] = dist;
 		q.pop();
-		for (int child : childs[cur]) {
+		for (ll child : childs[cur]) {
 			if (child == -1)continue;
 			if (rank[child] != -1)continue;
 			q.push(pll(child, dist + 1));
@@ -75,24 +75,24 @@ void setHeight(ll N, ll root, VVLL& childs, VLL& heights,ll cur = -1){
 	return;
 }
 
-int LowestCommonAncestor(int N,int root,vector<int>& parents,vector<int>& rank,vector<vector<int>>& doubling,int c1, int c2) {
+ll LowestCommonAncestor(ll N,ll root,vector<ll>& parents,vector<ll>& rank,vector<vector<ll>>& doubling,ll c1, ll c2) {
 	if (c1 == c2)return c1;
 	if (rank[c1] > rank[c2])return LowestCommonAncestor(N, root, parents, rank, doubling, c2, c1);
 	if (rank[c1] != rank[c2]) {
-		int dif = rank[c2] - rank[c1];
-		int p = 0;
+		ll dif = rank[c2] - rank[c1];
+		ll p = 0;
 		while (dif >= (1 << p)) {
 			if ((dif & (1 << p)))c2 = doubling[p][c2];
 			p++;
 		}
 		if (c1 == c2)return c1;
 	}
-	int log = doubling.size()-1;
+	ll log = doubling.size()-1;
 	for (; log >= 0; log--) {
 		if (c1 == c2)break;
 		if (doubling[log][c1] != doubling[log][c2]) {
-			int temp1 = doubling[log][c1];
-			int temp2 = doubling[log][c2];
+			ll temp1 = doubling[log][c1];
+			ll temp2 = doubling[log][c2];
 			if (temp1 != temp2) {
 				c1 = temp1;
 				c2 = temp2;

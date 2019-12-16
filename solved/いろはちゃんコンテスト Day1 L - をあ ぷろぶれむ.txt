@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template< typename T >
+struct SparseTable {
+	vector< vector< T > > st;
+	vector< int > lookup;
+
+	SparseTable(const vector< T >& v) {
+		int b = 0;
+		while ((1 << b) <= v.size()) ++b;
+		st.assign(b, vector< T >(1 << b,0));
+		for (int i = 0; i < v.size(); i++) {
+			st[0][i] = v[i];
+		}
+		for (int i = 1; i < b; i++) {
+			for (int j = 0; j + (1 << i) <= (1 << b); j++) {
+//				st[i][j] = min(st[i - 1][j], st[i - 1][j + (1 << (i - 1))]);
+				st[i][j] = st[i - 1][j] | st[i - 1][j + (1 << (i - 1))];
+			}
+		}
+		lookup.resize(v.size() + 1);
+		for (int i = 2; i < lookup.size(); i++) {
+			lookup[i] = lookup[i >> 1] + 1;
+		}
+	}
+
+	inline T rmq(int l, int r) {
+		int b = lookup[r - l];
+//		return min(st[b][l], st[b][r - (1 << b)]);
+		return st[b][l] | st[b][r - (1 << b)];
+	}
+};
+
+ll N, K;
+VLL A;
+
+ll count(ll X,SparseTable<ll>& ST) {
+	ll ans = 0;
+	for (ll n = 0; n < N; n++) {
+		//n‚©‚çs‚Ü‚Å‚Ìor < X <= n‚©‚çe‚Ü‚Å‚Ìor
+		ll s = n-1, e = N;
+		while (e - s > 1) {
+			ll m = (e + s) / 2;
+			if (ST.rmq(n,m+1) < X)s = m;
+			else e = m;
+		}
+		ans += N-e;
+	}
+	return ans;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N >> K;
+	A.resize(N);
+	for (ll n = 0; n < N; n++) {
+		cin >> A[n];
+	}
+	SparseTable<ll> ST(A);
+	ll s = 0, e = (ll)1 << 60;
+	while (e - s > 1) {
+		ll m = (e + s) / 2;
+		if (count(m,ST) < K)e = m;
+		else s = m;
+	}
+	cout << s << "\n";
+	return 0;
+}

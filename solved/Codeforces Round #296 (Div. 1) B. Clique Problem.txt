@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+struct first {
+	ll x, w;
+};
+
+struct task {
+	ll s, e;
+};
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	cin >> N;
+	vector<first> VF(N);
+	for (ll n = 0; n < N; n++) {
+		cin >> VF[n].x >> VF[n].w;
+	}
+	sort(VF.begin(), VF.end(), [](first a, first b) {
+		return a.x < b.x;
+	});
+	vector<task> VT(N);
+	for (ll n = 0; n < N; n++) {
+		VT[n].s = VF[n].x - VF[n].w;
+		VT[n].e = VF[n].x + VF[n].w;
+	}
+	sort(VT.begin(), VT.end(), [](task a, task b) {
+		return a.e < b.e;
+	});
+	ll ans = 0;
+	ll t = LLONG_MIN;
+	for (ll n = 0; n < N; n++) {
+		if (t <= VT[n].s) {
+			t = VT[n].e;
+			ans++;
+		}
+		else continue;
+	}
+	cout << ans << "\n";
+	return 0;
+}
