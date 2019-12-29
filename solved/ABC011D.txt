@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N, D, X, Y;
+	cin >> N >> D >> X >> Y;
+	if (X % D != 0 || Y % D != 0) {
+		cout << 0 << "\n";
+		return 0;
+	}
+	X /= D;
+	Y /= D;
+	X = max(X, -X);
+	Y = max(Y, -Y);
+	ld ans = 0;
+	for (ll a = 0; a <= N; a++) {
+		ll b = a - X;
+		if (b < 0 || b > N - a)continue;
+		ll c = X + Y + N - 2 * a;
+		if (c & 1)continue;
+		c /= 2;
+		if (c < 0 || c > N - a - b)continue;
+		ll d = X - Y + N - 2 * a;
+		if (d & 1)continue;
+		d /= 2;
+		if (d < 0 || d > N - a - b - c)continue;
+		ld temp = 1;
+		ll n = N;
+		for (ll aa = a; aa > 0; aa--,n--) {
+			temp *= (ld)n / aa / 4;
+		}
+		for (ll bb = b; bb > 0; bb--, n--) {
+			temp *= (ld)n / bb / 4;
+		}
+		for (ll bb = c; bb > 0; bb--, n--) {
+			temp *= (ld)n / bb / 4;
+		}
+		for (ll bb = d; bb > 0; bb--, n--) {
+			temp *= (ld)n / bb / 4;
+		}
+		ans += temp;
+	}
+	cout << setprecision(12) << ans << "\n";
+	return 0;
+}
