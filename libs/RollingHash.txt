@@ -1,0 +1,58 @@
+typedef unsigned long long HASH;
+
+class RollingHash {
+public:
+	static const ULL HMOD = (1ULL << 61) - 1;
+	static const ULL MASK30 = (1ULL << 30) - 1;
+	static const ULL MASK31 = (1ULL << 31) - 1;
+	static ULL base;
+	static const ULL POS = HMOD * ((1ULL << 3) - 1);
+	static vector<ULL> powmemo;
+	vector<HASH> hash;   //部分列[0,n)のハッシュを持つ
+	RollingHash(vector<LL>& S) {
+		if (base == 0) {
+			random_device rnd;
+			mt19937 mt(rnd());
+			uniform_int_distribution<ULL> rand(129, HMOD - 1);
+			RollingHash::base = rand(mt);
+			powmemo.resize(500000, 1);
+			for (LL n = 1; n < 500000; n++) {
+				powmemo[n] = mod(Mul(powmemo[n - 1], base));
+			}
+		}
+		hash.resize(S.size() + 1);
+		hash[0] = 0;
+		for (ll n = 1; n <= S.size(); n++) {
+			hash[n] = mod(Mul(hash[n - 1], base) + S[n - 1]);
+		}
+	}
+	//部分列[a,b)のハッシュ
+	HASH get(LL a, LL b) {
+		return mod(hash[b] + POS - Mul(hash[a], powmemo[b - a]));
+	}
+	//部分列配列への保存なしに変換
+	HASH conv(vector<LL>& S) {
+		HASH ans = 0;
+		for (ll n = 0; n < S.size(); n++) {
+			ans = mod(Mul(ans, base) + S[n]);
+		}
+		return ans;
+	}
+	static HASH Mul(HASH a, HASH b) {
+		HASH au = a >> 31;
+		HASH ad = a & MASK31;
+		HASH bu = b >> 31;
+		HASH bd = b & MASK31;
+		HASH midd = au * bd + ad * bu;
+		HASH midu = midd >> 30;
+		midd = midd & MASK30;
+		return ((au * bu) << 1) + ad * bd + (midd << 31) + midu;
+	}
+	static HASH mod(HASH val) {
+		val = (val & HMOD) + (val >> 61);
+		if (val >= HMOD)val -= HMOD;
+		return val;
+	}
+};
+ULL RollingHash::base = 0;
+vector<ULL> RollingHash::powmemo = vector<ULL>();

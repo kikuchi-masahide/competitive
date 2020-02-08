@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long long LL;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+typedef unsigned long long ULL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+LL calc(LL A) {
+	if (A == 0)return 1;
+	LL AA = A;
+	VLL V;
+	while (AA > 0) {
+		V.push_back(AA % 10);
+		AA /= 10;
+	}
+	VVLL DP;
+	DP.resize(2, VLL(V.size()));
+	if (V.back() == 4 || V.back() == 9)DP[1].back() = 0;
+	else DP[1].back() = 1;
+	if (1 <= V.back() && V.back() <= 4)DP[0].back() = V.back();
+	else if (V.back() <= 9)DP[0].back() = V.back() - 1;
+	for (LL n = (LL)V.size() - 2; n >= 0; n--) {
+		if (V[n] == 4 || V[n] == 9) {
+			DP[1][n] = DP[1][n + 1] * 0;
+		}
+		else {
+			DP[1][n] = DP[1][n + 1] * 1;
+		}
+		DP[0][n] = 8 * DP[0][n + 1];
+		if (0 <= V[n] && V[n] <= 4)DP[0][n] += DP[1][n + 1] * V[n];
+		else if (V[n] <= 9)DP[0][n] += DP[1][n + 1] * (V[n] - 1);
+	}
+	return DP[0][0] + DP[1][0];
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	LL A,B;
+	cin >> A >> B;
+	ll ans = calc(B);
+	ans -= calc(A - 1);
+	cout << (B - A + 1) - ans << "\n";
+	return 0;
+}
