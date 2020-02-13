@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+ll N;
+VLL parents;
+VVLL childs;
+VVLL edges;
+VLL DP;
+
+ll dp(ll n) {
+	if (DP[n] != -1)return DP[n];
+	if (childs[n].size() == 0) {
+		DP[n] = 1;
+		return 1;
+	}
+	DP[n] = 1;
+	for (ll c : childs[n]) {
+		DP[n] += dp(c);
+	}
+	return DP[n];
+}
+
+ll modpow(ll base, ll p) {
+	if (p == 0)return 1;
+	if (p == 1)return base;
+	ll ans = modpow(base, p / 2);
+	ans = (ans * ans) % MOD;
+	if (p & 1)ans = (ans * base) % MOD;
+	return ans;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N;
+	edges.resize(N);
+	for (ll n = 0; n < N - 1; n++) {
+		ll a, b;
+		cin >> a >> b;
+		edges[--a].push_back(--b);
+		edges[b].push_back(a);
+	}
+	parents.resize(N);
+	childs.resize(N);
+	queue<pll> q;
+	q.push(pll(0, -1));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll p = q.front().second;
+		q.pop();
+		parents[cur] = p;
+		for (ll c : edges[cur]) {
+			if (c == p)continue;
+			childs[cur].push_back(c);
+			q.push(pll(c, cur));
+		}
+	}
+	DP.resize(N, -1);
+	dp(0);
+	ll ans = (modpow(2,N-1)+MOD-1)%MOD;
+	ans = (ans * N) % MOD;
+	for (ll n = 0; n < N; n++) {
+		for (ll c : childs[n]) {
+			ans = (ans+MOD-modpow(2, DP[c])+1)%MOD;
+		}
+		ans = (ans + MOD - modpow(2, N - DP[n]) + 1) % MOD;
+	}
+	ll inv = modpow(2, N * (MOD - 2));
+	ans = (ans * inv) % MOD;
+	cout << ans << "\n";
+	return 0;
+}

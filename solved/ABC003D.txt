@@ -1,0 +1,117 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//拡張拡張Euclidの互除法による(階乗)逆元の求め方
+//O(N)
+void stairs(long long N, vector<long long>& st, long long mod = 1e9 + 7) {
+	st.resize(N + 1, 1);
+	for (long long n = 2; n <= N; n++) {
+		st[n] = (st[n - 1] * n) % mod;
+	}
+}
+
+ll stair(ll N, ll mod = 1e9 + 7) {
+	ll ans = 1;
+	for (ll n = 2; n <= N; n++)ans = (ans * n) % mod;
+	return ans;
+}
+
+void modinvs(long long N, vector<long long>& inv, vector<long long>& sinv, long long mod = 1e9 + 7) {
+	inv.resize(N + 1);
+	sinv.resize(N + 1);
+	inv[1] = 1;
+	sinv[0] = 1;
+	sinv[1] = 1;
+	for (int n = 2; n <= N; n++) {
+		inv[n] = mod - (inv[mod % n] * (mod / n)) % mod;
+		sinv[n] = (sinv[n - 1] * inv[n]) % mod;
+	}
+}
+
+//(n^(-1),(n!)^(-1))
+pll modinvs(ll N, ll mod = 1e9 + 7) {
+	vector<ll> inv(N + 1);
+	inv[1] = 1;
+	ll sinv = 1;
+	for (int n = 2; n <= N; n++) {
+		inv[n] = mod - (inv[mod % n] * (mod / n)) % mod;
+		sinv = (sinv * inv[n]) % mod;
+	}
+	return pll(inv[N], sinv);
+}
+
+long long Comb(long long n, long long k, vector<long long>& st, vector<long long>& sinv, long long mod = 1e9 + 7) {
+	if (n < 0)return 0;
+	if (k > n || k < 0)return 0;
+	long long ans = st[n];
+	ans = (ans * sinv[n - k]) % mod;
+	ans = (ans * sinv[k]) % mod;
+	return ans;
+}
+
+ll Comb(ll N, ll K, ll mod = 1e9 + 7) {
+	if (K == 0 || K == N)return 1;
+	ll ans = stair(N, mod);
+	ans = (ans * modinvs(N - K).second) % mod;
+	ans = (ans * modinvs(K).second) % mod;
+	return ans;
+}
+
+ll R, C, X, Y, D, L;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> R >> C >> X >> Y >> D >> L;
+	VLL st, inv, sinv;
+	stairs(max(D + L, X * Y), st);
+	modinvs(max(D + L, X * Y), inv, sinv);
+	ll ans = Comb(X * Y, D + L, st, sinv);
+	ans -= 2 * Comb(X * (Y - 1), D + L, st, sinv);
+	ans -= 2 * Comb((X - 1) * Y, D + L, st, sinv);
+	ans += 4 * Comb((X - 1) * (Y - 1), D + L, st, sinv);
+	ans += Comb((X - 2) * Y, D + L, st, sinv);
+	ans += Comb(X * (Y - 2), D + L, st, sinv);
+	ans -= 2 * Comb((X - 1) * (Y - 2), D + L, st, sinv);
+	ans -= 2 * Comb((X - 2) * (Y - 1), D + L, st, sinv);
+	if(X >= 2 && Y >= 2)ans += Comb((X - 2) * (Y - 2), D + L, st, sinv);
+	ans = (ans + 16 * MOD) % MOD;
+	ans = (ans * (R - X + 1) * (C - Y + 1)) % MOD;
+	ans = (ans * Comb(D + L, D, st, sinv)) % MOD;
+	cout << ans << "\n";
+	return 0;
+}
