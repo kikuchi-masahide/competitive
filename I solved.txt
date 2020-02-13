@@ -27,6 +27,24 @@ ABC 149 D - Prediction and Restriction
 ABC 149 C - Next Prime
 ABC 149 B - Greedy Takahashi
 ABC 149 A - Strings
+ABC 021 C - ³’¼Ò‚Ì‚‹´‚­‚ñ
+ABC 021 B - ‰R‚Â‚«‚Ì‚‹´‚­‚ñ
+ABC 021 A - ‘«‚µZ
+ABC 007 D - ‹Ö~‚³‚ê‚½”š
+ABC 007 A - A–ØZ
+ABC 018 A - “¤‚Ü‚«
+ABC 104 D - We Love ABC
+ARC 103 E - Tr/ee
+ABC 141 E - Who Says a Pun?
+yukicoder No.430 •¶š—ñŒŸõ
+ABC 150 F - Xor Shift
+ABC 150 E - Change a Little Bit
+ABC 150 D - Semi Common Multiple
+ABC 150 C - Count Order
+ABC 150 B - Count ABC
+ABC 150 A - 500 Yen Coins
+AGC 018 A - Getting Difference
+ARC 020 C - A mod B Problem
 ABC 011 D - ‘åƒWƒƒƒ“ƒv
 ABC 011 C - 123ˆø‚«Z
 ABC 011 B - –¼‘O‚ÌŠm”F
