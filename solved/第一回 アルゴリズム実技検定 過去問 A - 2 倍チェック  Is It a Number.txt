@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	string S;
+	cin >> S;
+	ll ans = 0;
+	if (S[0] >= '0' && S[0] <= '9') {
+		ans += 100 * (S[0] - '0');
+	}
+	else {
+		cout << "error\n";
+		return 0;
+	}
+	if (S[1] >= '0' && S[1] <= '9') {
+		ans += 10 * (S[1] - '0');
+	}
+	else {
+		cout << "error\n";
+		return 0;
+	}
+	if (S[2] >= '0' && S[2] <= '9') {
+		ans += 1 * (S[2] - '0');
+	}
+	else {
+		cout << "error\n";
+		return 0;
+	}
+	cout << 2*ans << "\n";
+	return 0;
+}

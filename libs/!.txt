@@ -38,6 +38,8 @@ pll modinvs(ll N, ll mod = 1e9 + 7) {
 }
 
 long long Comb(long long n, long long k, vector<long long>& st, vector<long long>& sinv, long long mod = 1e9 + 7) {
+	if (n < 0)return 0;
+	if (k > n || k < 0)return 0;
 	long long ans = st[n];
 	ans = (ans * sinv[n - k]) % mod;
 	ans = (ans * sinv[k]) % mod;
@@ -45,12 +47,15 @@ long long Comb(long long n, long long k, vector<long long>& st, vector<long long
 }
 
 ll Comb(ll N, ll K, ll mod = 1e9 + 7) {
+	if (n < 0)return 0;
+	if (k > n || k < 0)return 0;
 	if (K == 0 || K == N)return 1;
-	ll ans = stair(N,mod);
+	ll ans = stair(N, mod);
 	ans = (ans * modinvs(N - K).second) % mod;
 	ans = (ans * modinvs(K).second) % mod;
 	return ans;
 }
+
 
 
 

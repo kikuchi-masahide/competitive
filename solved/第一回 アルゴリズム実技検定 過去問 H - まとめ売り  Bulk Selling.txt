@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	ll N;
+	cin >> N;
+	VLL seg0, seg1;
+	seg0.resize(N);
+	seg1.resize(N);
+	ll m0 = LLONG_MAX;
+	ll m1 = LLONG_MAX;
+	for (ll n = 0; n < N; n++) {
+		ll a;
+		cin >> a;
+		if (n & 1) {
+			seg1[n / 2] = a;
+			m1 = min(m1, a);
+		}
+		else {
+			seg0[n / 2] = a;
+			m0 = min(m0, a);
+		}
+	}
+	ll s0 = 0, s1 = 0;
+	ll Q;
+	cin >> Q;
+	ll ans = 0;
+	for (ll q = 0; q < Q; q++) {
+		ll code;
+		cin >> code;
+		if (code == 1) {
+			ll a, x;
+			cin >> a >> x;
+			a--;
+			if (a & 1) {
+				if (seg1[a / 2] - s1 >= x) {
+					seg1[a / 2] -= x;
+					m1 = min(m1, seg1[a / 2]);
+					ans += x;
+				}
+			}
+			else {
+				if (seg0[a / 2] - s0 >= x) {
+					seg0[a / 2] -= x;
+					m0 = min(m0, seg0[a / 2]);
+					ans += x;
+				}
+			}
+		}
+		else if (code == 2) {
+			ll a;
+			cin >> a;
+			if (m0 - s0 >= a) {
+				s0 += a;
+				ans += (N + 1) / 2 * a;
+			}
+		}
+		else {
+			ll a;
+			cin >> a;
+			if (m0 - s0 >= a && m1 - s1 >= a) {
+				s0 += a;
+				s1 += a;
+				ans += N * a;
+			}
+		}
+	}
+	cout << ans << "\n";
+	return 0;
+}

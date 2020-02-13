@@ -1,0 +1,158 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template< typename T >
+struct edge {
+	ll src, to;
+	T cost;
+
+	edge(int to, T cost) : src(-1), to(to), cost(cost) {}
+
+	edge(ll src, ll to, T cost) : src(src), to(to), cost(cost) {}
+
+	edge& operator=(const int& x) {
+		to = x;
+		return *this;
+	}
+
+	operator int() const { return to; }
+};
+
+template< typename T >
+using Edges = vector< edge< T > >;
+template< typename T >
+using WeightedGraph = vector< Edges< T > >;
+using UnWeightedGraph = vector< vector< int > >;
+template< typename T >
+using Matrix = vector< vector< T > >;
+
+template< typename T >
+T prim(WeightedGraph< T >& g) {
+	using Pi = pair< T, int >;
+
+	T total = 0;
+	vector< bool > used(g.size(), false);
+	priority_queue< Pi, vector< Pi >, greater< Pi > > que;
+	que.emplace(0, 0);
+	while (!que.empty()) {
+		auto p = que.top();
+		que.pop();
+		if (used[p.second]) continue;
+		used[p.second] = true;
+		total += p.first;
+		for (auto& e : g[p.second]) {
+			que.emplace(e.cost, e.to);
+		}
+	}
+	return total;
+}
+
+ll N, M;
+VLL colors, Colors;
+vector<pll> pos, Pos;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N >> M;
+	Colors.resize(N);
+	Pos.resize(N);
+	for (ll n = 0; n < N; n++) {
+		ld x, y;
+		ll c;
+		cin >> x >> y >> c;
+		Pos[n] = pdd(x, y);
+		Colors[n] = c;
+	}
+	colors.resize(M);
+	pos.resize(M);
+	for (ll m = 0; m < M; m++) {
+		ld x, y;
+		ll c;
+		cin >> x >> y >> c;
+		pos[m] = pdd(x, y);
+		colors[m] = c;
+	}
+	ld ans = LLONG_MAX;
+	for (ll code = 0; code < ((ll)1 << M); code++) {
+		WeightedGraph<ld> G(N + M);
+		for (ll n1 = 0; n1 < N; n1++) {
+			for (ll n2 = 0; n2 < N; n2++) {
+				if (n1 == n2)continue;
+				ll x1 = Pos[n1].first, y1 = Pos[n1].second;
+				ll x2 = Pos[n2].first, y2 = Pos[n2].second;
+				ld d = sqrtl((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+				if (Colors[n1] != Colors[n2])d *= 10;
+				G[n1].push_back({ n1,n2,d });
+			}
+		}
+		for (ll m = 0; m < M; m++) {
+			if (code & ((ll)1 << m)) {
+				for (ll n = 0; n < N; n++) {
+					ll x1 = Pos[n].first;
+					ll y1 = Pos[n].second;
+					ll x2 = pos[m].first;
+					ll y2 = pos[m].second;
+					ld d = sqrtl((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+					if (Colors[n] != colors[m])d *= 10;
+					G[n].push_back({ n,N + m,d });
+					G[N + m].push_back({ N + m,n,d });
+				}
+			}
+			else {
+				G[0].push_back({ 0,N + m,0 });
+			}
+		}
+		for (ll m1 = 0; m1 < M; m1++) {
+			for (ll m2 = 0; m2 < M; m2++) {
+				if (!(code & (1 << m1)))continue;
+				if (!(code & (1 << m2)))continue;
+				ll x1 = pos[m1].first;
+				ll y1 = pos[m1].second;
+				ll x2 = pos[m2].first;
+				ll y2 = pos[m2].second;
+				ld d = sqrtl((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+				if (colors[m1] != colors[m2])d *= 10;
+				G[N + m1].push_back({ N + m1, N + m2,d });
+				G[N + m2].push_back({ N + m2, N + m1,d });
+			}
+		}
+		ans = min(ans, prim(G));
+	}
+	cout << setprecision(15) << ans << "\n";
+	return 0;
+}
