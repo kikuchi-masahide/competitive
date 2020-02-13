@@ -1,0 +1,198 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+#include <bitset>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long long LL;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+typedef unsigned long long ULL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+//si:頂点数
+//root:根
+//ch:子供の集合
+//pa:親(根の親=-1)
+//no:前提情報
+void treeconstruct(ll si, ll root, vector<vector<ll>>& ch, vector<ll>& pa, vector<vector<ll>>& no) {
+	ch.resize(si, vector<ll>(0));
+	pa.resize(si, -2);
+	queue<pll> q;
+	q.push(pll(root, -1));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll p = q.front().second;
+		q.pop();
+		pa[cur] = p;
+		for (ll next : no[cur]) {
+			if (next == p)continue;
+			ch[cur].push_back(next);
+			q.push(pll(next, cur));
+		}
+	}
+	return;
+}
+
+void doublingConstruct(ll N, vector<ll>& parents, vector<vector<ll>>& doubling) {
+	doubling.push_back(parents);
+	while (true) {
+		vector<ll> temp(N, -1);
+		vector<ll>& back = doubling.back();
+		bool flag = false;
+		for (ll n = 0; n < N; n++) {
+			if (doubling.back()[n] == -1)continue;
+			temp[n] = back[back[n]];
+			if (temp[n] != -1)flag = true;
+		}
+		if (!flag)break;
+		doubling.push_back(temp);
+	}
+}
+
+//木の各要素の深さ(根からの距離)を求める
+void setDepth(ll N, ll root, vector<vector<ll>>& childs, vector<ll>& depth) {
+	depth.resize(N, -1);
+	queue<pll> q;
+	q.push(pll(root, 0));
+	while (!q.empty()) {
+		ll cur = q.front().first;
+		ll dist = q.front().second;
+		depth[cur] = dist;
+		q.pop();
+		for (ll child : childs[cur]) {
+			if (child == -1)continue;
+			if (depth[child] != -1)continue;
+			q.push(pll(child, dist + 1));
+		}
+	}
+}
+
+ll LowestCommonAncestor(ll N, ll root, vector<ll>& parents, vector<ll>& depth, vector<vector<ll>>& doubling, ll c1, ll c2) {
+	if (c1 == c2)return c1;
+	if (depth[c1] > depth[c2])return LowestCommonAncestor(N, root, parents, depth, doubling, c2, c1);
+	if (depth[c1] != depth[c2]) {
+		ll dif = depth[c2] - depth[c1];
+		ll p = 0;
+		while (dif >= (1 << p)) {
+			if ((dif & (1 << p)))c2 = doubling[p][c2];
+			p++;
+		}
+		if (c1 == c2)return c1;
+	}
+	ll log = doubling.size() - 1;
+	for (; log >= 0; log--) {
+		if (c1 == c2)break;
+		if (doubling[log][c1] != doubling[log][c2]) {
+			ll temp1 = doubling[log][c1];
+			ll temp2 = doubling[log][c2];
+			if (temp1 != temp2) {
+				c1 = temp1;
+				c2 = temp2;
+			}
+		}
+	}
+	return parents[c1];
+}
+
+LL N, M;
+VVLL childs;
+VLL parent;
+VLL depth;
+VVLL doubling;
+VLL pow2;
+VVLL numbering;
+VLL codes;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N;
+	VVLL G(N);
+	for (LL n = 0; n < N - 1; n++) {
+		LL a, b;
+		cin >> a >> b;
+		a--; b--;
+		G[a].push_back(b);
+		G[b].push_back(a);
+	}
+	treeconstruct(N, 0, childs, parent, G);
+	setDepth(N, 0, childs, depth);
+	doublingConstruct(N, parent, doubling);
+	numbering.resize(N, VLL(N, -1));
+	for (LL n = 1; n < N; n++) {
+		numbering[n][parent[n]] = n - 1;
+	}
+	cin >> M;
+	codes.resize(M);
+	for (LL m = 0; m < M; m++) {
+		LL u, v;
+		cin >> u >> v;
+		u--; v--;
+		LL lca = LowestCommonAncestor(N, 0, parent, depth, doubling, u, v);
+		LL code = 0;
+		while (u != lca) {
+			code = code | ((LL)1 << numbering[u][parent[u]]);
+			u = parent[u];
+		}
+		while (v != lca) {
+			code = code | ((LL)1 << numbering[v][parent[v]]);
+			v = parent[v];
+		}
+		codes[m] = code;
+	}
+	pow2.resize(N + 1,1);
+	for (LL n = 1; n <= N; n++) {
+		pow2[n] = pow2[n - 1] * 2;
+	}
+	LL ans = 0;
+	for (LL code = 1; code < ((LL)1 << M); code++) {
+		LL st = 0;
+		LL C = 0;
+		for (LL m = 0; m < M; m++) {
+			if (!((code >> m) & 1))continue;
+			st++;
+			C = C | codes[m];
+		}
+		LL counter = 0;
+		for (LL n = 0; n < N ; n++) {
+			if (C & ((LL)1 << n))counter++;
+		}
+		if (st & 1) {
+			ans += pow2[N - 1 - counter];
+		}
+		else {
+			ans -= pow2[N - 1 - counter];
+		}
+	}
+	cout << pow2[N-1]-ans << "\n";
+	return 0;
+}
