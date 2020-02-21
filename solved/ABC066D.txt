@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long long LL;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+long long N;
+vector<long long> A;
+vector<bool> check;
+long long D1, D2;
+vector<long long> stair, inv, sinv;
+
+long long solvefor(long long K) {
+	long long all = (stair[N + 1] * sinv[K]) % MOD;
+	all = (all * sinv[N - K + 1]) % MOD;
+	long long doub = (stair[N + D1 - D2] * sinv[K - 1]) % MOD;
+	if (N + D1 - D2 - K + 1 < 0)doub = 0;
+	else doub = (doub * sinv[N + D1 - D2 - K + 1]) % MOD;
+	return (all - doub + MOD) % MOD;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N;
+	A.resize(N + 1);
+	check.resize(N + 1, false);
+	for (int n = 0; n <= N; n++) {
+		cin >> A[n];
+		if (check[A[n]]) {
+			D2 = n;
+		}
+		check[A[n]] = true;
+	}
+	for (int n = 0; n <= N; n++) {
+		if (A[n] == A[D2]) {
+			D1 = n;
+			break;
+		}
+	}
+	stair.resize(1e5 + 2);
+	inv.resize(1e5 + 2);
+	sinv.resize(1e5 + 2);
+	inv[1] = 1;
+	sinv[0] = 1;
+	sinv[1] = 1;
+	stair[1] = 1;
+	stair[0] = 1;
+	for (int n = 2; n <= 1e5 + 1; n++) {
+		inv[n] = MOD - (inv[MOD % n] * (MOD / n)) % MOD;
+		sinv[n] = (sinv[n - 1] * inv[n]) % MOD;
+		stair[n] = (n * stair[n - 1]) % MOD;
+	}
+	cout << N << endl;
+	for (int k = 2; k <= N; k++) {
+		cout << solvefor(k) << endl;
+	}
+	cout << 1 << endl;
+	return 0;
+}

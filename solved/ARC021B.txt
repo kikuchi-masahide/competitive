@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long ll;
+typedef long long LL;
+typedef long double ld;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ll> pdl;
+typedef pair<ld, ld> pdd;
+typedef vector<ll> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	LL N;
+	cin >> N;
+	VLL B(N + 1);
+	for (LL n = 1; n <= N; n++)cin >> B[n];
+	LL A = 0;
+	for (LL n = 1; n <= N; n++) {
+		A = A ^ B[n];
+	}
+	vector<bool> check1(32,false);
+	for (LL n = 0; n <= 31; n++) {
+		if (!(A & ((LL)1 << n)))check1[n] = true;
+	}
+	A = ((LL)1 << 32) - 1;
+	for (LL n = 1; n <= N; n++) {
+		A = A ^ B[n];
+	}
+	vector<bool> check2(32,false);
+	for (LL n = 0; n <= 31; n++) {
+		if (A & ((LL)1 << n))check2[n] = true;
+	}
+	for (LL n = 0; n <= 31; n++) {
+		if (!check1[n] && !check2[n]) {
+			cout << "-1\n";
+			return 0;
+		}
+	}
+	VLL ans(N + 1,0);
+	for (LL n = 0; n <= 31; n++) {
+		if (!check1[n])ans[1] = ans[1] | ((LL)1 << n);
+	}
+	for (LL n = 2; n <= N; n++) {
+		ans[n] = ans[n - 1] ^ B[n - 1];
+	}
+	for (LL n = 1; n <= N; n++) {
+		cout << ans[n] << "\n";
+	}
+	return 0;
+}
