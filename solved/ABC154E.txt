@@ -1,0 +1,99 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long LL;
+typedef long double LD;
+typedef pair<LL, LL> PLL;
+typedef pair<LD, LL> PDL;
+typedef pair<LD, LD> PDD;
+typedef vector<LL> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template<class T>
+void in(T& x) {
+	cin >> x;
+}
+
+template<class T1,class T2>
+void in(pair<T1, T2>& p) {
+	in(p.first);
+	in(p.second);
+}
+
+template<class T>
+void in(vector<T>& v,LL st=-1,LL en=-1) {
+	if (st == -1) {
+		st = 0;
+		en = v.size() - 1;
+	}
+	for (LL n = st; n <= en; n++) {
+		in(v[n]);
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	string S;
+	cin >> S;
+	LL N = S.size();
+	VLL A(N);
+	LL K;
+	cin >> K;
+	for (LL n = 0; n < N; n++) {
+		A[n] = S[n] - '0';
+	}
+	LL ans = 1;
+	for (LL k = 0; k < K; k++)ans *= (N-1 - k);
+	for (LL k = 1; k <= K; k++)ans /= k;
+	for (LL k = 0; k < K; k++)ans *= 9;
+	vector<VVLL> DP;
+	DP.resize(N, VVLL(2, VLL(K + 1, 0)));
+	DP[0][0][1] = A[0] - 1;
+	DP[0][0][0] = 0;
+	DP[0][1][1] = 1;
+	DP[0][1][0] = 0;
+	for (LL n = 1; n < N; n++) {
+		DP[n][0][0] += DP[n - 1][0][0];
+		if (A[0] > 0)DP[n][0][0] += DP[n - 1][1][0];
+		else DP[n][1][0] += DP[n - 1][1][0];
+		for (LL k = 1; k <= K; k++) {
+			DP[n][0][k] += 9 * DP[n - 1][0][k - 1];
+			DP[n][0][k] += DP[n - 1][0][k];
+			if (A[n] > 0) {
+				DP[n][0][k] += (A[n] - 1) * DP[n - 1][1][k - 1];
+				DP[n][0][k] += DP[n - 1][1][k];
+				DP[n][1][k] += DP[n - 1][1][k - 1];
+			}
+			else DP[n][1][k] += DP[n - 1][1][k];
+		}
+	}
+	cout << ans+DP[N-1][0][K] + DP[N-1][1][K] << "\n";
+	return 0;
+}
