@@ -1,0 +1,98 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long LL;
+typedef long double LD;
+typedef pair<LL, LL> PLL;
+typedef pair<LD, LL> PDL;
+typedef pair<LD, LD> PDD;
+typedef vector<LL> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template<class T>
+void in(T& x) {
+	cin >> x;
+}
+
+template<class T1, class T2>
+void in(pair<T1, T2>& p) {
+	in(p.first);
+	in(p.second);
+}
+
+template<class T>
+void in(vector<T>& v, LL st = -1, LL en = -1) {
+	if (st == -1) {
+		st = 0;
+		en = v.size() - 1;
+	}
+	for (LL n = st; n <= en; n++) {
+		in(v[n]);
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	LL N;
+	cin >> N;
+	VLL A(N+1), B(N+1), D(N+1);
+	in(A,0,N);
+	in(B,0,N);
+	in(D,1,N);
+	sort(D.begin(), D.end(), [](LL a, LL b) {
+		return a < b;
+	});
+	VVLL DP;
+	DP.resize(N + 1, VLL(N + 1, N + 2));
+	LL ans = 0;
+	for (LL k = 1; k <= N; k++) {
+		for (LL x = 0; x <= k; x++) {
+			LL y = k - x;
+			LL sum = A[x] + B[y];
+			LL s = 0, e = N+1;
+			while (e - s > 1) {
+				LL m = (e + s) / 2;
+				if (D[m] <= sum)s = m;
+				else e = m;
+			}
+			LL prev = 0;
+			if (x > 0) {
+				prev = max(DP[x - 1][y], prev);
+			}
+			if (y > 0) {
+				prev = max(DP[x][y - 1],prev);
+			}
+			DP[x][y] = min(s, prev - 1);
+			if (DP[x][y] >= 1)ans = k;
+		}
+	}
+	cout << ans << "\n";
+	return 0;
+}

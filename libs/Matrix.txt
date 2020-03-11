@@ -62,7 +62,7 @@ public:
 };
 
 //AにBを食わせる return A(B(n))
-Replacement operator*(Replacement& A, Replacement2& B) {
+Replacement apply(Replacement& A, Replacement2& B) {
 	Replacement C(A);
 	C.V[B.A] = C.V[B.A] ^ C.V[B.B];
 	C.V[B.B] = C.V[B.A] ^ C.V[B.B];
@@ -72,7 +72,7 @@ Replacement operator*(Replacement& A, Replacement2& B) {
 }
 
 //A(B(n))を返す
-Replacement operator*(Replacement2& A, Replacement2& B) {
+Replacement apply(Replacement2& A, Replacement2& B) {
 	Replacement C(A.N);
 	C.V[B.A] = C.V[B.A] ^ C.V[B.B];
 	C.V[B.B] = C.V[B.A] ^ C.V[B.B];
@@ -84,7 +84,7 @@ Replacement operator*(Replacement2& A, Replacement2& B) {
 }
 
 //A(B(n))を返す(使う機会があるのかはわからない)
-Replacement operator*(Replacement& A, Replacement& B) {
+Replacement apply(Replacement& A, Replacement& B) {
 	Replacement C(A.N);
 	for (int n = 0; n < C.N; n++) {
 		C.V[n] = A.V[B.V[n]];
@@ -269,7 +269,7 @@ bool LUdecomposition(Matrix<T>& A, Matrix<T>& L, Matrix<T>& U, Replacement& R) {
 				U[y][q] = U[y][ix];
 				U[y][ix] = t;
 			}
-			R = R * Replacement2(N, q, ix);
+			R = apply(R, Replacement2(N, q, ix));
 		}
 		for (int y = q; y < N; y++)L[y][q] = U[y][q];
 		for (int x = q; x < N; x++)U[q][x] /= L[q][q];

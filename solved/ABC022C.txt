@@ -1,0 +1,133 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long LL;
+typedef long double LD;
+typedef pair<LL, LL> PLL;
+typedef pair<LD, LL> PDL;
+typedef pair<LD, LD> PDD;
+typedef vector<LL> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template<class T>
+void in(T& x) {
+	cin >> x;
+}
+
+template<class T1, class T2>
+void in(pair<T1, T2>& p) {
+	in(p.first);
+	in(p.second);
+}
+
+template<class T>
+void in(vector<T>& v, LL st = -1, LL en = -1) {
+	if (st == -1) {
+		st = 0;
+		en = v.size() - 1;
+	}
+	for (LL n = st; n <= en; n++) {
+		in(v[n]);
+	}
+}
+
+VVLL edges;
+VVLL childs;
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	LL N, M;
+	cin >> N >> M;
+	edges.resize(N,VLL(N,1e8));
+	childs.resize(N,VLL());
+	for (LL m = 0; m < M; m++) {
+		LL s, t, l;
+		cin >> s >> t >> l;
+		s--; t--;
+		edges[s][t] = l;
+		edges[t][s] = l;
+		childs[s].push_back(t);
+		childs[t].push_back(s);
+	}
+	vector<PLL> dijkstra1(N, PLL(1e8, -1));
+	typedef pair<LL, PLL> P;
+	{
+		priority_queue<P, vector<P>, greater<P>> q;
+		q.push(P(0, PLL(0, -1)));
+		while (!q.empty()) {
+			LL cur = q.top().second.first;
+			LL par = q.top().second.second;
+			LL dist = q.top().first;
+			q.pop();
+			if (dijkstra1[cur].first != 1e8)continue;
+			dijkstra1[cur] = PLL(dist, par);
+			for (auto itr : childs[cur]) {
+				LL next = itr;
+				LL d = edges[cur][next];
+				if (dijkstra1[next].first != 1e8)continue;
+				q.push(P(dist + d, PLL(next, cur)));
+			}
+		}
+	}
+	LL ans = 1e8;
+	for (LL top = 1; top < N; top++) {
+		if (dijkstra1[top].first == 1e8)continue;
+		VVLL copy(edges);
+		LL prev = top;
+		LL pos = dijkstra1[top].second;
+		while (1) {
+			copy[prev][pos] = 1e8;
+			copy[pos][prev] = 1e8;
+			if (pos == 0)break;
+			prev = pos;
+			pos = dijkstra1[pos].second;
+		}
+		VLL dijkstra2(N, 1e8);
+		priority_queue<PLL, vector<PLL>, greater<PLL>> q;
+		q.push(PLL(0, top));
+		while (!q.empty()) {
+			LL cur = q.top().second;
+			LL dist = q.top().first;
+			q.pop();
+			if (dijkstra2[cur] != 1e8)continue;
+			dijkstra2[cur] = dist;
+			for (LL next : childs[cur]) {
+				if (dijkstra2[next] != 1e8)continue;
+				if (copy[cur][next] == 1e8)continue;
+				q.push(PLL(dist + copy[cur][next], next));
+			}
+		}
+		if (dijkstra2[0] == 1e8)continue;
+		ans = min(ans, dijkstra1[top].first + dijkstra2[0]);
+	}
+	if (ans == 1e8)cout << "-1\n";
+	else cout << ans << "\n";
+	return 0;
+}

@@ -1,0 +1,138 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 1e9 + 7;
+typedef long long LL;
+typedef long double LD;
+typedef pair<LL, LL> PLL;
+typedef pair<LD, LL> PDL;
+typedef pair<LD, LD> PDD;
+typedef vector<LL> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template<class T>
+void in(T& x) {
+	cin >> x;
+}
+
+template<class T1, class T2>
+void in(pair<T1, T2>& p) {
+	in(p.first);
+	in(p.second);
+}
+
+template<class T>
+void in(vector<T>& v, LL st = -1, LL en = -1) {
+	if (st == -1) {
+		st = 0;
+		en = v.size() - 1;
+	}
+	for (LL n = st; n <= en; n++) {
+		in(v[n]);
+	}
+}
+
+typedef complex<LD> Point;
+const LD eps = 1e-8;
+const LD pi = acos(-1.0);
+
+template<>
+void in(Point& p) {
+	LD r, i;
+	cin >> r >> i;
+	p = { r,i };
+}
+
+LL N;
+vector<Point> A, B;
+
+LD getsum(vector<Point>& v,LD X, LD Y) {
+	LD temp = 0;
+	for (LL n = 0; n < N; n++) {
+		temp = max(temp, (v[n].real() - X) * (v[n].real() - X) + (v[n].imag() - Y) * (v[n].imag() - Y));
+	}
+	return temp;
+}
+
+LD gety(vector<Point>& v,LD X) {
+	LD left = 0;
+	LD right = 1000;
+	for (LL t = 0; t < 100; t++) {
+		LD c1 = getsum(v,X, (left * 2 + right) / 3);
+		LD c2 = getsum(v,X, (left + right * 2) / 3);
+		if (c1 > c2)left = (left * 2 + right) / 3;
+		else right = (left + right*2) / 3;
+	}
+	return getsum(v,X, (left + right) / 2);
+}
+
+LD getx(vector<Point>& v) {
+	LD left = 0;
+	LD right = 1000;
+	for (LL t = 0; t < 100; t++) {
+		LD c1 = gety(v,(left * 2 + right) / 3);
+		LD c2 = gety(v,(left + right * 2) / 3);
+		if (c1 > c2)left = (left * 2 + right) / 3;
+		else right = (left + right * 2) / 3;
+	}
+	return gety(v,left);
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	cin >> N;
+	A.resize(N);
+	B.resize(N);
+	in(A);
+	in(B);
+	Point G1 = 0;
+	for (LL n = 0; n < N; n++) {
+		G1 += A[n];
+	}
+	G1 /= N;
+	Point far1 = G1;
+	for (LL n = 0; n < N; n++) {
+		if (abs(A[n] - G1) > abs(far1 - G1)) {
+			far1 = A[n];
+		}
+	}
+	Point G2 = 0;
+	for (LL n = 0; n < N; n++) {
+		G2 += B[n];
+	}
+	G2 /= N;
+	Point far2 = G2;
+	for (LL n = 0; n < N; n++) {
+		if (abs(B[n] - G2) > abs(far2 - G2)) {
+			far2 = B[n];
+		}
+	}
+	cout << setprecision(12) << abs(far2 - G2) / abs(far1 - G1) << "\n";
+	return 0;
+}
