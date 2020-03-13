@@ -1,3 +1,12 @@
+yosupo Point Set Range Composite
+yosupo Point Add Range Sum
+yosupo Static RMQ
+yosupo Unionfind
+yosupo Many A + B
+yosupo A + B
+AGC 006 C - Rabbit Exercise
+AOJ 2311 Dessert Witch
+AOJ 2310 Rose Garden Witch
 yukicoder No.949 飲酒プログラミングコンテスト
 yukicoder No.891 隣接3項間の漸化式
 yukicoder No.198 キャンディー・ボックス２
@@ -72,7 +81,6 @@ ABC 149 D - Prediction and Restriction
 ABC 149 C - Next Prime
 ABC 149 B - Greedy Takahashi
 ABC 149 A - Strings
->>>>>>> 9c10e36d74964f99e3d7247a76e135f505e7b045
 ABC 021 C - 正直者の高橋くん
 ABC 021 B - 嘘つきの高橋くん
 ABC 021 A - 足し算

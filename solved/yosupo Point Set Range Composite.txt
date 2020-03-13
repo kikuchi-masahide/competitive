@@ -1,19 +1,78 @@
-class Ab {
-public:
-	LL v;
-	Ab(LL v_) :v(v_) {};
-	LL operator()() {
-		return v;
-	}
-	static Ab E;
-	Ab() :v(1e9){};
-};
-Ab Ab::E = Ab(1e9);
-Ab operator+(Ab a, Ab b) {
-	return Ab(min(a.v, b.v));
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 998244353;//1e9 + 7;
+typedef long long LL;
+typedef long double LD;
+typedef pair<LL, LL> PLL;
+typedef pair<LD, LL> PDL;
+typedef pair<LD, LD> PDD;
+typedef vector<LL> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template<class T>
+void in(T& x) {
+	cin >> x;
 }
 
-//êîóÒÉ^ÉCÉvÇÃtreap
+template<class T1, class T2>
+void in(pair<T1, T2>& p) {
+	in(p.first);
+	in(p.second);
+}
+
+template<class T>
+void in(vector<T>& v, LL st = -1, LL en = -1) {
+	if (st == -1) {
+		st = 0;
+		en = v.size() - 1;
+	}
+	for (LL n = st; n <= en; n++) {
+		in(v[n]);
+	}
+}
+
+class Ab {
+public:
+	LL a,b;
+	Ab(LL _a,LL _b) :a(_a),b(_b) {};
+	PLL operator()() {
+		return PLL(a,b);
+	}
+	static Ab E;
+	Ab() :a(1),b(0) {};
+};
+Ab Ab::E = Ab(1,0);
+Ab operator+(Ab a, Ab b) {
+	return Ab((a.a*b.a)%MOD,(a.b*b.a+b.b)%MOD);
+}
+
+//Êï∞Âàó„Çø„Ç§„Éó„ÅÆtreap
 //Xorshift
 unsigned int Xorshift() {
 	static unsigned int tx = 123456789, ty = 362436069, tz = 521288629, tw = 88675123;
@@ -23,15 +82,15 @@ unsigned int Xorshift() {
 }
 
 struct node_t {
-	Ab val;   //íl
-	node_t* ch[2];   //éq
-	LL pri;   //óDêÊìx
-	LL cnt;   //éqÇÃå¬êî
-	Ab sum;   //ílÇÃòa
-	static LL node_count;   //ÉvÅ[ÉãópÇÃóvëfÇêîÇ¶ÇÈïœêî
-	static const LL MAX_N = 4000000 + 10;   //ÉvÅ[ÉãÇÃÉTÉCÉY
+	Ab val;   //ÂÄ§
+	node_t* ch[2];   //Â≠ê
+	LL pri;   //ÂÑ™ÂÖàÂ∫¶
+	LL cnt;   //Â≠ê„ÅÆÂÄãÊï∞
+	Ab sum;   //ÂÄ§„ÅÆÂíå
+	static LL node_count;   //„Éó„Éº„É´Áî®„ÅÆË¶ÅÁ¥†„ÇíÊï∞„Åà„ÇãÂ§âÊï∞
+	static const LL MAX_N = 4000000 + 10;   //„Éó„Éº„É´„ÅÆ„Çµ„Ç§„Ç∫
 	void* operator new(std::size_t) {
-		static node_t pool[MAX_N];   //ÉvÅ[Éã
+		static node_t pool[MAX_N];   //„Éó„Éº„É´
 		return pool + node_count++;
 	}
 	static void delete_all() {
@@ -62,7 +121,7 @@ struct node_t {
 LL node_t::node_count = 0;
 
 
-//2Ç¬ÇÃtreapÇÉ}Å[ÉW
+//2„Å§„ÅÆtreap„Çí„Éû„Éº„Ç∏
 node_t* merge(node_t* l, node_t* r) {
 	if (!l || !r)return !l ? r : l;
 	if (l->pri > r->pri) {
@@ -75,7 +134,7 @@ node_t* merge(node_t* l, node_t* r) {
 	}
 }
 
-//treapÇ[0,k)Ç∆[k,n)Ç…split
+//treap„Çí[0,k)„Å®[k,n)„Å´split
 pair<node_t*, node_t*> split(node_t* t, LL k) {
 	typedef pair<node_t*, node_t*> P;
 	if (!t)return P(NULL, NULL);
@@ -92,14 +151,14 @@ pair<node_t*, node_t*> split(node_t* t, LL k) {
 	}
 }
 
-//treap trÇÃèÍèäkÇ…óvëftÇí«â¡
+//treap tr„ÅÆÂ†¥ÊâÄk„Å´Ë¶ÅÁ¥†t„ÇíËøΩÂä†
 node_t* insert(node_t* tr, LL k, node_t* t) {
 	auto sp = split(tr, k);
 	sp.first = merge(sp.first, t);
 	return merge(sp.first, sp.second);
 }
 
-//treap trÇÃèÍèäkÇÃóvëfÇè¡ãé
+//treap tr„ÅÆÂ†¥ÊâÄk„ÅÆË¶ÅÁ¥†„ÇíÊ∂àÂéª
 node_t* erase(node_t* tr, LL k) {
 	auto sp = split(tr, k - 1);
 	auto sp2 = split(sp.second, 1);
@@ -107,13 +166,13 @@ node_t* erase(node_t* tr, LL k) {
 	return merge(sp.first, sp2.second);
 }
 
-void print(node_t* root) {
-	if (root == NULL)return;
-	print(root->ch[0]);
-	cout << " " << root->val();
-	print(root->ch[1]);
-	return;
-}
+//void print(node_t* root) {
+//	if (root == NULL)return;
+//	print(root->ch[0]);
+//	cout << " " << root->val();
+//	print(root->ch[1]);
+//	return;
+//}
 
 node_t* index(node_t* root, LL n) {
 	if (!root)return NULL;
@@ -160,4 +219,33 @@ Ab rangesum(node_t* root, LL l, LL r) {
 	if (l <= ln && ln <= r)ans = ans + root->val;
 	ans = ans + rangesum(root->ch[1], l - ln - 1, r - ln - 1);
 	return ans;
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	LL N, Q;
+	cin >> N >> Q;
+	node_t* tree = nullptr;
+	for (LL n = 0; n < N; n++) {
+		LL a, b;
+		cin >> a >> b;
+		tree = merge(tree, new node_t(Ab(a,b)));
+	}
+	for (LL q = 0; q < Q; q++) {
+		LL t;
+		cin >> t;
+		if (t == 0) {
+			LL p, c, d;
+			cin >> p >> c >> d;
+			change(tree, p, Ab(c, d));
+		}
+		else {
+			LL l, r, x;
+			cin >> l >> r >> x;
+			PLL temp = rangesum(tree, l, r - 1)();
+			cout << (temp.first * x + temp.second) % MOD << "\n";
+		}
+	}
+	return 0;
 }

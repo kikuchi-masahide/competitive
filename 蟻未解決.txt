@@ -110,7 +110,6 @@ https://atcoder.jp/contests/arc058/tasks/arc058_c
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0581
 https://community.topcoder.com/stat?c=problem_statement&pm=10184&rd=13519
 https://atcoder.jp/contests/tdpc/tasks/tdpc_house
-https://atcoder.jp/contests/agc006/tasks/agc006_c
 https://atcoder.jp/contests/agc013/tasks/agc013_e
 https://atcoder.jp/contests/jag2013summer-day4/tasks/icpc2013summer_day4_f
 https://csacademy.com/contest/iati-shumen-2017-day-1/task/superstition/
