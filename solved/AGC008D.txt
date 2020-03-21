@@ -1,0 +1,122 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 998244353;//1e9 + 7;
+typedef long long LL;
+typedef long double LD;
+typedef pair<LL, LL> PLL;
+typedef pair<LD, LL> PDL;
+typedef pair<LD, LD> PDD;
+typedef vector<LL> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template<class Rng>
+void in(Rng& x) {
+	cin >> x;
+}
+
+template<class T1, class T2>
+void in(pair<T1, T2>& p) {
+	in(p.first);
+	in(p.second);
+}
+
+template<class Rng>
+void in(vector<Rng>& v, LL st = -1, LL en = -1) {
+	if (st == -1) {
+		st = 0;
+		en = v.size() - 1;
+	}
+	for (LL n = st; n <= en; n++) {
+		in(v[n]);
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	LL N;
+	cin >> N;
+	VLL A(N*N + 1,-1);
+	vector<PLL> V(N+1);
+	V[0] = PLL(0, 1e10);
+	for (LL n = 1; n <= N; n++) {
+		V[n].first = n;
+		cin >> V[n].second;
+	}
+	sort(V.begin(), V.end(), [](PLL a, PLL b) {
+		return a.second < b.second;
+	});
+	LL r = 0;
+	for (LL n = 0; n < N; n++) {
+		LL i = V[n].first;
+		LL xi = V[n].second;
+		if (A[xi] == -1) {
+			A[xi] = i;
+		}
+		else {
+			cout << "No\n";
+			return 0;
+		}
+		LL t = 0;
+		while (t < i - 1) {
+			if (xi <= r) {
+				cout << "No\n";
+				return 0;
+			}
+			if (A[r + 1] == -1) {
+				A[r + 1] = i;
+				t++;
+			}
+			r++;
+		}
+	}
+	LL l = N * N + 1;
+	for (LL n = N - 1; n >= 0; n--) {
+		LL i = V[n].first;
+		LL xi = V[n].second;
+		LL t = 0;
+		while (t < N - i) {
+			if (xi >= l) {
+				cout << "No\n";
+				return 0;
+			}
+			if (A[l - 1] == -1) {
+				A[l -1] = i;
+				t++;
+			}
+			l--;
+		}
+	}
+	cout << "Yes\n";
+	for (LL n = 1; n < N * N; n++) {
+		cout << A[n] << " ";
+	}
+	cout << A.back() << "\n";
+	return 0;
+}

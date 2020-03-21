@@ -1,16 +1,18 @@
-class Ab {
+//class Rng {
+//public:
+//	Rng();
+//	friend ostream operator<<(ostream&,Rng);   (if print neccesary)
+//};
+//Rng operator+(Rng, Rng);
+class T {
 public:
 	LL v;
-	Ab(LL v_) :v(v_) {};
-	LL operator()() {
-		return v;
-	}
-	static Ab E;
-	Ab() :v(1e9){};
+	T() :v(1e7) {};
+	T(LL _v) :v(_v) {};
 };
-Ab Ab::E = Ab(1e9);
-Ab operator+(Ab a, Ab b) {
-	return Ab(min(a.v, b.v));
+T operator+(T a, T b) {
+	if (a.v < b.v)return a;
+	else return b;
 }
 
 //数列タイプのtreap
@@ -22,22 +24,24 @@ unsigned int Xorshift() {
 	return (tw = (tw ^ (tw >> 19)) ^ (tt ^ (tt >> 8)));
 }
 
-struct node_t {
-	Ab val;   //値
-	node_t* ch[2];   //子
+template<class Rng>
+class node_t {
+public:
+	Rng val;   //値
+	node_t<Rng>* ch[2];   //子
 	LL pri;   //優先度
 	LL cnt;   //子の個数
-	Ab sum;   //値の和
+	Rng sum;   //値の和
 	static LL node_count;   //プール用の要素を数える変数
 	static const LL MAX_N = 4000000 + 10;   //プールのサイズ
 	void* operator new(std::size_t) {
-		static node_t pool[MAX_N];   //プール
+		static node_t<Rng> pool[MAX_N];   //プール
 		return pool + node_count++;
 	}
 	static void delete_all() {
 		node_count = 0;
 	}
-	node_t(Ab v) {
+	node_t(Rng v) {
 		val = v;
 		ch[0] = ch[1] = NULL;
 		cnt = 1;
@@ -45,25 +49,28 @@ struct node_t {
 		pri = Xorshift();
 	}
 	node_t() {
-		val = Ab();
+		val = Rng();
 		ch[0] = ch[1] = NULL;
 		cnt = 1;
 		sum = val;
 		pri = Xorshift();
 	}
-	node_t* update() {
-		node_t* t = this;
+	node_t<Rng>* update() {
+		node_t<Rng>* t = this;
 		t->cnt = (t->ch[0] ? t->ch[0]->cnt : 0) + (t->ch[1] ? t->ch[1]->cnt : 0) + 1;
-		t->sum = (t->ch[0] ? t->ch[0]->sum : Ab::E) + t->val;
-		t->sum = t->sum + (t->ch[1] ? t->ch[1]->sum : Ab::E);
+		if (t->ch[0])t->sum = t->ch[0]->sum + t->val;
+		else t->sum = t->val;
+		if (t->ch[1])t->sum = t->sum + t->ch[1]->sum;
 		return t;
 	}
 };
-LL node_t::node_count = 0;
+template<class Rng>
+LL node_t<Rng>::node_count = 0;
 
 
 //2つのtreapをマージ
-node_t* merge(node_t* l, node_t* r) {
+template<class Rng>
+node_t<Rng>* merge(node_t<Rng>* l, node_t<Rng>* r) {
 	if (!l || !r)return !l ? r : l;
 	if (l->pri > r->pri) {
 		l->ch[1] = merge(l->ch[1], r);
@@ -76,8 +83,9 @@ node_t* merge(node_t* l, node_t* r) {
 }
 
 //treapを[0,k)と[k,n)にsplit
-pair<node_t*, node_t*> split(node_t* t, LL k) {
-	typedef pair<node_t*, node_t*> P;
+template<class Rng>
+pair<node_t<Rng>*, node_t<Rng>*> split(node_t<Rng>* t, LL k) {
+	typedef pair<node_t<Rng>*, node_t<Rng>*> P;
 	if (!t)return P(NULL, NULL);
 	LL count = t->ch[0] ? t->ch[0]->cnt : 0;
 	if (k <= count) {
@@ -93,29 +101,33 @@ pair<node_t*, node_t*> split(node_t* t, LL k) {
 }
 
 //treap trの場所kに要素tを追加
-node_t* insert(node_t* tr, LL k, node_t* t) {
+template<class Rng>
+node_t<Rng>* insert(node_t<Rng>* tr, LL k, node_t<Rng>* t) {
 	auto sp = split(tr, k);
 	sp.first = merge(sp.first, t);
 	return merge(sp.first, sp.second);
 }
 
 //treap trの場所kの要素を消去
-node_t* erase(node_t* tr, LL k) {
+template<class Rng>
+node_t<Rng>* erase(node_t<Rng>* tr, LL k) {
 	auto sp = split(tr, k - 1);
 	auto sp2 = split(sp.second, 1);
 	delete sp2.first;
 	return merge(sp.first, sp2.second);
 }
 
-void print(node_t* root) {
+template<class Rng>
+void print(node_t<Rng>* root) {
 	if (root == NULL)return;
 	print(root->ch[0]);
-	cout << " " << root->val();
+	cout << " " << root->val;
 	print(root->ch[1]);
 	return;
 }
 
-node_t* index(node_t* root, LL n) {
+template<class Rng>
+node_t<Rng>* index(node_t<Rng>* root, LL n) {
 	if (!root)return NULL;
 	LL ln = (root->ch[0] ? root->ch[0]->cnt : 0);
 	LL rn = (root->ch[1] ? root->ch[1]->cnt : 0);
@@ -125,13 +137,14 @@ node_t* index(node_t* root, LL n) {
 	else return index(root->ch[1], n - (ln + 1));
 }
 
-node_t* change(node_t* root, LL n, Ab x) {
+template<class Rng>
+node_t<Rng>* change(node_t<Rng>* root, LL n, Rng x) {
 	if (!root)return NULL;
 	LL ln = (root->ch[0] ? root->ch[0]->cnt : 0);
 	LL rn = (root->ch[1] ? root->ch[1]->cnt : 0);
 	if (n >= ln + rn + 1)return NULL;
 	if (n < ln) {
-		node_t* r = change(root->ch[0], n, x);
+		node_t<Rng>* r = change(root->ch[0], n, x);
 		root->update();
 		return r;
 	}
@@ -141,22 +154,23 @@ node_t* change(node_t* root, LL n, Ab x) {
 		return root;
 	}
 	else {
-		node_t* r = change(root->ch[1], n - (ln + 1), x);
+		node_t<Rng>* r = change(root->ch[1], n - (ln + 1), x);
 		root->update();
 		return r;
 	}
 }
 
 //[l,r]
-Ab rangesum(node_t* root, LL l, LL r) {
-	if (root == NULL)return Ab();
+template<class Rng>
+Rng rangesum(node_t<Rng>* root, LL l, LL r) {
+	if (root == NULL)return Rng();
 	LL ln = (root->ch[0] ? root->ch[0]->cnt : 0);
 	LL rn = (root->ch[1] ? root->ch[1]->cnt : 0);
-	if (r < 0 || l > ln + rn)return Ab();
+	if (r < 0 || l > ln + rn)return Rng();
 	l = max((LL)0, l);
 	r = min(ln + rn, r);
 	if (l == 0 && r == ln + rn)return root->sum;
-	Ab ans = rangesum(root->ch[0], l, r);
+	Rng ans = rangesum(root->ch[0], l, r);
 	if (l <= ln && ln <= r)ans = ans + root->val;
 	ans = ans + rangesum(root->ch[1], l - ln - 1, r - ln - 1);
 	return ans;

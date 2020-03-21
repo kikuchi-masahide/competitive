@@ -1,3 +1,15 @@
+DISCO presents ディスカバリーチャンネル プログラミングコンテスト2016 予選 B - ディスコ社内ツアー
+AGC 008 D - K-th K
+AGC 008 C - Tetromino Tiling
+AGC 008 B - Contiguous Repainting
+AGC 008 A - Simple Calculator
+ABC 112 B - Time Limit Exceeded
+ABC 112 A - Programming Education
+パナソニックプログラミングコンテスト2020 D - String Equivalence
+パナソニックプログラミングコンテスト2020 C - Sqrt Inequality
+パナソニックプログラミングコンテスト2020 B - Bishop
+パナソニックプログラミングコンテスト2020 A - Kth Term
+yosupo Queue Operate All Composite
 yosupo Point Set Range Composite
 yosupo Point Add Range Sum
 yosupo Static RMQ

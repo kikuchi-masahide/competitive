@@ -1,0 +1,21 @@
+template<class T>
+class LinearFunction {
+public:
+	T a, b;
+	LinearFunction(T _a, T _b) :a(_a), b(_b) {};
+	T operator()(T x) {
+		return a * x + b;
+	}
+};
+
+//l(r(x))
+template<class T>
+LinearFunction<T> getlr(LinearFunction<T> l, LinearFunction<T> r) {
+	return LinearFunction<T>(l.a * r.a, l.a * r.b + l.b);
+}
+
+//r(l(x))
+template<class T>
+LinearFunction<T> getrl(LinearFunction<T> l, LinearFunction<T> r) {
+	return LinearFunction<T>(r.a * l.a, r.a * l.b + r.b);
+}

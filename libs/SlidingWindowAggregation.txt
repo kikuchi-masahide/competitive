@@ -1,0 +1,44 @@
+template <class T>
+class SlidingWindowAggregation {
+private:
+	stack<pair<T, T>> fr, ba;   //自分、和のペア
+	T(*op)(T, T);   //関数ポインタ
+public:
+	SlidingWindowAggregation(T(*_op)(T, T)) :op(_op) {}
+	LL GetSize() {
+		return (LL)fr.size() + (LL)ba.size();
+	}
+	void push_back(T a) {
+		if (ba.size() == 0)ba.push(pair<T, T>(a, a));
+		else {
+			pair<T, T> t = ba.top();
+			pair<T, T> n(a, (*op)(t.second, a));
+			ba.push(n);
+		}
+	}
+	T pop_front() {
+		if (fr.size() == 0) {
+			while (ba.size() != 0) {
+				T cur = ba.top().first;
+				ba.pop();
+				if (fr.size() == 0) {
+					fr.push(pair<T, T>(cur, cur));
+				}
+				else {
+					T prev = fr.top().second;
+					fr.push(pair<T, T>(cur, (*op)(cur, prev)));
+				}
+			}
+		}
+		T ret = fr.top().first;
+		fr.pop();
+		return ret;
+	}
+	T Getall() {
+		if (ba.size() == 0)return fr.top().second;
+		if (fr.size() == 0)return ba.top().second;
+		T frsum = fr.top().second;
+		T basum = ba.top().second;
+		return (*op)(frsum, basum);
+	}
+};

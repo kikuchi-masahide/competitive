@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <limits.h>
+#include <algorithm>
+#include <string>
+#include <math.h>
+#include <limits.h>
+#include <queue>
+#include <map>
+#include <set>
+#include <iomanip>
+#include <bitset>
+#include <cassert>
+#include <random>
+#include <functional>
+#include <stack>
+#include <iomanip>
+#include <cassert>
+//#include <boost/multiprecision/cpp_int.hpp>
+#include <complex>
+#include <cstdio>
+#include <list>
+
+//< in.txt > out.txt
+using namespace std;
+//std::ios::sync_with_stdio(false);
+//std::cin.tie(0);
+const long long MOD = 998244353;//1e9 + 7;
+typedef long long LL;
+typedef long double LD;
+typedef pair<LL, LL> PLL;
+typedef pair<LD, LL> PDL;
+typedef pair<LD, LD> PDD;
+typedef vector<LL> VLL;
+typedef vector<VLL> VVLL;
+//typedef boost::multiprecision::cpp_int bigint;
+
+template<class Rng>
+void in(Rng& x) {
+	cin >> x;
+}
+
+template<class T1, class T2>
+void in(pair<T1, T2>& p) {
+	in(p.first);
+	in(p.second);
+}
+
+template<class Rng>
+void in(vector<Rng>& v, LL st = -1, LL en = -1) {
+	if (st == -1) {
+		st = 0;
+		en = v.size() - 1;
+	}
+	for (LL n = st; n <= en; n++) {
+		in(v[n]);
+	}
+}
+
+int main() {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	LL I, O, T, J, L, S, Z;
+	cin >> I >> O >> T >> J >> L >> S >> Z;
+	LL ans = 0;
+	ans += 2 * O;
+	LL p, q, r;
+	p = I;
+	q = J;
+	r = L;
+	LL oddc = 0;
+	oddc += p % 2;
+	oddc += q % 2;
+	oddc += r % 2;
+	LL temp = 0;
+	if (min(p, min(q, r)) == 0) {
+		temp += (p / 2) * 4;
+		temp += (q / 2) * 4;
+		temp += (r / 2) * 4;
+	}
+	else {
+		temp = 2 * (p + q + r);
+		if (oddc == 3 || oddc == 0)temp -= 0;
+		else temp -= 2;
+	}
+	ans += temp;
+	cout << ans / 2 << "\n";
+	return 0;
+}

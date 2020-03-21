@@ -1,0 +1,84 @@
+class Modint {
+public:
+	LL v;
+	Modint(LL _v) {
+		_v %= MOD;
+		if (_v < 0)_v += MOD;
+		v = _v;
+	}
+	Modint operator+=(Modint m);
+	Modint operator-=(Modint m);
+	Modint operator*=(Modint m);
+	friend ostream& operator<<(ostream& st, Modint m);
+	friend ostream& operator>>(ostream& st, Modint m);
+	Modint() :v(0) {}
+};
+ostream& operator<<(ostream& st, Modint m) {
+	cout << m.v;
+	return st;
+}
+ostream& operator>>(ostream& st, Modint m) {
+	LL v;
+	cin >> v;
+	m.v = v % MOD;
+	return st;
+}
+Modint operator+(Modint a, Modint b) {
+	Modint r;
+	r.v = a.v + b.v;
+	if (r.v >= MOD)r.v -= MOD;
+	return r;
+}
+Modint operator-(Modint a, Modint b) {
+	Modint r;
+	r.v = a.v - b.v;
+	if (r.v < 0)r.v += MOD;
+	return r;
+}
+Modint operator*(Modint a, Modint b) {
+	return Modint((a.v * b.v) % MOD);
+}
+Modint operator+(Modint a, LL b) {
+	return Modint(a.v + b);
+}
+Modint operator+(LL a, Modint b) {
+	return Modint(a + b.v);
+}
+Modint operator-(Modint a, LL b) {
+	return Modint(a.v - b);
+}
+Modint operator-(LL a, Modint b) {
+	return Modint(a - b.v);
+}
+Modint operator*(Modint a, LL b) {
+	return Modint(a.v * (b % MOD));
+}
+Modint operator*(LL a, Modint b) {
+	return Modint((a % MOD) * b.v);
+}
+Modint Modint::operator+=(Modint m) {
+	*this += *this + m;
+	return *this;
+}
+Modint Modint::operator-=(Modint m) {
+	*this = *this - m;
+	return *this;
+}
+Modint Modint::operator*=(Modint m) {
+	*this = *this * m;
+	return *this;
+}
+template<class T>
+T pow(T& base, LL p) {
+	if (p == 0)return T();
+	else if (p == 1)return base;
+	T ret = pow(base, p / 2);
+	ret *= ret;
+	if (p & 1)ret *= base;
+	return ret;
+}
+
+template<>
+void in(Modint& m) {
+	cin >> m.v;
+}
