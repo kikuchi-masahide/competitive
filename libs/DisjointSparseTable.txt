@@ -1,0 +1,53 @@
+template<class T>
+class DST {
+private:
+	vector<vector<T>> table;
+	VLL ind;
+	LL RN;
+public:
+	DST(vector<T>& V) {
+		if (V.size() == 1) {
+			table.resize(1, vector<T>(1, V[0]));
+			ind.resize(1, 0);
+			RN = 1;
+			return;
+		}
+		LL N = V.size();
+		RN = 1;
+		LL tablenum = 0;
+		while (RN < N) {
+			RN *= 2;
+			tablenum++;
+		}
+		table.resize(tablenum, vector<T>(RN,T()));
+		ind.resize(RN);
+		for (LL t = 0,n = 0; ((LL)1 << n) <= RN; n++) {
+			for (; t < ((LL)1 << n); t++) {
+				ind[t] = n;
+			}
+		}
+		for (LL n = 0; n < N; n++) {
+			table[0][n] = V[n];
+		}
+		for (LL t = 1, shelf = 4; t < table.size(); t++, shelf *= 2) {
+			LL c = shelf / 2;
+			while(c < RN){
+				table[t][c - 1] = table[0][c - 1];
+				for (LL n = c - 2; n >= c - shelf / 2; n--) {
+					table[t][n] = table[0][n] * table[t][n + 1];
+				}
+				table[t][c] = table[0][c];
+				for (LL n = c + 1; n < c + shelf / 2; n++) {
+					table[t][n] = table[t][n - 1] * table[0][n];
+				}
+				c += shelf;
+			}
+		}
+	}
+	//get [l,r]
+	T get(LL l, LL r) {
+		if (l == r)return table[0][l];
+		LL d = l ^ r;
+		return table[ind[d]-1][l] * table[ind[d]-1][r];
+	}
+};

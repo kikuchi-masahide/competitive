@@ -12,7 +12,9 @@ public:
 	friend ostream& operator<<(ostream& st, Modint m);
 	friend ostream& operator>>(ostream& st, Modint m);
 	Modint() :v(0) {}
+	static Modint one;
 };
+Modint Modint::one = Modint(1);
 ostream& operator<<(ostream& st, Modint m) {
 	cout << m.v;
 	return st;
@@ -77,8 +79,28 @@ T pow(T& base, LL p) {
 	if (p & 1)ret *= base;
 	return ret;
 }
-
+template<class T>
+T modpow(T base, LL p) {
+	if (p == 0)return T();
+	else if (p == 1)return base;
+	T ret = modpow(base, p / 2);
+	ret *= ret;
+	if (p & 1)ret *= base;
+	return ret;
+}
+//O(min(N-R,R))
+Modint Comb(LL N, LL R) {
+	if (R > N - R)return Comb(N, N - R);
+	Modint ans((LL)1);
+	for (LL n = N; n > N - R; n--) {
+		ans *= Modint(n);
+	}
+	for (LL n = R; n >= 1; n--) {
+		ans *= modpow(Modint(n), MOD - 2);
+	}
+	return ans;
+}
 template<>
 void in(Modint& m) {
-	cin >> m.v;
+    cin >> m.v;
 }

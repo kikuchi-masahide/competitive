@@ -1,0 +1,17 @@
+//半群...結合法則
+class Semigroup {
+public:
+	Semigroup(...);
+	friend ostream operator<<(ostream&,Semigroup);   //if cout is neccesary
+};
+Semigroup operator*(Semigroup, Semigroup);
+
+
+//モノイド...結合法則・単位的
+class Monoid {
+public:
+	Monoid(...);
+	Monoid();   //return 1
+	friend ostream operator<<(ostream&, Monoid);   //if cout is neccesary
+};
+Monoid operator*(Monoid, Monoid);
