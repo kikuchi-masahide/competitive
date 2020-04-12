@@ -1,3 +1,4 @@
+//require Monoid
 template<class T>
 class Segtree {
 private:

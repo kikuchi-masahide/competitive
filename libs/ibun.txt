@@ -1,25 +1,25 @@
 //vector<ll> Vの「回文部分」を求める
 //返すもの:vector<ll> ans;
-//ans[2*n]:=n番目中心、ans[2*n-1]:=n番目と(n-1)番目の間が中心の極大な回文の長さ(V[0]とV[N+1]はダミー)
+//ans[2*n+1]:=n番目中心、ans[2*n]:=(n-1)番目とn番目の間が中心の極大な回文の長さ(V[0]とV[N+1]はダミー)
 VLL ManacherPalindromes(VLL& in) {
-	ll N = in.size();
-	vector<ll> V;
+	LL N = in.size();
+	vector<LL> V;
 	V.reserve(2 * N + 1);
-	for (ll n = 0; n < N; n++) {
+	for (LL n = 0; n < N; n++) {
 		V.push_back(-1);
 		V.push_back(in[n]);
 	}
 	V.push_back(-1);
 	VLL ans(V.size(), 1);
 	ans[1] = 2;
-	ll c = 1;
-	for (ll i = 2; i < V.size(); i++) {
-		ll l = 2 * c - i;
+	LL c = 1;
+	for (LL i = 2; i < V.size(); i++) {
+		LL l = 2 * c - i;
 		if (i + ans[l] < c + ans[c]) {
 			ans[i] = ans[l];
 		}
 		else {
-			ll j = c + ans[c] - i;
+			LL j = c + ans[c] - i;
 			while (i - j >= 0 && i + j < V.size()) {
 				if (V[i - j] == V[i + j])j++;
 				else break;
@@ -28,12 +28,13 @@ VLL ManacherPalindromes(VLL& in) {
 			c = i;
 		}
 	}
-	for (ll n = 0; n < ans.size(); n++) {
+	for (LL n = 0; n < ans.size(); n++) {
 		if (n & 1) {
 			ans[n] = (ans[n] + 1) / 2;
+			ans[n] = 2 * ans[n] - 1;
 		}
 		else {
-			ans[n] = (ans[n] - 1) / 2;
+			ans[n] = (ans[n] - 1);
 		}
 	}
 	return ans;

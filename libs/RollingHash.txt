@@ -22,7 +22,7 @@ public:
 		}
 		hash.resize(S.size() + 1);
 		hash[0] = 0;
-		for (ll n = 1; n <= S.size(); n++) {
+		for (LL n = 1; n <= S.size(); n++) {
 			hash[n] = mod(Mul(hash[n - 1], base) + S[n - 1]);
 		}
 	}
@@ -33,7 +33,7 @@ public:
 	//•”•ª—ñ”z—ñ‚Ö‚Ì•Û‘¶‚È‚µ‚É•ÏŠ·
 	HASH conv(vector<LL>& S) {
 		HASH ans = 0;
-		for (ll n = 0; n < S.size(); n++) {
+		for (LL n = 0; n < S.size(); n++) {
 			ans = mod(Mul(ans, base) + S[n]);
 		}
 		return ans;

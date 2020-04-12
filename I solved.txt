@@ -1,3 +1,12 @@
+JOI 2007 本選 2 - 共通部分文字列
+Judge System Update Test Contest 202004 D - Calculating GCD
+Judge System Update Test Contest 202004 C - Numbering Blocks
+Judge System Update Test Contest 202004 B - Picking Balls
+Judge System Update Test Contest 202004 A - Walking Takahashi
+早稲田大学プログラミングコンテスト2019 G - Teishoku
+早稲田大学プログラミングコンテスト2019 E - Artist
+早稲田大学プログラミングコンテスト2019 B - 10 puzzle
+早稲田大学プログラミングコンテスト2019 A - WAsedAC
 ABC 161 E - Yutori
 ABC 161 F - Division or Substraction
 ABC 161 D - Lunlun Number
