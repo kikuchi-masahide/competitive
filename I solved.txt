@@ -1,3 +1,10 @@
+yosupo Static Range Sum
+ABC 162 F - Select Half
+ABC 162 E - Sum of gcd of Tuples (Hard)
+ABC 162 D - RGB Triplets
+ABC 162 C - Sum of gcd of Tuples (Easy)
+ABC 162 B - FizzBuzz Sum
+ABC 162 A - Lucky 7
 JOI 2007 –{‘I 2 - ‹¤’Ê•”•ª•¶Žš—ñ
 Judge System Update Test Contest 202004 D - Calculating GCD
 Judge System Update Test Contest 202004 C - Numbering Blocks
