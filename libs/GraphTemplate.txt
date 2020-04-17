@@ -1,0 +1,17 @@
+template<class T>
+struct Gedge {
+	LL to;
+	T cost;
+	Gedge(LL t, T c) :to(t), cost(c) {}
+};
+
+template<class T>
+using WeightedGraph = vector<vector<Gedge<T>>>;
+using UnweightedGraph = vector<vector<LL>>;
+
+struct TNode {
+	LL parent;
+	VLL childs;
+	TNode() :parent(-1) {};
+};
+using Tree = vector<TNode>;

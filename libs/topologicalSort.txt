@@ -1,3 +1,65 @@
+//return false->ï¬òH
+template<class T>
+bool TopologicalVisit(WeightedGraph<T>& G, LL n, LL& ord, VLL& vord, VLL& check) {
+	if (check[n] == 1) {
+		return false;
+	}
+	else if (check[n] == 0) {
+		check[n] = 1;
+		for (Gedge<T>& e : G[n]) {
+			if (!TopologicalVisit(G, e.to, ord, vord, check))return false;
+		}
+		check[n] = 2;
+		vord[ord] = n;
+		ord--;
+	}
+	return true;
+}
+
+template<class T>
+bool TopologicalSort(WeightedGraph<T>& G, VLL& order) {
+	order.resize(G.size());
+	LL ord = G.size()-1;
+	VLL check(G.size(), 0);   //0:ñ¢ 1:àÍéû 2:çPãv
+	for (LL n = 0; n < G.size(); n++) {
+		if (check[n] == 0) {
+			if(!TopologicalVisit(G, n, ord, order, check))return false;
+		}
+	}
+	return true;
+}
+
+//return false->ï¬òH
+bool TopologicalVisit(UnweightedGraph& G, LL n, LL& ord, VLL& vord, VLL& check) {
+	if (check[n] == 1) {
+		return false;
+	}
+	else if (check[n] == 0) {
+		check[n] = 1;
+		for (LL to : G[n]) {
+			if (!TopologicalVisit(G, to, ord, vord, check))return false;
+		}
+		check[n] = 2;
+		vord[ord] = n;
+		ord--;
+	}
+	return true;
+}
+
+bool TopologicalSort(UnweightedGraph& G, VLL& order) {
+	order.resize(G.size());
+	LL ord = G.size() - 1;
+	VLL check(G.size(), 0);   //0:ñ¢ 1:àÍéû 2:çPãv
+	for (LL n = 0; n < G.size(); n++) {
+		if (check[n] == 0) {
+			if (!TopologicalVisit(G, n, ord, order, check))return false;
+		}
+	}
+	return true;
+}
+https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%9D%E3%83%AD%E3%82%B8%E3%82%AB%E3%83%AB%E3%82%BD%E3%83%BC%E3%83%88
+################################################################################
+################################################################################
 void topologicalVisit(graph& g0, int n, vector<char>& check, stack<int>& q, bool& flag) {
 	if (check.at(n) == 1) {
 		flag = true;

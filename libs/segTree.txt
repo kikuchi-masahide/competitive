@@ -1,23 +1,28 @@
+//TT(T,T):=ƒ‚ƒmƒCƒh‚ÌæZ
 //require Monoid
 template<class T>
 class Segtree {
 private:
 	vector<T> seg;
 	LL RN;
+	typedef function<T(T, T)> TT;
+	TT f;
 public:
-	Segtree(LL N) {
+	Segtree(LL N, TT _f) {
 		RN = 1;
 		while (RN < N)RN *= 2;
-		seg.resize(2*RN, T());
+		seg.resize(2 * RN, T());
+		f = _f;
 	}
-	Segtree(vector<T>& V) {
+	Segtree(vector<T>& V, T(*_f)(T, T)) {
 		LL N = V.size();
 		RN = 1;
 		while (RN < N)RN *= 2;
-		seg.resize(2*RN, T());
+		seg.resize(2 * RN, T());
+		f = _f;
 		for (LL n = 0; n < N; n++) seg[RN + n] = V[n];
 		for (LL k = RN - 1; k >= 1; k--) {
-			seg[k] = seg[2 * k] * seg[2 * k + 1];
+			seg[k] = f(seg[2 * k], seg[2 * k + 1]);
 		}
 	}
 	//set n-th as x(0 index!!!!!)
@@ -25,18 +30,47 @@ public:
 		seg[RN + n] = x;
 		n = (RN + n) / 2;
 		while (n >= 1) {
-			seg[n] = seg[2 * n] * seg[2 * n + 1];
+			seg[n] = f(seg[2 * n], seg[2 * n + 1]);
+			n /= 2;
+		}
+	}
+	//change n-th number p to x*p(0 index!!!!!)
+	void addl(LL n, T x) {
+		seg[RN + n] = f(x, seg[RN+n]);
+		n = (RN + n) / 2;
+		while (n >= 1) {
+			seg[n] = f(seg[2 * n], seg[2 * n + 1]);
+			n /= 2;
+		}
+	}
+	//change n-th number p to p*x(0 index!!!!!)
+	void addr(LL n, T x) {
+		seg[RN + n] = f(seg[RN + n], x);
+		n = (RN + n) / 2;
+		while (n >= 1) {
+			seg[n] = f(seg[2 * n], seg[2 * n + 1]);
 			n /= 2;
 		}
 	}
 	//get [l,r] (0 index!!!!!)
-	T get(LL a, LL b, LL k = 1, LL l = 0, LL r = - 1) {
-		if (r == -1)r = RN-1;
-		if (b < l || r < a)return T();
-		else if (a <= l && r <= b)return seg[k];
-		else {
-			return get(a, b, 2 * k, l, (l + r) / 2) * get(a, b, 2 * k + 1, (l + r) / 2 + 1, r);
+	T get(LL l, LL r) {
+		T ansl = T(), ansr = T();
+		r++;
+		l += RN;
+		r += RN;
+		while (l < r) {
+			if (l & 1) {
+				ansl = f(ansl, seg[l]);
+				l++;
+			}
+			if (r & 1) {
+				r--;
+				ansr = f(seg[r], ansr);
+			}
+			l >>= 1;
+			r >>= 1;
 		}
+		return f(ansl, ansr);
 	}
 	//get n-th number(0 index!!!!!)
 	T get(LL n) {
@@ -46,6 +80,8 @@ public:
 		return seg[RN + n];
 	}
 };
+
+
 ####################
 template<class T>
 class segTree {

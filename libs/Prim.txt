@@ -1,0 +1,34 @@
+//need Union-Find
+template<class T>
+T prim(Gedges<T>& G,LL V) {
+	sort(G.begin(), G.end(), [](Gedge<T> a, Gedge<T> b) {
+		return a.cost < b.cost;
+	});
+	unionFind uf(V);
+	T ans = 0;
+	for (Gedge<T>& e : G) {
+		if (uf[e.src] != uf[e.to]) {
+			ans += e.cost;
+			uf.unit(e.src, e.to);
+		}
+	}
+	return ans;
+}
+
+//使用辺も求める(used)
+template<class T>
+T prim(Gedges<T>& G, LL V, Gedges<T>& used) {
+	sort(G.begin(), G.end(), [](Gedge<T> a, Gedge<T> b) {
+		return a.cost < b.cost;
+	});
+	unionFind uf(V);
+	T ans = 0;
+	for (Gedge<T>& e : G) {
+		if (uf[e.src] != uf[e.to]) {
+			ans += e.cost;
+			uf.unit(e.src, e.to);
+			used.push_back(e);
+		}
+	}
+	return ans;
+}

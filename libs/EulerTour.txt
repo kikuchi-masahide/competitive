@@ -1,0 +1,92 @@
+void ETSdfs(Tree& G, LL& id, vector<PLL>& range, LL n) {
+	range[n].first = id++;
+	for (LL ch : G[n].childs) {
+		ETSdfs(G, id, range,ch);
+	}
+	range[n].second = id-1;
+}
+
+//dfs:dfsした順に頂点が格納される(重複無し、size = V)
+//range:range[n] = (u,v) <==> dfs上でnの部分木は[u,v]
+void EulerTour_subtree(Tree& G, vector<PLL>& range, LL root = 0) {
+	range.resize(G.size());
+	LL id = 0;
+	ETSdfs(G, id, range, root);
+}
+
+struct ETPsegnode {
+	LL n;
+	LL d;
+	ETPsegnode() :n(0), d(1e9) {};
+	ETPsegnode(LL _n, LL _d) :n(_n), d(_d) {};
+};
+
+ETPsegnode operator*(ETPsegnode a, ETPsegnode b) {
+	if (a.d < b.d)return a;
+	else return b;
+}
+
+void ETPdfs(Tree& G, LL& ord, vector<ETPsegnode>& dfs, vector<PLL>& id, LL n) {
+	if (ord == 0)dfs[ord] = { n, 0 };
+	else {
+		dfs[ord] = { n, dfs[ord - 1].d+1 };
+	}
+	id[n].first = ord++;
+	for (LL ch : G[n].childs) {
+		ETPdfs(G, ord, dfs, id, ch);
+		dfs[ord] = { n, dfs[ord - 1].d-1 };
+		ord++;
+	}
+	id[n].second = ord-1;
+}
+
+//dfs:dfsした順に頂点およびその深さが格納される(重複あり、size=2*V-1)
+//id:dfsである頂点vが最初に出てくる添え字(つまりvの親->vをした時の添え字)
+//辺(p(u),u)をxに更新
+//->seg[id[u].first-1]をx、seg[id[u].second]を-xに
+//パス(u,v) (lca(u,v) == u)での和を取得
+//->seg[id[u].first]+...+seg[id[v].first-1]
+void EulerTour_path(Tree& G, vector<ETPsegnode>& dfs, vector<PLL>& id, LL root = 0) {
+	dfs.resize(2*G.size()-1);
+	id.resize(G.size());
+	LL ord = 0;
+	ETPdfs(G, ord, dfs, id, root);
+}
+
+ETPsegnode LCA(Segtree<ETPsegnode>& seg, vector<PLL>& id,LL u,LL v) {
+	if (id[u] > id[v])swap(u, v);
+	return seg.get(id[u].first, id[v].first);
+}
+
+//辺(p(ch),ch)をxに更新
+//->seg[id[ch].first-1]をx、seg[id[ch].second]を-xに
+template<class T>
+void ETP_set(vector<PLL>& id, Segtree<T>& seg, LL ch, T x,T nx) {
+	seg.set(id[ch].first - 1,x);
+	seg.set(id[ch].second,nx);
+}
+
+template<class T>
+void ETP_add(vector<PLL>& id, Segtree<T>& seg, LL ch, T x, T nx) {
+	seg.addl(id[ch].first - 1, x);
+	seg.addl(id[ch].second, nx);
+}
+
+//パス(u,v) (lca(u,v) == u)での和を取得
+//->seg[id[u].first]+...+seg[id[v].first-1]
+template<class T>
+T ETP_get(Segtree<ETPsegnode>& lcaseg, vector<PLL>& id, Segtree<T>& seg, LL u,LL v) {
+	LL lca = LCA(lcaseg, id, u, v).n;
+	T ans;
+	if (lca == u) {
+		return seg.get(id[u].first, id[v].first - 1);
+	}
+	else if (lca == v) {
+		return seg.get(id[v].first, id[u].first - 1);
+	}
+	else {
+		return seg.get(id[lca].first, id[u].first - 1) * seg.get(id[lca].first, id[v].first - 1);
+	}
+}
+
+https://beet-aizu.hatenablog.com/entry/2019/07/08/174727

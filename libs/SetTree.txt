@@ -1,0 +1,16 @@
+void SetTree(UnweightedGraph& G, Tree& T, LL root = 0) {
+	T.resize(G.size());
+	stack<PLL> st;
+	st.push(PLL(root, -1));
+	while (!st.empty()) {
+		LL cur = st.top().first;
+		LL p = st.top().second;
+		st.pop();
+		T[cur].parent = p;
+		for (LL ch : G[cur]) {
+			if (ch == p)continue;
+			T[cur].childs.push_back(ch);
+			st.push(PLL(ch, cur));
+		}
+	}
+}

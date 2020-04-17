@@ -1,3 +1,79 @@
+//負経路が存在->return false
+//res[i][j] := iからj最小コスト
+template<class T>
+bool WarshallFroyd(WeightedGraph <T>& G, vector<vector<T>> & res) {
+	res.resize(G.size(),vector<T>(G.size(),INF));
+	for (LL n = 0; n < G.size(); n++) {
+		for (Gedge<T>& e:G[n]) {
+			res[n][e.to] = min(res[n][e.to], e.cost);
+		}
+	}
+	for (LL n = 0; n < G.size(); n++) {
+		res[n][n] = 0;
+	}
+	for (LL k = 0; k < G.size(); k++) {
+		for (LL i = 0; i < G.size(); i++) {
+			for (LL j = 0; j < G.size(); j++) {
+				if (res[i][k] == INF || res[k][j] == INF)continue;
+				res[i][j] = min(res[i][j], res[i][k] + res[k][j]);
+			}
+		}
+	}
+	for (LL n = 0; n < G.size(); n++) {
+		if (res[n][n] < 0)return false;
+	}
+	return true;
+}
+
+//ポテンシャルを用いる全点間
+//need BellmanFord
+template<class T>
+bool WarshallFroydPotential(WeightedGraph<T>& G, vector<vector<T>>& res) {
+	res.resize(G.size());
+	LL p = 0;
+	//ポテンシャルを作りえる始点が見つかるまでやる
+	for (; p < G.size(); p++) {
+		if (!BellmanFord(G, p, res[p]))return false;
+		bool flag = false;
+		for (LL n = 0; n < G.size(); n++) {
+			if (res[p][n] == INF) {
+				flag = true;
+				break;
+			}
+		}
+		if (!flag)break;
+	}
+	for (LL s = p + 1; s < G.size(); s++) {
+		typedef pair<T, LL> P;
+		priority_queue<P, vector<P>, greater<P>> q;
+		res[s].resize(G.size(), INF);
+		res[s][s] = 0;
+		q.push(P(0, s));
+		while (!q.empty()) {
+			LL cur = q.top().second;
+			T cost = q.top().first;
+			q.pop();
+			if (res[s][cur] < cost)continue;
+			res[s][cur] = cost;
+			for (Gedge<T>& e : G[cur]) {
+				T d = e.cost + res[p][cur] - res[p][e.to];
+				if (res[s][e.to] > res[s][cur] + d) {
+					res[s][e.to] = res[s][cur] + d;
+					q.push(P(res[s][e.to], e.to));
+				}
+			}
+		}
+		for (LL n = 0; n < G.size(); n++) {
+			if(res[s][n] != INF)res[s][n] += res[p][n] - res[p][s];
+		}
+		if (res[s][s] < 0)return false;
+	}
+	return true;
+}
+
+https://niuez.hatenablog.com/entry/2019/03/04/142903
+########################################
+########################################
 //ワーシャルフロイド、全点対最短路
 //グラフと結果保存用
 //到達不可能はg.INF

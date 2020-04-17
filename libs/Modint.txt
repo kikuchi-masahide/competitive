@@ -59,7 +59,7 @@ Modint operator*(LL a, Modint b) {
 	return Modint((a % MOD) * b.v);
 }
 Modint Modint::operator+=(Modint m) {
-	*this += *this + m;
+	*this = *this + m;
 	return *this;
 }
 Modint Modint::operator-=(Modint m) {

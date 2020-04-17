@@ -3,32 +3,32 @@
 //ch:子供の集合
 //pa:親(根の親=-1)
 //no:前提情報
-void treeconstruct(ll si, ll root,vector<vector<ll>>& ch, vector<ll>& pa, vector<vector<ll>>& no) {
-	ch.resize(si,vector<ll>(0));
-	pa.resize(si,-2);
-	queue<pll> q;
-	q.push(pll(root, -1));
+void treeconstruct(LL si, LL root, vector<vector<LL>>& ch, vector<LL>& pa, vector<vector<LL>>& no) {
+	ch.resize(si, vector<LL>(0));
+	pa.resize(si, -2);
+	queue<PLL> q;
+	q.push(PLL(root, -1));
 	while (!q.empty()) {
-		ll cur = q.front().first;
-		ll p = q.front().second;
+		LL cur = q.front().first;
+		LL p = q.front().second;
 		q.pop();
 		pa[cur] = p;
-		for (ll next : no[cur]) {
+		for (LL next : no[cur]) {
 			if (next == p)continue;
 			ch[cur].push_back(next);
-			q.push(pll(next, cur));
+			q.push(PLL(next, cur));
 		}
 	}
 	return;
 }
 
-void doublingConstruct(ll N,vector<ll>& parents,vector<vector<ll>>& doubling){
+void doublingConstruct(LL N, vector<LL>& parents, vector<vector<LL>>& doubling) {
 	doubling.push_back(parents);
 	while (true) {
-		vector<ll> temp(N, -1);
-		vector<ll>& back = doubling.back();
+		vector<LL> temp(N, -1);
+		vector<LL>& back = doubling.back();
 		bool flag = false;
-		for (ll n = 0; n < N; n++) {
+		for (LL n = 0; n < N; n++) {
 			if (doubling.back()[n] == -1)continue;
 			temp[n] = back[back[n]];
 			if (temp[n] != -1)flag = true;
@@ -39,32 +39,32 @@ void doublingConstruct(ll N,vector<ll>& parents,vector<vector<ll>>& doubling){
 }
 
 //木の各要素の深さ(根からの距離)を求める
-void setDepth(ll N, ll root, vector<vector<ll>>& childs, vector<ll>& rank) {
+void setDepth(LL N, LL root, vector<vector<LL>>& childs, vector<LL>& rank) {
 	rank.resize(N, -1);
-	queue<pll> q;
-	q.push(pll(root, 0));
+	queue<PLL> q;
+	q.push(PLL(root, 0));
 	while (!q.empty()) {
-		ll cur = q.front().first;
-		ll dist = q.front().second;
+		LL cur = q.front().first;
+		LL dist = q.front().second;
 		rank[cur] = dist;
 		q.pop();
-		for (ll child : childs[cur]) {
+		for (LL child : childs[cur]) {
 			if (child == -1)continue;
 			if (rank[child] != -1)continue;
-			q.push(pll(child, dist + 1));
+			q.push(PLL(child, dist + 1));
 		}
 	}
 }
 
 //木の各要素の高さ(葉からの距離最大値)を求める
-void setHeight(ll N, ll root, VVLL& childs, VLL& heights,ll cur = -1){
+void setHeight(LL N, LL root, VVLL& childs, VLL& heights, LL cur = -1) {
 	if (cur == -1) {
-		heights.resize(N,-1);
+		heights.resize(N, -1);
 		setHeight(N, root, childs, heights, root);
 		return;
 	}
-	ll hei = -1;
-	for (ll child : childs[cur]) {
+	LL hei = -1;
+	for (LL child : childs[cur]) {
 		if (child == -1)continue;
 		if (heights[child] == -1) {
 			setHeight(N, root, childs, heights, child);
@@ -75,24 +75,24 @@ void setHeight(ll N, ll root, VVLL& childs, VLL& heights,ll cur = -1){
 	return;
 }
 
-ll LowestCommonAncestor(ll N,ll root,vector<ll>& parents,vector<ll>& rank,vector<vector<ll>>& doubling,ll c1, ll c2) {
+LL LowestCommonAncestor(LL N, LL root, vector<LL>& parents, vector<LL>& depth, vector<vector<LL>>& doubling, LL c1, LL c2) {
 	if (c1 == c2)return c1;
-	if (rank[c1] > rank[c2])return LowestCommonAncestor(N, root, parents, rank, doubling, c2, c1);
-	if (rank[c1] != rank[c2]) {
-		ll dif = rank[c2] - rank[c1];
-		ll p = 0;
+	if (depth[c1] > depth[c2])return LowestCommonAncestor(N, root, parents, depth, doubling, c2, c1);
+	if (depth[c1] != depth[c2]) {
+		LL dif = depth[c2] - depth[c1];
+		LL p = 0;
 		while (dif >= (1 << p)) {
 			if ((dif & (1 << p)))c2 = doubling[p][c2];
 			p++;
 		}
 		if (c1 == c2)return c1;
 	}
-	ll log = doubling.size()-1;
+	LL log = doubling.size() - 1;
 	for (; log >= 0; log--) {
 		if (c1 == c2)break;
 		if (doubling[log][c1] != doubling[log][c2]) {
-			ll temp1 = doubling[log][c1];
-			ll temp2 = doubling[log][c2];
+			LL temp1 = doubling[log][c1];
+			LL temp2 = doubling[log][c2];
 			if (temp1 != temp2) {
 				c1 = temp1;
 				c2 = temp2;
@@ -101,9 +101,8 @@ ll LowestCommonAncestor(ll N,ll root,vector<ll>& parents,vector<ll>& rank,vector
 	}
 	return parents[c1];
 }
-
 //与えられた木を左部分木、右部分木、根の順で来訪(reserve推奨)
-void postorderTreeWalk(ll N,ll root, VVLL& childs, VLL& order) {
+void postorderTreeWalk(LL N,LL root, VVLL& childs, VLL& order) {
 	if (childs[root][0] != -1)postorderTreeWalk(N, childs[root][0], childs, order);
 	if (childs[root][1] != -1)postorderTreeWalk(N, childs[root][1], childs,order);
 	order.push_back(root);

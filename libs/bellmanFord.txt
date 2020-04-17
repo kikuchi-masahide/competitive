@@ -1,3 +1,27 @@
+//負経路が存在->return false
+template<class T>
+bool BellmanFord(WeightedGraph<T>& G, LL start, vector<T>& res) {
+	res.resize(G.size(),INF);
+	res[start] = 0;
+	for (LL t = 0; t < G.size() - 1; t++) {
+		for (LL n = 0; n < G.size(); n++) {
+			if (res[n] == INF)continue;
+			for (Gedge<T>& e : G[n]) {
+				res[e.to] = min(res[e.to], res[n] + e.cost);
+			}
+		}
+	}
+	//negative loop check
+	for (LL n = 0; n < G.size(); n++) {
+		if (res[n] == INF)continue;
+		for (Gedge<T>& e : G[n]) {
+			if (res[e.to] > res[n] + e.cost)return false;
+		}
+	}
+	return true;
+}
+########################################
+########################################
 //ベルマンフォード　O(|V|*|E|)
 //グラフ、始点、保存用ベクトル(空)
 template<class T>

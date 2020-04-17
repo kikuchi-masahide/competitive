@@ -1,3 +1,27 @@
+//到達不可能->INF
+template<class T>
+void dijkstra(WeightedGraph<T>& G, LL start,vector<T>& res) {
+	res.resize(G.size(),INF);
+	res[start] = 0;
+	typedef pair<T, LL> P;
+	priority_queue<P, vector<P>, greater<P>> q;
+	q.push(P(0, start));
+	while (!q.empty()) {
+		LL cur = q.top().second;
+		T cost = q.top().first;
+		q.pop();
+		if (res[cur] < cost)continue;
+		for (Gedge<T> e : G[cur]) {
+			if (res[e.to] > cost + e.cost) {
+				res[e.to] = cost + e.cost;
+				q.push(P(res[e.to], e.to));
+			}
+		}
+	}
+	return;
+}
+########################################
+########################################
 //ダイクストラする
 //条件:重み>0
 //グラフ本体、始点、保存用vector

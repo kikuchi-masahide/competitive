@@ -1,0 +1,87 @@
+//TT(T,T):=モノイドの乗算
+//MT(M,T,LL):=モノイドに対する左作用(第3項は要素数)
+//MM(M,M):=左作用の合成
+template<class T,class M>
+class LazySegtree {
+public:
+	vector<T> seg;
+	vector<M> lazy;   //実、更新の必要性
+	typedef function<T(T, T)> TT;
+	typedef function<T(M, T,LL)> MT;
+	typedef function<M(M, M)> MM;
+	TT tt;
+	MT mt;
+	MM mm;
+	M Me;
+	T Te;
+	LL snum;   //何回シフトで下段から1に行けるか
+	LazySegtree(LL N, TT _tt, MT _mt, MM _mm,T te,M me) {
+		LL RN = 1;
+		snum = 0;
+		while (RN < N) {
+			RN *= 2;
+			snum++;
+		}
+		Te = te;
+		Me = me;
+		seg.resize(2 * RN,Te);
+		lazy.resize(2 * RN,Me);
+		tt = _tt;
+		mt = _mt;
+		mm = _mm;
+	}
+	LazySegtree(vector<T>& vec, TT _tt, MT _mt, MM _mm,T te,M me) {
+		LL RN = 1;
+		snum = 0;
+		while (RN < vec.size()) {
+			RN *= 2;
+			snum++;
+		}
+		Te = te;
+		Me = me;
+		seg.resize(2 * RN, Te);
+		lazy.resize(2 * RN, Me);
+		tt = _tt;
+		mt = _mt;
+		mm = _mm;
+		for (LL n = 0; n < vec.size(); n++) seg[RN + n] = vec[n];
+		for (LL n = RN - 1; n >= 1; n--) {
+			seg[n] = tt(seg[2 * n], seg[2 * n + 1]);
+		}
+	}
+	void eval(LL k, LL l, LL r) {
+		if (k >= seg.size())return;
+		if (lazy[k] == Me)return;
+		seg[k] = mt(lazy[k], seg[k],r-l+1);
+		if (k < seg.size() / 2) {
+			lazy[2 * k] = mm(lazy[k], lazy[2 * k]);
+			lazy[2 * k + 1] = mm(lazy[k], lazy[2 * k + 1]);
+		}
+		lazy[k] = Me;
+	}
+	void apply(LL a, LL b, M m, LL k,LL l,LL r) {
+		eval(k, l, r);
+		if (r < a || b < l)return;
+		if (a <= l && r <= b) {
+			lazy[k] = mm(m, lazy[k]);
+			eval(k, l, r);
+		}
+		else {
+			apply(a, b, m, 2 * k, l, (l + r) / 2);
+			apply(a, b, m, 2 * k + 1, (l + r) / 2 + 1, r);
+			seg[k] = tt(seg[2 * k], seg[2 * k + 1]);
+		}
+	}
+	void apply(LL a, LL b, M m) {
+		apply(a, b, m, 1, 0, seg.size() / 2 - 1);
+	}
+	T get(LL a, LL b, LL k,LL l,LL r) {
+		if (r < a || b < l)return Te;
+		eval(k, l, r);
+		if (a <= l && r <= b)return seg[k];
+		else return tt(get(a, b, 2 * k, l, (l + r) / 2), get(a, b, 2 * k + 1, (l + r) / 2 + 1, r));
+	}
+	T get(LL a, LL b) {
+		return get(a, b, 1, 0, seg.size() / 2 - 1);
+	}
+};
