@@ -1,20 +1,12 @@
-template<class T>
-struct HLDnode {
-	LL depth;
-	VLL nums;
-	LL parent;
-	VLL childs;
-	LL pad;
-	HLDnode() :depth(0),parent(-1),pad(0){};
-};
-
-template<class T>
-struct HLD {
-	vector<HLDnode<T>> tree;
-	vector<PLL> corres;   //corres[n]:=(u,v) <==> point n is tree[u][v]
+class HLD {
+public:
+	Tree& tree;
 	LL V;
-	vector<PLL> eulerind;
-	HLD(Tree& t, LL root = 0) {
+	VLL depth;   //各頂点が属するHeavy集合の深さ
+	VLL top;   //各頂点が属するHeavy集合の一番上の頂点
+	VLL in;   //各頂点がEuler-Tourでどこにいるか
+	VLL out;   //各頂点の部分木の終わり
+	HLD(Tree& t, LL root = 0):tree(t) {
 		V = t.size();
 		VLL subtrees(V, -1);
 		//各部分木のサイズを求める
@@ -26,7 +18,7 @@ struct HLD {
 				LL cur = hold.top();
 				hold.pop();
 				order.push(cur);
-				for (LL ch : t[cur].childs) {
+				for (LL ch : tree[cur].childs) {
 					hold.push(ch);
 				}
 			}
@@ -34,78 +26,60 @@ struct HLD {
 				LL cur = order.top();
 				order.pop();
 				subtrees[cur] = 1;
-				for (LL ch : t[cur].childs) {
+				for (LL& ch : tree[cur].childs) {
 					subtrees[cur] += subtrees[ch];
+					if (subtrees[ch] > subtrees[tree[cur].childs[0]]) {
+						swap(ch, tree[cur].childs[0]);
+					}
 				}
 			}
 		}
 		//HL分解 with eulertour
 		{
-			corres.resize(V);
-			corres[root] = PLL(0, 0);
-			eulerind.resize(V);
+			in.resize(V);
+			out.resize(V);
+			depth.resize(V);
+			top.resize(V);
 			LL cur = root;
-			LL nexthld = 1;
-			LL nexteuler = 0;
-			tree.push_back(HLDnode<T>());
-			tree[0].nums.push_back(root);
-			dfs(t, subtrees, cur, nexthld, nexteuler);
-			////各HLDnodeのセグ木を初期化
-			//for (HLDnode<T>& node : tree) {
-			//	node.seg = Segtree<T>(node.nums.size());
-			//	for (LL n = 0; n < node.nums.size(); n++) {
-			//		node.seg.set(n, cont[node.nums[n]]);
-			//	}
-			//}
+			LL nextid = 0;
+			dfs(cur, nextid);
 		}
 	}
-	void dfs(Tree& t,VLL& subtrees,LL cur, LL& nexthld,LL& nexteuler) {
-		LL hld = corres[cur].first;
-		eulerind[cur].first = nexteuler++;
-		if (t[cur].childs.size() == 0)
-		{
-			eulerind[cur].second = nexteuler - 1;
-			return;
-		}
-		LL maxsub = t[cur].childs[0];
-		for (LL cn = 1; cn < t[cur].childs.size(); cn++) {
-			if (subtrees[maxsub] < subtrees[t[cur].childs[cn]]) {
-				maxsub = t[cur].childs[cn];
+	void dfs(LL cur,LL& nextind) {
+		in[cur] = nextind++;
+		for (auto ch : tree[cur].childs) {
+			//0番目の子は同じHeavy集合
+			if (ch == tree[cur].childs[0]) {
+				top[ch] = top[cur];
+				depth[ch] = depth[cur];
 			}
+			//それ以外は新しいHeavy集合
+			else {
+				top[ch] = ch;
+				depth[ch] = depth[cur] + 1;
+			}
+			dfs(ch, nextind);
 		}
-		tree[hld].nums.push_back(maxsub);
-		corres[maxsub] = PLL(hld, tree[hld].nums.size() - 1);
-		dfs(t, subtrees, maxsub, nexthld, nexteuler);
-		for (LL ch : t[cur].childs) {
-			if (ch == maxsub)continue;
-			corres[ch] = PLL(nexthld, 0);
-			tree.push_back(HLDnode<T>());
-			tree.back().depth = tree[hld].depth + 1;
-			tree.back().nums.push_back(ch);
-			tree.back().parent = cur;
-			tree[hld].childs.push_back(nexthld++);
-			LL neold = nexteuler;
-			dfs(t, subtrees, ch, nexthld, nexteuler);
-			tree[corres[ch].first].pad = neold;
-		}
-		eulerind[cur].second = nexteuler - 1;
+		out[cur] = nextind - 1;
 	}
 	LL LCA(LL u, LL v) {
 		//uの属するnode.depth >= vの属するnode.depthにする
-		if (tree[corres[u].first].depth < tree[corres[v].first].depth) {
+		if (depth[u] < depth[v]) {
 			swap(u, v);
 		}
-		while (tree[corres[u].first].depth > tree[corres[v].first].depth) {
-			u = tree[corres[u].first].parent;
+		while (depth[u] > depth[v]) {
+			u = tree[top[u]].parent;
 		}
-		while (corres[u].first != corres[v].first) {
-			u = tree[corres[u].first].parent;
-			v = tree[corres[v].first].parent;
+		while (top[u] != top[v]) {
+			u = tree[top[u]].parent;
+			v = tree[top[v]].parent;
 		}
-		if (corres[u].second > corres[v].second)return v;
+		if (in[u] > in[v])return v;
 		else return u;
 	}
 };
+
+
 
 https://beet-aizu.hatenablog.com/entry/2017/12/12/235950
 https://codeforces.com/blog/entry/53170

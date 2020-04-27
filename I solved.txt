@@ -1,3 +1,9 @@
+Codeforces Round #511 (Div. 1) B. Little C Loves 3 II
+Codeforces Round #511 (Div. 1) A. Enlarge GCD
+Codeforces Round #511 (Div. 2) B. Cover Points
+Codeforces Round #511 (Div. 2) A. Little C Loves 3 I
+Codeforces Round #434 (Div. 1, based on Technocup 2018 Elimination Round 1) A. Did you mean...
+Codeforces Round #434 (Div. 2, based on Technocup 2018 Elimination Round 1) A. k-rounding
 yukicoder No.529 ãAè»ÉâÉbÉVÉÖ
 AOJ Course Range Query on a Tree II
 AOJ Course Range Query on a Tree

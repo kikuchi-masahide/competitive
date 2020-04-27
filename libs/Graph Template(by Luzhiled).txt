@@ -1,24 +1,20 @@
-template< typename T >
-struct edge {
-	ll src, to;
+template<class T>
+struct Gedge {
+	LL src,to;
 	T cost;
-
-	edge(int to, T cost) : src(-1), to(to), cost(cost) {}
-
-	edge(ll src, ll to, T cost) : src(src), to(to), cost(cost) {}
-
-	edge& operator=(const int& x) {
-		to = x;
-		return *this;
-	}
-
-	operator int() const { return to; }
+	Gedge(LL s,LL t, T c) :src(s),to(t), cost(c) {}
+	Gedge(LL t, T c) :src(-1), to(t), cost(c) {}
 };
 
-template< typename T >
-using Edges = vector< edge< T > >;
-template< typename T >
-using WeightedGraph = vector< Edges< T > >;
-using UnWeightedGraph = vector< vector< int > >;
-template< typename T >
-using Matrix = vector< vector< T > >;
+template<class T>
+using WeightedGraph = vector<vector<Gedge<T>>>;
+using UnweightedGraph = vector<vector<LL>>;
+template<class T>
+using Gedges = vector<Gedge<T>>;
+
+struct TNode {
+	LL parent;
+	VLL childs;
+	TNode() :parent(-1) {};
+};
+using Tree = vector<TNode>;
