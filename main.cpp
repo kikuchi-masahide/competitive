@@ -38,12 +38,19 @@ typedef vector<VLL> VVLL;
 typedef unsigned long long ULL;
 //typedef boost::multiprecision::cpp_int bigint;
 
+LL A,B,N;
+
+LL func(LL x){
+    return floor((LD)A*x/B)-A*floor((LD)x/B);
+}
+
 int main() {
-	//std::ios::sync_with_stdio(false);
-	//std::cin.tie(0);
-    int a;
-    cin >> a;
-    cout << a + 2 << "\n";
-    cin >> a;
+    std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+    cin >> A >> B >> N;
+    for(LL x = 1;x <= 100;x++){
+        LL f = func(x);
+        cout << "x=" << x << ":" << func(x) << "\n";
+    }
 	return 0;
 }

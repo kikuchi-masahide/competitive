@@ -6,13 +6,13 @@ void stairs(long long N, vector<long long>& st, long long mod = 1e9 + 7) {
 		st[n] = (st[n - 1] * n) % mod;
 	}
 }
-
-ll stair(ll N, ll mod = 1e9 + 7) {
-	ll ans = 1;
-	for (ll n = 2; n <= N; n++)ans = (ans * n) % mod;
+ 
+LL stair(LL N, LL mod = 1e9 + 7) {
+	LL ans = 1;
+	for (LL n = 2; n <= N; n++)ans = (ans * n) % mod;
 	return ans;
 }
-
+ 
 void modinvs(long long N, vector<long long>& inv, vector<long long>& sinv, long long mod = 1e9 + 7) {
 	inv.resize(N + 1);
 	sinv.resize(N + 1);
@@ -24,19 +24,19 @@ void modinvs(long long N, vector<long long>& inv, vector<long long>& sinv, long 
 		sinv[n] = (sinv[n - 1] * inv[n]) % mod;
 	}
 }
-
+ 
 //(n^(-1),(n!)^(-1))
-pll modinvs(ll N, ll mod = 1e9 + 7) {
-	vector<ll> inv(N + 1);
+PLL modinvs(LL N, LL mod = 1e9 + 7) {
+	vector<LL> inv(N + 1);
 	inv[1] = 1;
-	ll sinv = 1;
+	LL sinv = 1;
 	for (int n = 2; n <= N; n++) {
 		inv[n] = mod - (inv[mod % n] * (mod / n)) % mod;
 		sinv = (sinv * inv[n]) % mod;
 	}
-	return pll(inv[N], sinv);
+	return PLL(inv[N], sinv);
 }
-
+ 
 long long Comb(long long n, long long k, vector<long long>& st, vector<long long>& sinv, long long mod = 1e9 + 7) {
 	if (n < 0)return 0;
 	if (k > n || k < 0)return 0;
@@ -45,17 +45,16 @@ long long Comb(long long n, long long k, vector<long long>& st, vector<long long
 	ans = (ans * sinv[k]) % mod;
 	return ans;
 }
-
-ll Comb(ll N, ll K, ll mod = 1e9 + 7) {
-	if (n < 0)return 0;
-	if (k > n || k < 0)return 0;
+ 
+LL Comb(LL N, LL K, LL mod = 1e9 + 7) {
+	if (N < 0)return 0;
+	if (K > N || K < 0)return 0;
 	if (K == 0 || K == N)return 1;
-	ll ans = stair(N, mod);
+	LL ans = stair(N, mod);
 	ans = (ans * modinvs(N - K).second) % mod;
 	ans = (ans * modinvs(K).second) % mod;
 	return ans;
 }
-
 
 
 

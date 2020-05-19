@@ -7,18 +7,19 @@ private:
 	LL RN;
 	typedef function<T(T, T)> TT;
 	TT f;
+	T te;
 public:
-	Segtree(LL N, TT _f) {
+	Segtree(LL N, TT _f, T e) :te(e) {
 		RN = 1;
 		while (RN < N)RN *= 2;
-		seg.resize(2 * RN, T());
+		seg.resize(2 * RN, te);
 		f = _f;
 	}
-	Segtree(vector<T>& V, T(*_f)(T, T)) {
+	Segtree(vector<T>& V, TT _f, T e) :te(e) {
 		LL N = V.size();
 		RN = 1;
 		while (RN < N)RN *= 2;
-		seg.resize(2 * RN, T());
+		seg.resize(2 * RN, te);
 		f = _f;
 		for (LL n = 0; n < N; n++) seg[RN + n] = V[n];
 		for (LL k = RN - 1; k >= 1; k--) {
@@ -36,7 +37,7 @@ public:
 	}
 	//change n-th number p to x*p(0 index!!!!!)
 	void addl(LL n, T x) {
-		seg[RN + n] = f(x, seg[RN+n]);
+		seg[RN + n] = f(x, seg[RN + n]);
 		n = (RN + n) / 2;
 		while (n >= 1) {
 			seg[n] = f(seg[2 * n], seg[2 * n + 1]);
@@ -54,7 +55,7 @@ public:
 	}
 	//get [l,r] (0 index!!!!!)
 	T get(LL l, LL r) {
-		T ansl = T(), ansr = T();
+		T ansl = te, ansr = te;
 		r++;
 		l += RN;
 		r += RN;

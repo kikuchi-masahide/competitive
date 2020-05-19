@@ -1,10 +1,53 @@
 typedef complex<LD> Point;
 const LD eps = 1e-8;
-const LD pi = acos(-1.0);
+const LD pi = acosl(-1.0);
 
 //イコール
 bool equal(Point a, Point b) {
 	return (abs(a - b) < eps);
+}
+
+//a>b -> 1
+//a == b -> 0
+//a<b -> -1
+LL sgn(LD a, LD b) {
+	if (a - b >= eps)return 1;
+	if (a - b <= -eps)return -1;
+	return 0;
+}
+
+LL getQuadrant(Point p) {
+	LL sx = sgn(p.real(), 0);
+	LL sy = sgn(p.imag(), 0);
+	if (sx >= 0) {
+		if (sy >= 0)return 0;
+		else return 3;
+	}
+	else {
+		if (sy >= 0)return 1;
+		else return 2;
+	}
+}
+
+LD abs(Point p) {
+	return sqrtl(p.real() * p.real() + p.imag() * p.imag());
+}
+
+//arg(a) < arg(b) => return true;
+bool isArgSmaller(Point a, Point b) {
+	if (a == Point(0,0))return true;
+	if (b == Point(0,0))return false;
+	LL q1 = getQuadrant(a);
+	LL q2 = getQuadrant(b);
+	if (q1 != q2)return q1 < q2;
+	LD r1 = abs(a);
+	LD r2 = abs(b);
+	if (q1 <= 1) {
+		return sgn(a.real()*r2,b.real()*r1) > 0;
+	}
+	else {
+		return sgn(b.real() * r1, a.real() * r2) > 0;
+	}
 }
 
 //内積
@@ -82,7 +125,6 @@ Point proj(Line l, Point p) {
 //直線と直線の交点
 Point is_ll(Line s, Line t) {
 	Point sv = s.e - s.s, tv = t.e - t.s;
-	assert(cross(sv, tv) != 0);
 	return s.s + sv * cross(tv, t.s - s.s) / cross(tv, sv);
 }
 
@@ -140,10 +182,6 @@ Point eitheta(LD theta) {
 	return Point(cosl(theta), sinl(theta));
 }
 
-LD abs(Point p) {
-	return sqrtl(p.real() * p.real() + p.imag() * p.imag());
-}
-
 //頂点が反時計回りに与えられている多角形
 using Polygon = vector<Point>;
 
@@ -192,10 +230,6 @@ LL isPointin(Polygon Poly, Point P) {
 	return in ? 0 : 2;
 }
 
-template<>
-void in(Point& p) {
-	LD r, i;
-	cin >> r >> i;
-	p = { r,i };
-}
+LL N;
+vector<Point> P0;
 

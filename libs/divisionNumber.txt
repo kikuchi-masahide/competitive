@@ -1,17 +1,34 @@
-//分割数求める
-//和S以下、n分割、M剰余
-//保存用空vector<int>指定
-//もうめんどくさいから全部long intで(適当)
-//O(nS)
-void divisionNumber(long int S, long int n, long int M,vector<long int>& v) {
-	v.resize(S+1);
-	for (int n = 0; n <= S; n++)v[n] = 0;
-	v[0] = 1;
-	for (int i = 1; i <= n; i++) {   //i分割
-		for (int j = 0; j <= S; j++) {   //和j
-			if (j - i >= 0)v[j] += v[j - i];
-			if (v[j] >= M)v[j] -= M;
+//0<=a[0] <= ... <= a[n-1]かつa[0]+...+a[n-1] = sなる整数列aの個数P(n,s)
+//O(n*s)
+void divisionNumber(LL n, LL s, VVLL& P,LL mod = 1e9+7) {
+	P.resize(n+1, VLL(s+1, 0));
+	for (LL f = 0; f <= s; f++)P[1][f]++;
+	for (LL nn = 2; nn <= n; nn++) {
+		for (LL ss = 0; ss <= s; ss++) {
+			P[nn][ss] = P[nn - 1][ss];
+			if (ss >= nn)P[nn][ss] += P[nn][ss - nn];
+			if (mod != -1 && P[nn][ss] >= mod)P[nn][ss] -= mod;
 		}
 	}
-	return;
+}
+
+//0<=a[0] <= ... <= a[n-1] <= mかつa[0]+...+a[n-1] = sなる整数列aの個数P(n,s)
+//P(n,s) = P(n-1,s)+{ P(n,s-n)-P(n-1,s-n) }
+//O(n*s)
+void divisionNumber(LL n, LL s, LL m,VVLL& P,LL mod = 1e9+7) {
+	P.resize(n+1, VLL(s + 1,0));
+	for (LL f = 0; f <= min(m,s); f++)P[1][f]++;
+	for (LL nn = 2; nn <= n; nn++) {
+		for (LL ss = 0; ss <= s; ss++) {
+			P[nn][ss] += P[nn - 1][ss];
+			if (ss >= nn) {
+				P[nn][ss] += P[nn][ss - nn];
+				if (ss - nn >= m)P[nn][ss] -= P[nn - 1][ss - nn - m];
+			}
+			if (mod != -1) {
+				if (P[nn][ss] >= mod)P[nn][ss] -= mod;
+				else if (P[nn][ss] < 0)P[nn][ss] += mod;
+			}
+		}
+	}
 }
