@@ -9,7 +9,9 @@ public:
 	static const ULL POS = HMOD * ((1ULL << 3) - 1);
 	static vector<ULL> powmemo;
 	vector<HASH> hash;   //部分列[0,n)のハッシュを持つ
-	RollingHash(vector<LL>& S) {
+	//文字列S,time回繰り返し
+	RollingHash(vector<LL>& S,LL time = 1) {
+		LL N = S.size();
 		if (base == 0) {
 			random_device rnd;
 			mt19937 mt(rnd());
@@ -20,15 +22,22 @@ public:
 				powmemo[n] = mod(Mul(powmemo[n - 1], base));
 			}
 		}
-		hash.resize(S.size() + 1);
-		hash[0] = 0;
-		for (LL n = 1; n <= S.size(); n++) {
-			hash[n] = mod(Mul(hash[n - 1], base) + S[n - 1]);
+		hash.resize(N*time);
+		hash[0] = S[0];
+		for (LL t = 0; t < time; t++) {
+			for (LL n = 0; n < N; n++) {
+				if (t == 0 && n == 0)continue;
+				hash[t*N+n] = mod(Mul(hash[t*N+n - 1], base) + S[n]);
+			}
 		}
 	}
 	//部分列[a,b)のハッシュ
 	HASH get(LL a, LL b) {
-		return mod(hash[b] + POS - Mul(hash[a], powmemo[b - a]));
+		HASH ans = hash[b - 1];
+		if (a - 1 >= 0) {
+			ans = mod(ans + POS - Mul(hash[a - 1], powmemo[b - a]));
+		}
+		return ans;
 	}
 	//部分列配列への保存なしに変換
 	HASH conv(vector<LL>& S) {

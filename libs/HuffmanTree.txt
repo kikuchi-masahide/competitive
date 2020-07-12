@@ -1,0 +1,59 @@
+//class TOmagma {
+//public:
+//
+//};
+//bool operator<(TOmagma a,TOmagma){}
+//TOmagma operator+(TOmagma a,TOmagma b){}
+
+template<class T>
+class node_Huffman {
+public:
+	node_Huffman* ch[2];
+	T val;   //weight
+	node_Huffman(T v):val(v){
+		ch[0] = nullptr;
+		ch[1] = nullptr;
+	}
+	node_Huffman() :val() {
+		ch[0] = nullptr;
+		ch[1] = nullptr;
+	}
+	static int node_count;
+	static const int MAX_N = 4000000 + 10;
+	void* operator new(std::size_t) {
+		static node_Huffman<T> pool[MAX_N];
+		return pool + node_count++;
+	}
+	static void delete_all() {
+		node_count = 0;
+	}
+};
+template<class T>
+int node_Huffman<T>::node_count = 0;
+
+//construct a Huffman tree with given values
+//which minimizes \sum weight*depth and not keeps the initial order
+template<class T>
+node_Huffman<T>* HuffmanConstruct(vector<node_Huffman<T>*>& vect) {
+	typedef node_Huffman<T> N;
+	priority_queue<N*, vector<N*>, function<bool(N*, N*)>> q(
+		[](N* a, N* b) {
+			return b->val < a->val;
+		}
+	);
+	for (int n = 0; n < vect.size(); n++) {
+		q.push(vect[n]);
+	}
+	while (q.size() > 1) {
+		N* a = q.top();
+		q.pop();
+		N* b = q.top();
+		q.pop();
+		N* newnode = new N(a->val + b->val);
+		if (b->val < a->val)swap(a, b);
+		newnode->ch[0] = a;
+		newnode->ch[1] = b;
+		q.push(newnode);
+	}
+	return q.top();
+}

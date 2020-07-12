@@ -56,3 +56,22 @@ void enumerateFactors(ll N,vector<ll>& V) {
 	}
 	return;
 }
+
+//NˆÈ‰º‚Ì‘f”‚Ì”‚ğ”‚¦‚é
+LL pi(LL N) {
+	vector<bool> ch((N+1)>>1, true);   //ch[i] <--> 2i+1
+	ch[0] = false;
+	for (LL i = 1; (2*i+1)* (2 * i + 1) <= N; i++) {
+		if (!ch[i])continue;
+		LL p = 2 * i + 1;
+		for (LL x = 2*i*(i+1); x < ch.size(); x += p) {
+			ch[x] = false;
+		}
+	}
+	LL counter = 1;
+	for (LL n = 0; n < ch.size(); n++) {
+		if (ch[n])counter++;
+	}
+	return counter;
+}
+https://qiita.com/peria/items/a4ff4ddb3336f7b81d50

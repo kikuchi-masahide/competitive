@@ -12,7 +12,6 @@ https://atcoder.jp/contests/tdpc/tasks/tdpc_eel^
 https://atcoder.jp/contests/joi2008ho/tasks/joi2008ho_d
 https://atcoder.jp/contests/joi2009ho/tasks/joi2009ho_d
 https://atcoder.jp/contests/joi2010yo/tasks/joi2010yo_e
-https://atcoder.jp/contests/joi2012yo/tasks/joi2012yo_c
 https://atcoder.jp/contests/joi2011ho/tasks/joi2011ho2
 https://atcoder.jp/contests/tdpc/tasks/tdpc_knapsack
 https://atcoder.jp/contests/cf17-final/tasks/cf17_final_d
@@ -58,7 +57,6 @@ https://atcoder.jp/contests/jag2017autumn/tasks/jag2017autumn_c
 https://atcoder.jp/contests/joisc2007/tasks/joisc2007_fermat
 https://atcoder.jp/contests/jag2015summer-day4/tasks/icpc2015summer_day4_d^
 https://atcoder.jp/contests/joi2009ho/tasks/joi2009ho_b
-https://atcoder.jp/contests/abc023/tasks/abc023_d
 https://atcoder.jp/contests/arc050/tasks/arc050_b
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2220
 https://atcoder.jp/contests/code-festival-2015-quala/tasks/codefestival_2015_qualA_d
@@ -66,9 +64,6 @@ https://atcoder.jp/contests/joi2017ho/tasks/joi2017ho_c
 https://atcoder.jp/contests/arc075/tasks/arc075_chttps://atcoder.jp/contests/abc038/tasks/abc038_c
 https://atcoder.jp/contests/abc038/tasks/abc038_c
 #https://atcoder.jp/contests/abc033/tasks/abc033_d
-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0646^
-https://atcoder.jp/contests/arc064/tasks/arc064_a
-https://atcoder.jp/contests/joi2009ho/tasks/joi2009ho_c
 https://atcoder.jp/contests/kupc2012/tasks/kupc2012_8
 https://yukicoder.me/problems/no/226
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1308
@@ -80,7 +75,6 @@ https://atcoder.jp/contests/joi2009yo/tasks/joi2009yo_e
 https://atcoder.jp/contests/abc008/tasks/abc008_4
 https://atcoder.jp/contests/apc001/tasks/apc001_i
 https://atcoder.jp/contests/yahoo-procon2017-qual/tasks/yahoo_procon2017_qual_d^
-https://atcoder.jp/contests/indeednow-finalb-open/tasks/indeednow_2015_finalb_e
 https://atcoder.jp/contests/tenka1-2017/tasks/tenka1_2017_e
 https://atcoder.jp/contests/arc088/tasks/arc088_c
 https://atcoder.jp/contests/code-festival-2015-final-open/tasks/codefestival_2015_final_d
@@ -126,11 +120,8 @@ http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2347^
 https://community.topcoder.com/stat?c=problem_statement&pm=6095&rd=9917^
 https://atcoder.jp/contests/arc080/tasks/arc080_d^
 https://onlinejudge.u-aizu.ac.jp/beta/room.html#RitsCamp18Day2/problems/G^
-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_6_B&lang=jp
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1088
 https://atcoder.jp/contests/soundhound2018/tasks/soundhound2018_c
-https://atcoder.jp/contests/tenka1-2015-quala/tasks/tenka1_2015_qualA_c
-https://yukicoder.me/problems/no/421
 https://atcoder.jp/contests/JAG2014Spring/tasks/icpc2014spring_c
 https://atcoder.jp/contests/maximum-cup-2018/tasks/maximum_cup_2018_h
 https://atcoder.jp/contests/arc013/tasks/arc013_4
@@ -150,7 +141,6 @@ https://code-festival-2014-china-open.contest.atcoder.jp/tasks/code_festival_chi
 https://atcoder.jp/contests/abc004/tasks/abc004_4^
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2581^
 https://community.topcoder.com/stat?c=problem_statement&pm=14319&rd=16766
-https://atcoder.jp/contests/jag2013summer-day4/tasks/icpc2013summer_day4_i
 https://atcoder.jp/contests/utpc2012/tasks/utpc2012_12
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2230
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2736

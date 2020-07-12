@@ -1,3 +1,31 @@
+template<class Type>
+Type MinSpanTree(WeightedGraph<Type>& G, WeightedGraph<Type>& G2) {
+	int N = G.size();
+	G2.resize(N);
+	unionFind UF(N);
+	Gedges<Type> edges;
+	for (int n = 0; n < N; n++) {
+		for (Gedge<Type>& e : G[n]) {
+			edges.push_back(e);
+		}
+	}
+	sort(edges.begin(), edges.end(), [](Gedge<Type>& a, Gedge<Type>& b) {
+		return a.cost < b.cost;
+	});
+	Type ans = 0;
+	for (Gedge<Type>& e : edges) {
+		int from = e.src;
+		int to = e.to;
+		if (UF[from] == UF[to])continue;
+		ans += e.cost;
+		G2[from].push_back({from,to,e.cost,e.id});
+		G2[to].push_back({ to,from,e.cost,e.id });
+		UF.unit(from, to);
+	}
+	return ans;
+}
+
+
 //need Union-Find
 template<class T>
 T prim(Gedges<T>& G,LL V) {

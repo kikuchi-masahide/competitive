@@ -1,3 +1,29 @@
+template<class Type>
+void SetTree(WeightedGraph<Type>& G, Tree<Type>& T, int root = 0) {
+	int N = G.size();
+	T.resize(N);
+	queue<int> q;
+	q.push(root);
+	T[root].parent = -1;
+	T[root].id = -1;
+	T[root].cost = 0;
+	while (!q.empty()) {
+		int cur = q.front();
+		q.pop();
+		for (Gedge<Type>& e : G[cur]) {
+			if (e.to == T[cur].parent)continue;
+			T[e.to].parent = cur;
+			T[cur].childs.push_back(e.to);
+			T[e.to].id = e.id;
+			T[e.to].cost = e.cost;
+			q.push(e.to);
+		}
+	}
+}
+
+########################################
+########################################
+
 void SetTree(UnweightedGraph& G, Tree& T, LL root = 0) {
 	T.resize(G.size());
 	stack<PLL> st;
