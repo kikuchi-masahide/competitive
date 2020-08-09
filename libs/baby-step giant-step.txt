@@ -1,0 +1,42 @@
+//solve K s.t. X^K = Y (mod M)
+//create one instance per X
+//if not exists,return -1
+class BSGS {
+public:
+	LL X;
+	LL M;
+	map<LL, LL> xpow;
+	LL Xm;   //X^(-m)
+	LL msq;
+	LL pow(LL base, LL p) {
+		if (p == 0)return 1;
+		else if (p == 1)return base;
+		LL ans = pow(base, p >> 1);
+		ans = (ans * ans) % M;
+		if (p & 1)ans = (ans * base) % M;
+		return ans;
+	}
+	BSGS(LL x, LL m) :X(x), M(m) {
+		LL t = 0;
+		while (t * t < M) {
+			xpow.insert(PLL(pow(X, t), t));
+			t++;
+		}
+		msq = t;
+		Xm = pow(X, M - t - 1);
+	}
+	LL solve(LL Y) {
+		LL R = 1;
+		for (int a = 0; a <= M / msq; a++) {
+			auto itr = xpow.find((Y * R) % M);
+			if (itr == xpow.end()) {
+				R = (R * Xm) % M;
+			}
+			else {
+				LL b = itr->second;
+				return msq * a + b;
+			}
+		}
+		return -1;
+	}
+};

@@ -269,7 +269,8 @@ bool LUdecomposition(Matrix<T>& A, Matrix<T>& L, Matrix<T>& U, Replacement& R) {
 				U[y][q] = U[y][ix];
 				U[y][ix] = t;
 			}
-			R = apply(R, Replacement2(N, q, ix));
+			Replacement2 r2(N, q, ix);
+			R = apply(R, r2);
 		}
 		for (int y = q; y < N; y++)L[y][q] = U[y][q];
 		for (int x = q; x < N; x++)U[q][x] /= L[q][q];

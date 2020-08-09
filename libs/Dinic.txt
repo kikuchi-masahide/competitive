@@ -1,0 +1,71 @@
+template<class F>
+class MaxFEdge {
+public:
+	int to;
+	F cap;
+	int rev;
+	MaxFEdge(int _to,F _cap,int _rev):to(_to),cap(_cap),rev(_rev){}
+};
+
+template<class F>
+class Dinic {
+public:
+	int V;
+	vector<vector<MaxFEdge<F>>> G;
+	VI itr, level;
+	Dinic(int _v):V(_v){
+		G.resize(V);
+	}
+	void AddEdge(int src, int to, F cap) {
+		G[src].push_back(MaxFEdge<F>(to, cap, G[to].size()));
+		G[to].push_back(MaxFEdge<F>(src, 0, G[src].size() - 1));
+	}
+	void bfs(int s) {
+		level.assign(V, -1);
+		queue<int> q;
+		level[s] = 0;
+		q.push(s);
+		while (!q.empty()) {
+			int v = q.front();
+			q.pop();
+			for (auto& e : G[v]) {
+				if (e.cap > 0 && level[e.to] < 0) {
+					level[e.to] = level[v] + 1;
+					q.push(e.to);
+				}
+			}
+		}
+	}
+	F dfs(int v, int t, F f) {
+		if (v == t)return f;
+		F res = 0;
+		for (int& i = itr[v]; i < (int)G[v].size(); i++) {
+			MaxFEdge<F>& e = G[v][i];
+			if (e.cap > 0 && level[v] < level[e.to]) {
+				F d = dfs(e.to, t, min(f,e.cap));
+				if (d > 0) {
+					e.cap -= d;
+					G[e.to][e.rev].cap += d;
+					res += d;
+					f -= d;
+				}
+			}
+		}
+		return res;
+	}
+	F MaxFlow(int s, int t) {
+		F res = 0;
+		F f = 0;
+		F inf = numeric_limits<F>::max();
+		while (true) {
+			bfs(s);
+			if (level[t] < 0)return res;
+			itr.assign(V, 0);
+			while (true) {
+				f = dfs(s, t, inf);
+				if (f <= 0)break;
+				res += f;
+			}
+		}
+	}
+};

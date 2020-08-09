@@ -1,3 +1,76 @@
+第3回 ドワンゴからの挑戦状 本選(オープンコンテスト) B - ニワンゴくんの約数
+AOJ 2235 Graph Construction
+第１０回日本情報オリンピック 本選（オンライン）A - 惑星探査 (Planetary Exploration) 
+ARC 031 D - 買い物上手
+ARC 085 E - MUL
+JAG Practice Contest for ACM-ICPC Asia Regional 2014 F - Reverse a Road II
+東京海上日動 プログラミングコンテスト2020 D - Knapsack Queries on a tree
+2007年 日本情報オリンピック春合宿OJ fermat - フェルマー方程式 (Fermat)
+AOJ 2220 The Number of the Real Roots of a Cubic Equation
+ABC 174 F - Range Set Query
+ABC 174 E - Logs
+ABC 174 D - Alter Altar
+ABC 174 C - Repsept
+ABC 174 B - Distance
+ABC 174 A - Air Conditioner
+第１１回日本情報オリンピック 予選（オンライン） D - パスタ (Pasta)
+第１３回日本情報オリンピック 予選（オンライン） D - 部活のスケジュール表 (Schedule)
+JOI2018/2019 予選ページ E - イルミネーション (Illumination)
+JAG Practice Contest for ACM-ICPC Asia Regional 2013 C - SIRO Challenge
+Typical DP Contest M - 家
+square869120Contest #1 E - 散歩 (E869120 and Path Length)
+M-SOLUTIONS プロコンオープン 2020 F - Air Safety
+M-SOLUTIONS プロコンオープン 2020 D - Road to Millionaire
+M-SOLUTIONS プロコンオープン 2020 C - Marks
+M-SOLUTIONS プロコンオープン 2020 B - Magic 2
+M-SOLUTIONS プロコンオープン 2020 A - Kyu in AtCoder
+ARC 060 E - 高橋君とホテル
+第１４回日本情報オリンピック 本選（オンライン） A - 鉄道旅行 (Railroad Trip)
+GigaCode 2019 D - 家の建設
+ABC 081 D - Non-decreasing
+ABC 081 C - Not so Diverse
+ABC 081 B - Shift only
+ABC 081 A - Placing Marbles
+ABC 101 D - Snuke Numbers
+ABC 101 C - Minimization
+ABC 101 B - Digit Sums
+ABC 101 A - Eating Symbols Easy
+ABC 157 E - Simple String Queries
+ABC 157 D - Friend Suggestions
+ABC 157 C - Guess The Number
+ABC 157 B - Bingo
+ABC 157 A - Duplex Printing
+ABC 054 B - Template Matching
+ABC 054 A - One Card Poker
+ABC 048 B - Between a and b ...
+ABC 048 A - AtCoder *** Contest
+CODE FESTIVAL 2016 Final A - Where's Snuke?
+CODE FESTIVAL 2016 qual C A - CF
+CODE FESTIVAL 2016 qual B A - Signboard
+CODE FESTIVAL 2016 qual A A - CODEFESTIVAL 2016
+ABC 045 A - 台形
+CODE FESTIVAL 2017 Final C - Time Gap
+東京海上日動 プログラミングコンテスト2020 C - Lamps
+ABC 148 E - Double Factorial
+第１４回日本情報オリンピック 本選（オンライン） B - ケーキの切り分け２ (Cake 2)
+パ研合宿2019　第3日「パ研杯2019」 C - カラオケ
+パ研合宿2019　第3日「パ研杯2019」 B - 多数決
+パ研合宿2019　第3日「パ研杯2019」 A - パ研合宿2103
+エイシング プログラミング コンテスト 2020 D - Anything Goes to Zero
+エイシング プログラミング コンテスト 2020 C - XYZ Triplets
+エイシング プログラミング コンテスト 2020 B - An Odd Problem
+エイシング プログラミング コンテスト 2020 A - Number of Multiples
+ABC 048 D - An Ordinary Game
+ARC 060 D - 桁和
+AGC 031 B - Reversi
+AGC 024 C - Sequence Growing Easy
+yosupo Matching on Bipartite Graph
+ARC 088 E - Papple Sort
+CODE THANKS FESTIVAL 2017(Parallel) G - Mixture Drug
+AOJ 1166 Amazing Mazes
+AOJ 1127 Building a Space Station
+2008年 日本情報オリンピック春合宿OJ typhoon - 台風 (Typhoon)
+ARC 050 B - 花束
 ABC 173 F - Intervals on Tree
 ABC 173 E - Multiplication 4
 ABC 173 D - Chat in a Circle

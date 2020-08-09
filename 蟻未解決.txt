@@ -46,7 +46,6 @@ https://atcoder.jp/contests/arc093/tasks/arc093_c
 https://atcoder.jp/contests/arc018/tasks/arc018_4^
 https://atcoder.jp/contests/cf17-final-open/tasks/cf17_final_j^
 https://atcoder.jp/contests/abc061/tasks/abc061_d
-https://atcoder.jp/contests/ttpc2015/tasks/ttpc2015_n
 https://atcoder.jp/contests/abc079/tasks/abc079_d
 https://atcoder.jp/contests/agc001/tasks/agc001_b
 https://csacademy.com/contest/round-68/task/integer-coords/
@@ -54,14 +53,11 @@ https://atcoder.jp/contests/joi2007ho/tasks/joi2007ho_e
 https://atcoder.jp/contests/arc067/tasks/arc067_c
 https://community.topcoder.com/stat?c=problem_statement&pm=15557
 https://atcoder.jp/contests/jag2017autumn/tasks/jag2017autumn_c
-https://atcoder.jp/contests/joisc2007/tasks/joisc2007_fermat
 https://atcoder.jp/contests/jag2015summer-day4/tasks/icpc2015summer_day4_d^
 https://atcoder.jp/contests/joi2009ho/tasks/joi2009ho_b
-https://atcoder.jp/contests/arc050/tasks/arc050_b
-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2220
 https://atcoder.jp/contests/code-festival-2015-quala/tasks/codefestival_2015_qualA_d
 https://atcoder.jp/contests/joi2017ho/tasks/joi2017ho_c
-https://atcoder.jp/contests/arc075/tasks/arc075_chttps://atcoder.jp/contests/abc038/tasks/abc038_c
+https://atcoder.jp/contests/abc038/tasks/abc038_c
 https://atcoder.jp/contests/abc038/tasks/abc038_c
 #https://atcoder.jp/contests/abc033/tasks/abc033_d
 https://atcoder.jp/contests/kupc2012/tasks/kupc2012_8
@@ -76,7 +72,6 @@ https://atcoder.jp/contests/abc008/tasks/abc008_4
 https://atcoder.jp/contests/apc001/tasks/apc001_i
 https://atcoder.jp/contests/yahoo-procon2017-qual/tasks/yahoo_procon2017_qual_d^
 https://atcoder.jp/contests/tenka1-2017/tasks/tenka1_2017_e
-https://atcoder.jp/contests/arc088/tasks/arc088_c
 https://atcoder.jp/contests/code-festival-2015-final-open/tasks/codefestival_2015_final_d
 https://atcoder.jp/contests/s8pc-2/tasks/s8pc_2_h
 https://atcoder.jp/contests/joisc2010/tasks/joisc2010_hideseek
@@ -84,9 +79,7 @@ https://atcoder.jp/contests/arc076/tasks/arc076_d
 https://atcoder.jp/contests/arc042/tasks/arc042_d^
 https://atcoder.jp/contests/utpc2014/tasks/utpc2014_k^
 https://atcoder.jp/contests/joisc2016/tasks/joisc2016_h^
-https://atcoder.jp/contests/dwacon2017-honsen/tasks/dwango2017final_b^
 https://atcoder.jp/contests/abc041/tasks/abc041_d
-https://atcoder.jp/contests/jag2013autumn/tasks/icpc2013autumn_c
 https://atcoder.jp/contests/yahoo-procon2018-qual/tasks/yahoo_procon2018_qual_c
 https://atcoder.jp/contests/abc025/tasks/abc025_d
 https://atcoder.jp/contests/arc016/tasks/arc016_3^
@@ -97,7 +90,6 @@ https://atcoder.jp/contests/tdpc/tasks/tdpc_concatenation
 https://atcoder.jp/contests/arc058/tasks/arc058_c
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0581
 https://community.topcoder.com/stat?c=problem_statement&pm=10184&rd=13519
-https://atcoder.jp/contests/tdpc/tasks/tdpc_house
 https://atcoder.jp/contests/agc013/tasks/agc013_e
 https://atcoder.jp/contests/jag2013summer-day4/tasks/icpc2013summer_day4_f
 https://csacademy.com/contest/iati-shumen-2017-day-1/task/superstition/
@@ -106,14 +98,12 @@ https://community.topcoder.com/stat?c=problem_statement&pm=9764&rd=12177
 https://community.topcoder.com/stat?c=problem_statement&pm=13001&rd=15841^
 https://community.topcoder.com/stat?c=problem_statement&pm=10516&rd=13900
 https://atcoder.jp/contests/dwacon2018-final-open/tasks/dwacon2018_final_b
-https://atcoder.jp/contests/joi2019yo/tasks/joi2019_yo_e
 https://atcoder.jp/contests/arc073/tasks/arc073_d
 https://atcoder.jp/contests/arc085/tasks/arc085_d
 https://atcoder.jp/contests/joisc2015/tasks/joisc2015_c
 https://yukicoder.me/problems/no/654
 https://atcoder.jp/contests/arc074/tasks/arc074_d
 https://atcoder.jp/contests/kupc2016/tasks/kupc2016_e
-https://atcoder.jp/contests/jag2014autumn/tasks/icpc2014autumn_f
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2480
 https://atcoder.jp/contests/indeednow-finala-open/tasks/indeednow_2015_finala_f^
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2347^
@@ -128,8 +118,6 @@ https://atcoder.jp/contests/arc013/tasks/arc013_4
 https://community.topcoder.com/stat?c=problem_statement&pm=10766&rd=14157
 https://community.topcoder.com/stat?c=problem_statement&pm=12808
 https://atcoder.jp/contests/utpc2012/tasks/utpc2012_10
-https://atcoder.jp/contests/arc085/tasks/arc085_c^
-https://atcoder.jp/contests/arc031/tasks/arc031_4^
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2903^
 https://atcoder.jp/contests/kupc2017/tasks/kupc2017_h^
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=3047
@@ -151,5 +139,5 @@ https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_
 
 
 
-monge hu-tucker ツリー二重DP 連結性DP きたまさ法 永続Union-Find木 並列二分探索 拡張Dijkstra
-Moのアルゴリズム Hallの結婚定理 割り当て問題 重み付きマッチング 単体法 Project Selection Problem
+hu-tucker ツリー二重DP 連結性DP きたまさ法 永続Union-Find木 並列二分探索 拡張Dijkstra
+Hallの結婚定理 割り当て問題 重み付きマッチング 単体法 Project Selection Problem
