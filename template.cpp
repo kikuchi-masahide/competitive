@@ -1,3 +1,5 @@
+//#pragma warning(disable:4996)
+//#include <Windows.h>
 #include <iostream>
 #include <vector>
 #include <limits.h>
@@ -21,6 +23,7 @@
 #include <cstdio>
 #include <list>
 #include <bitset>
+//#include <stdio.h>
 
 //< in.txt > out.txt
 using namespace std;
@@ -30,27 +33,49 @@ const long long MOD = 1e9 + 7;
 const long long INF = 1e18;
 typedef long long LL;
 typedef long double LD;
+//typedef boost::multiprecision::cpp_int bigint;
 typedef pair<LL, LL> PLL;
+typedef pair<int, int> PI;
 typedef pair<LD, LL> pdl;
 typedef pair<LD, LD> pdd;
 typedef vector<LL> VLL;
 typedef vector<VLL> VVLL;
+typedef vector<int> VI;
+typedef vector<vector<int>> VVI;
 typedef unsigned long long ULL;
-//typedef boost::multiprecision::cpp_int bigint;
 
-LL A,B,N;
-
-LL func(LL x){
-    return floor((LD)A*x/B)-A*floor((LD)x/B);
+template<class T>
+inline void chmin(T& a, T b) {
+	a = min(a, b);
 }
 
+template<class T>
+inline void chmax(T& a, T b) {
+	a = max(a, b);
+}
+
+void input();
+void solve();
+
+void daminput();
+
 int main() {
-    std::ios::sync_with_stdio(false);
 	std::cin.tie(0);
-    cin >> A >> B >> N;
-    for(LL x = 1;x <= 100;x++){
-        LL f = func(x);
-        cout << "x=" << x << ":" << func(x) << "\n";
-    }
+	std::ios::sync_with_stdio(false);
+	input();
+	//daminput();
+	solve();
 	return 0;
+}
+
+//////////////////////////////////////////////////
+//////////////////////////////////////////////////
+
+void input() {
+}
+
+void daminput() {
+}
+
+void solve() {
 }

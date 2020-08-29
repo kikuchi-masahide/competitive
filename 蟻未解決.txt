@@ -9,15 +9,11 @@ http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2415^
 https://atcoder.jp/contests/atc002/tasks/atc002_c^
 https://atcoder.jp/contests/tdpc/tasks/tdpc_tree
 https://atcoder.jp/contests/tdpc/tasks/tdpc_eel^
-https://atcoder.jp/contests/joi2008ho/tasks/joi2008ho_d
 https://atcoder.jp/contests/joi2009ho/tasks/joi2009ho_d
 https://atcoder.jp/contests/joi2010yo/tasks/joi2010yo_e
-https://atcoder.jp/contests/joi2011ho/tasks/joi2011ho2
-https://atcoder.jp/contests/tdpc/tasks/tdpc_knapsack
 https://atcoder.jp/contests/cf17-final/tasks/cf17_final_d
 https://community.topcoder.com/stat?c=problem_statement&pm=11357
 https://atcoder.jp/contests/arc081/tasks/arc081_c
-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2895
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1392
 https://atcoder.jp/contests/tdpc/tasks/tdpc_lexicographical
 https://atcoder.jp/contests/tdpc/tasks/tdpc_string^
@@ -39,13 +35,11 @@ https://atcoder.jp/contests/arc041/tasks/arc041_d
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2370^
 https://atcoder.jp/contests/soundhound2018-summer-qual/tasks/soundhound2018_summer_qual_d
 https://atcoder.jp/contests/wupc2012-closed/tasks/wupc2012_5^
-https://atcoder.jp/contests/jag2012autumn/tasks/icpc2012autumn_c?lang=ja
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1350
 https://atcoder.jp/contests/utpc2013/tasks/utpc20https://atcoder.jp/contests/wupc2nd/tasks/wupc_0713_06
 https://atcoder.jp/contests/arc093/tasks/arc093_c
 https://atcoder.jp/contests/arc018/tasks/arc018_4^
 https://atcoder.jp/contests/cf17-final-open/tasks/cf17_final_j^
-https://atcoder.jp/contests/abc061/tasks/abc061_d
 https://atcoder.jp/contests/abc079/tasks/abc079_d
 https://atcoder.jp/contests/agc001/tasks/agc001_b
 https://csacademy.com/contest/round-68/task/integer-coords/
@@ -57,8 +51,6 @@ https://atcoder.jp/contests/jag2015summer-day4/tasks/icpc2015summer_day4_d^
 https://atcoder.jp/contests/joi2009ho/tasks/joi2009ho_b
 https://atcoder.jp/contests/code-festival-2015-quala/tasks/codefestival_2015_qualA_d
 https://atcoder.jp/contests/joi2017ho/tasks/joi2017ho_c
-https://atcoder.jp/contests/abc038/tasks/abc038_c
-https://atcoder.jp/contests/abc038/tasks/abc038_c
 #https://atcoder.jp/contests/abc033/tasks/abc033_d
 https://atcoder.jp/contests/kupc2012/tasks/kupc2012_8
 https://yukicoder.me/problems/no/226
@@ -79,7 +71,6 @@ https://atcoder.jp/contests/arc076/tasks/arc076_d
 https://atcoder.jp/contests/arc042/tasks/arc042_d^
 https://atcoder.jp/contests/utpc2014/tasks/utpc2014_k^
 https://atcoder.jp/contests/joisc2016/tasks/joisc2016_h^
-https://atcoder.jp/contests/abc041/tasks/abc041_d
 https://atcoder.jp/contests/yahoo-procon2018-qual/tasks/yahoo_procon2018_qual_c
 https://atcoder.jp/contests/abc025/tasks/abc025_d
 https://atcoder.jp/contests/arc016/tasks/arc016_3^
@@ -91,7 +82,6 @@ https://atcoder.jp/contests/arc058/tasks/arc058_c
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0581
 https://community.topcoder.com/stat?c=problem_statement&pm=10184&rd=13519
 https://atcoder.jp/contests/agc013/tasks/agc013_e
-https://atcoder.jp/contests/jag2013summer-day4/tasks/icpc2013summer_day4_f
 https://csacademy.com/contest/iati-shumen-2017-day-1/task/superstition/
 https://community.topcoder.com/stat?c=problem_statement&pm=7412&rd=10666
 https://community.topcoder.com/stat?c=problem_statement&pm=9764&rd=12177
@@ -102,7 +92,6 @@ https://atcoder.jp/contests/arc073/tasks/arc073_d
 https://atcoder.jp/contests/arc085/tasks/arc085_d
 https://atcoder.jp/contests/joisc2015/tasks/joisc2015_c
 https://yukicoder.me/problems/no/654
-https://atcoder.jp/contests/arc074/tasks/arc074_d
 https://atcoder.jp/contests/kupc2016/tasks/kupc2016_e
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2480
 https://atcoder.jp/contests/indeednow-finala-open/tasks/indeednow_2015_finala_f^
@@ -110,7 +99,6 @@ http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2347^
 https://community.topcoder.com/stat?c=problem_statement&pm=6095&rd=9917^
 https://atcoder.jp/contests/arc080/tasks/arc080_d^
 https://onlinejudge.u-aizu.ac.jp/beta/room.html#RitsCamp18Day2/problems/G^
-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1088
 https://atcoder.jp/contests/soundhound2018/tasks/soundhound2018_c
 https://atcoder.jp/contests/JAG2014Spring/tasks/icpc2014spring_c
 https://atcoder.jp/contests/maximum-cup-2018/tasks/maximum_cup_2018_h

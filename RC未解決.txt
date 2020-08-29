@@ -5,7 +5,6 @@ https://atcoder.jp/contests/joi2012yo/tasks/joi2012yo_e
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_1_A&lang=ja
 https://atcoder.jp/contests/joi2011yo/tasks/joi2011yo_d
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1611&lang=jp
-https://atcoder.jp/contests/s8pc-1/tasks/s8pc_1_g
 https://atcoder.jp/contests/nikkei2019-final/tasks/nikkei2019_final_a
 https://atcoder.jp/contests/joi2012ho/tasks/joi2012ho4
 https://atcoder.jp/contests/abc075/tasks/abc075_c?lang=ja
@@ -25,5 +24,4 @@ https://atcoder.jp/contests/agc004/tasks/agc004_b
 https://atcoder.jp/contests/s8pc-2/tasks/s8pc_2_h
 https://atcoder.jp/contests/joisc2012/tasks/joisc2012_fortune_telling
 #https://atcoder.jp/contests/yahoo-procon2017-qual/tasks/yahoo_procon2017_qual_d
-https://atcoder.jp/contests/abc139/tasks/abc139_f
 #https://atcoder.jp/contests/joi2017yo/tasks/joi2017yo_f

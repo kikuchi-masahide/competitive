@@ -4,3 +4,6 @@ https://atcoder.jp/contests/jag2014autumn/submissions/me
 https://atcoder.jp/contests/arc042/tasks/arc042_d
 https://atcoder.jp/contests/joi2017yo/tasks/joi2017yo_f
 https://atcoder.jp/contests/abc065/tasks/arc076_b
+https://atcoder.jp/contests/s8pc-1/tasks/s8pc_1_g
+https://atcoder.jp/contests/abc139/tasks/abc139_f
+http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2895

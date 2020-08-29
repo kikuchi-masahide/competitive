@@ -1,7 +1,7 @@
 //•‰Œo˜H‚ª‘¶Ý->return false
 template<class T>
 bool BellmanFord(WeightedGraph<T>& G, LL start, vector<T>& res) {
-	res.resize(G.size(),INF);
+	res.resize(G.size(), INF);
 	res[start] = 0;
 	for (LL t = 0; t < G.size() - 1; t++) {
 		for (LL n = 0; n < G.size(); n++) {
@@ -12,10 +12,16 @@ bool BellmanFord(WeightedGraph<T>& G, LL start, vector<T>& res) {
 		}
 	}
 	//negative loop check
-	for (LL n = 0; n < G.size(); n++) {
+	for (int n = 0; n < G.size(); n++)
+	{
 		if (res[n] == INF)continue;
 		for (Gedge<T>& e : G[n]) {
-			if (res[e.to] > res[n] + e.cost)return false;
+			if (res[n] == -INF) {
+				res[e.to] = -INF;
+			}
+			else if (res[e.to] > res[n] + e.cost) {
+				res[e.to] = -INF;
+			}
 		}
 	}
 	return true;
