@@ -1,7 +1,6 @@
 https://atcoder.jp/contests/joi2007ho/tasks/joi2007ho_c
-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_13_A&lang=ja
 https://atcoder.jp/contests/joi2009yo/tasks/joi2009yo_d
-https://atcoder.jp/contests/joi2012yo/tasks/joi2012yo_e
+-https://atcoder.jp/contests/joi2012yo/tasks/joi2012yo_e
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_1_A&lang=ja
 https://atcoder.jp/contests/joi2011yo/tasks/joi2011yo_d
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1611&lang=jp
@@ -14,8 +13,6 @@ http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1149&lang=jp
 https://atcoder.jp/contests/joi2015yo/tasks/joi2015yo_f
 https://yukicoder.me/problems/no/526
 https://atcoder.jp/contests/arc013/tasks/arc013_3
-https://atcoder.jp/contests/agc017/tasks/agc017_d
-https://atcoder.jp/contests/arc074/tasks/arc074_d
 https://atcoder.jp/contests/arc013/tasks/arc013_4
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0365&lang=ja
 https://atcoder.jp/contests/abc136/tasks/abc136_f
