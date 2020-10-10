@@ -1,0 +1,37 @@
+class SAT2 {
+public:
+	int N;   //総命題数
+	WeightedGraph<int> G;
+	SAT2(int n) {
+		G.resize(2*n);
+		N = n;
+	}
+	//1-indexでクロージャp∨qを追加(-p => ￢p)
+	void AddEdge(int p, int q) {
+		auto conv = [&](int v) {
+			if (v > 0) {
+				return v - 1;
+			}
+			else {
+				return -v - 1 + N;
+			}
+		};
+		//￢a=>b
+		G[conv(-p)].push_back({ conv(q),1 });
+		//￢b=>a
+		G[conv(-q)].push_back({ conv(p),1 });
+	}
+	//今の状態の2SATを満たす割り当てを一つ返す(1-index)
+	//従属不可能:return false
+	bool Solve(vector<bool>& v) {
+		v.resize(N+1);
+		VI res;
+		SCC(G, res);
+		for (int n = 0; n < N; n++) {
+			if (res[n] == res[n + N])return false;
+			if (res[n + N] < res[n])v[n+1] = true;
+			else v[n+1] = false;
+		}
+		return true;
+	}
+};

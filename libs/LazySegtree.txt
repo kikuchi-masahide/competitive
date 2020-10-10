@@ -7,16 +7,16 @@ public:
 	vector<T> seg;
 	vector<M> lazy;   //実、更新の必要性
 	typedef function<T(T, T)> TT;
-	typedef function<T(M, T, LL)> MT;
+	typedef function<T(M, T, int)> MT;
 	typedef function<M(M, M)> MM;
 	TT tt;
 	MT mt;
 	MM mm;
 	M Me;
 	T Te;
-	LL snum;   //何回シフトで下段から1に行けるか
-	LazySegtree(LL N, TT _tt, MT _mtn, MM _mm, T te, M me) {
-		LL RN = 1;
+	int snum;   //何回シフトで下段から1に行けるか
+	LazySegtree(int N, TT _tt, MT _mtn, MM _mm, T te, M me) {
+		int RN = 1;
 		snum = 0;
 		while (RN < N) {
 			RN *= 2;
@@ -31,7 +31,7 @@ public:
 		mm = _mm;
 	}
 	LazySegtree(vector<T>& vec, TT _tt, MT _mt, MM _mm, T te, M me) {
-		LL RN = 1;
+		int RN = 1;
 		snum = 0;
 		while (RN < vec.size()) {
 			RN *= 2;
@@ -44,12 +44,12 @@ public:
 		tt = _tt;
 		mt = _mt;
 		mm = _mm;
-		for (LL n = 0; n < vec.size(); n++) seg[RN + n] = vec[n];
-		for (LL n = RN - 1; n >= 1; n--) {
+		for (int n = 0; n < vec.size(); n++) seg[RN + n] = vec[n];
+		for (int n = RN - 1; n >= 1; n--) {
 			seg[n] = tt(seg[2 * n], seg[2 * n + 1]);
 		}
 	}
-	void eval(LL k, LL l, LL r) {
+	void eval(int k, int l, int r) {
 		if (k >= seg.size())return;
 		if (lazy[k] == Me)return;
 		seg[k] = mt(lazy[k], seg[k], r - l + 1);
@@ -59,7 +59,7 @@ public:
 		}
 		lazy[k] = Me;
 	}
-	void apply(LL a, LL b, M m, LL k, LL l, LL r) {
+	void apply(int a, int b, M m, int k, int l, int r) {
 		eval(k, l, r);
 		if (r < a || b < l)return;
 		if (a <= l && r <= b) {
@@ -72,16 +72,46 @@ public:
 			seg[k] = tt(seg[2 * k], seg[2 * k + 1]);
 		}
 	}
-	void apply(LL a, LL b, M m) {
+	void apply(int a, int b, M m) {
 		apply(a, b, m, 1, 0, seg.size() / 2 - 1);
 	}
-	T get(LL a, LL b, LL k, LL l, LL r) {
+	T get(int a, int b, int k, int l, int r) {
 		if (r < a || b < l)return Te;
 		eval(k, l, r);
 		if (a <= l && r <= b)return seg[k];
 		else return tt(get(a, b, 2 * k, l, (l + r) / 2), get(a, b, 2 * k + 1, (l + r) / 2 + 1, r));
 	}
-	T get(LL a, LL b) {
+	T get(int a, int b) {
 		return get(a, b, 1, 0, seg.size() / 2 - 1);
+	}
+	void set(int n, T t) {
+		int RN = seg.size() / 2;
+		int l = 0, r = RN - 1;
+		for (int t = snum; t > 0; t--) {
+			eval((n + RN) >> t, l, r);
+			if (((n + RN) >> (t - 1)) & 1) {
+				l = ((l + r) >> 1) + 1;
+			}
+			else {
+				r = (l + r) >> 1;
+			}
+		}
+		eval((n + RN), n, n);
+		seg[n + RN] = t;
+		l = n;
+		r = n;
+		n += RN;
+		while ((n >> 1) > 0) {
+			if (n & 1) {
+				l = 2 * l - r - 1;
+			}
+			else {
+				r = 2 * r - l + 1;
+			}
+			n >>= 1;
+			eval(n * 2, l, (l + r) >> 1);
+			eval(n * 2 + 1, ((l + r) >> 1) + 1, r);
+			seg[n] = tt(seg[2 * n], seg[2 * n + 1]);
+		}
 	}
 };

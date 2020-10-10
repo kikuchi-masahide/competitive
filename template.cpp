@@ -43,6 +43,8 @@ typedef vector<VLL> VVLL;
 typedef vector<int> VI;
 typedef vector<vector<int>> VVI;
 typedef unsigned long long ULL;
+template<class T>
+using pqueue = priority_queue<T, vector<T>, function<bool(T, T)>>;
 
 template<class T>
 inline void chmin(T& a, T b) {
@@ -58,6 +60,9 @@ void input();
 void solve();
 
 void daminput();
+void naive();
+
+void outputinput();
 
 int main() {
 	std::cin.tie(0);
@@ -65,6 +70,8 @@ int main() {
 	input();
 	//daminput();
 	solve();
+	//naive();
+	//outputinput();
 	return 0;
 }
 
@@ -78,4 +85,10 @@ void daminput() {
 }
 
 void solve() {
+}
+
+void naive() {
+}
+
+void outputinput() {
 }

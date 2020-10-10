@@ -1,0 +1,40 @@
+//非連結なグラフを連結要素に分解(UnionFindが必要)
+//G0:元の非連結なグラフ
+//change:元のグラフでの頂点->(連結要素の何番目か、連結要素中の何頂点か)
+//revchange:連結要素の頂点が、元のグラフでのどの頂点か
+//G:連結要素の集合
+template<class T>
+void DecomposeTo(WeightedGraph<T>& G0, vector<PI>& change, VVI& revchange, vector<WeightedGraph<T>>& G) {
+	int N = G0.size();
+	change.resize(N,PI(-1,-1));
+	unionFind UF(N);
+	for (int n = 0; n < N; n++) {
+		for (Gedge<T>& edge : G0[n]) {
+			UF.unit(n, edge.to);
+		}
+	}
+	VI check(N, -1);
+	int graphsize = 0;
+	for (int n = 0; n < N; n++) {
+		if (check[UF[n]] == -1) {
+			check[UF[n]] = revchange.size();
+			revchange.push_back(VI());
+			graphsize++;
+		}
+		change[n] = PI(check[UF[n]], revchange[check[UF[n]]].size());
+		revchange[check[UF[n]]].push_back(n);
+	}
+	G.resize(graphsize);
+	for (int n = 0; n < N; n++) {
+		if (UF[n] != n)continue;
+		G[check[n]].resize(UF.size(n));
+	}
+	for (int n0 = 0; n0 < N; n0++) {
+		int g = change[n0].first;
+		int n = change[n0].second;
+		for (Gedge<T>& edge : G0[n0]) {
+			int to = change[edge.to].second;
+			G[g][n].push_back(Gedge<T>(n,to,edge.cost,edge.id));
+		}
+	}
+}

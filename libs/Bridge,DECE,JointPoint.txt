@@ -1,82 +1,88 @@
+template<class T>
 struct DFSTreeNode {
-	VLL childs;
-	LL ord, lowlink;
-	LL dece;   //何番目の二重連結成分に含まれるか
-	DFSTreeNode() : ord(-1), lowlink(-1),dece(-1) {};
+	vector<Gedge<T>> childs;   //自分から子に行く辺集合
+	int ord, lowlink;
+	int dece;   //何番目の二重連結成分に含まれるか
+	DFSTreeNode() : ord(-1), lowlink(-1), dece(-1) {};
 };
-typedef vector<DFSTreeNode> DFSTree;
+template<class T>
+using DFSTree = vector<DFSTreeNode<T>>;
 
-void BridgeDECEdfs(UnweightedGraph& G, DFSTree& tree, LL n,LL& ord,VVLL& backedges,LL parent) {
+template<class T>
+void BridgeDECEdfs(WeightedGraph<T>& G, DFSTree<T>& tree, int n, int& ord, vector<vector<Gedge<T>>>& backedges, Gedge<T> edge) {
 	if (tree[n].ord != -1)return;
 	tree[n].ord = ord++;
 	tree[n].lowlink = tree[n].ord;
-	for (LL next : G[n]) {
-		if (tree[next].ord != -1) {
-			//後退辺の場合
-			if (next == parent)continue;
-			backedges[next].push_back(n);
-			tree[n].lowlink = min(tree[n].lowlink, tree[next].ord);
+	for (Gedge<T>& next : G[n]) {
+		if (tree[next.to].ord != -1) {
+			//行き先のordがすでに決まっている場合
+			//親→子の辺だったら無視
+			if (next.id == edge.id)continue;
+			backedges[n].push_back(next);
+			tree[n].lowlink = min(tree[n].lowlink, tree[next.to].ord);
 		}
 		else {
 			tree[n].childs.push_back(next);
-			BridgeDECEdfs(G, tree, next, ord, backedges,n);
-			tree[n].lowlink = min(tree[n].lowlink, tree[next].lowlink);
+			BridgeDECEdfs(G, tree, next.to, ord, backedges, next);
+			tree[n].lowlink = min(tree[n].lowlink, tree[next.to].lowlink);
 		}
 	}
 }
 
-void BridgeDECE(UnweightedGraph& G, DFSTree& tree, VVLL& bridges, VVLL& dece,LL start = 0) {
+//無向グラフGを受け取りDFS木と橋のidの集合bridges、各dece要素に属する頂点集合deceを返す
+template<class T>
+void BridgeDECE(WeightedGraph<T>& G, DFSTree<T>& tree, set<int>& bridges, VVI& dece, int start = 0) {
 	tree.resize(G.size());
-	bridges.resize(G.size());
-	for (LL n = 0; n < G.size(); n++)tree[n].ord = -1;
-	VVLL backedges;   //backedges[i]\ni j <==> 後退辺j->iが存在
-	backedges.resize(G.size());
-	LL ord = 0;   //次設定するord
+	for (int n = 0; n < G.size(); n++)tree[n].ord = -1;
+	vector<vector<Gedge<T>>> backedges(G.size());   //後退辺の集合
+	int ord = 0;   //次設定するord
 	//ord,lowlink求める
-	BridgeDECEdfs(G, tree, start, ord, backedges,-1);
+	BridgeDECEdfs(G, tree, start, ord, backedges, Gedge<T>(-1, start, 0, -1));
 	//連結要素id
-	LL id = 0;
-	stack<LL> st;
-	for (LL n = 0; n < G.size(); n++) {
+	int id = 0;
+	stack<int> st;
+	for (int n = 0; n < G.size(); n++) {
 		if (tree[n].dece != -1)continue;
 		st.push(n);
-		dece.push_back(VLL());
+		dece.push_back(VI());
 		while (!st.empty()) {
-			LL cur = st.top();
+			int cur = st.top();
 			st.pop();
 			if (tree[cur].dece != -1)continue;
 			tree[cur].dece = id;
 			dece.back().push_back(cur);
 			//子
-			for (LL ch : tree[cur].childs) {
-				if (tree[cur].ord < tree[ch].lowlink) {
+			for (Gedge<T>& edge : tree[cur].childs) {
+				//辺が橋である条件:DFS木の辺かつ子のlowlink > 親のord
+				if (tree[cur].ord < tree[edge.to].lowlink) {
 					//橋だった
-					bridges[cur].push_back(ch);
+					bridges.insert(edge.id);
 				}
 				else {
-					st.push(ch);
+					st.push(edge.to);
 				}
 			}
 			//後退辺
-			for (LL next : backedges[cur]) {
-				st.push(next);
+			for (Gedge<T>& back : backedges[cur]) {
+				st.push(back.to);
 			}
 		}
 		id++;
 	}
 }
 
-void JointPoint(DFSTree& tree, VLL& jpoints,LL start = 0) {
+template<class T>
+void JointPoint(DFSTree<T>& tree, VI& jpoints, int start = 0) {
 	if (tree[start].childs.size() > 1) {
 		jpoints.push_back(start);
 	}
 	//関節点の条件:
 	//point v is a jointpoint
 	// <==> \exist u \in v.childs,u.ord <= v.lowlink
-	for (LL n = 0; n < tree.size(); n++) {
+	for (int n = 0; n < tree.size(); n++) {
 		if (n == start)continue;
-		for (LL ch : tree[n].childs) {
-			if (tree[ch].lowlink >= tree[n].ord) {
+		for (Gedge<T>& edge : tree[n].childs) {
+			if (tree[edge.to].lowlink >= tree[n].ord) {
 				jpoints.push_back(n);
 				break;
 			}
@@ -84,4 +90,4 @@ void JointPoint(DFSTree& tree, VLL& jpoints,LL start = 0) {
 	}
 }
 
-http://yazaten.hatenablog.com/entry/2016/12/05/094725
+//http://yazaten.hatenablog.com/entry/2016/12/05/094725

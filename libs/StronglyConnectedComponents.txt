@@ -1,0 +1,55 @@
+template<class T>
+void sccbfs(WeightedGraph<T>& g, VI& res, int n, vector<bool>& check) {
+	check[n] = true;
+	for (auto& e : g[n]) {
+		if (!check[e.to]) {
+			sccbfs(g, res, e.to, check);
+		}
+	}
+	res.push_back(n);
+}
+
+//強連結成分分解
+//上流側の強連結成分の番号が小さくなるように番号付け
+//分解後のDAGの頂点数を返す
+template<class T>
+int SCC(WeightedGraph<T>& G, VI& scv)
+{
+	int N = G.size();
+	VI bfs1;
+	vector<bool> bfscheck(N, false);
+	for (int n = 0; n < N; n++)
+	{
+		if (!bfscheck[n]) {
+			sccbfs(G, bfs1, n, bfscheck);
+		}
+	}
+	WeightedGraph<int> Grev(N);
+	for (int n = 0; n < N; n++)
+	{
+		for (auto& e : G[n]) {
+			Grev[e.to].push_back({ n,1 });
+		}
+	}
+	scv.resize(N, -1);
+	int next = 0;
+	for (int ordi = N-1; ordi >= 0; ordi--)
+	{
+		if (scv[bfs1[ordi]] != -1)continue;
+		queue<int> q;
+		q.push(bfs1[ordi]);
+		scv[bfs1[ordi]] = next;
+		while (!q.empty()) {
+			int cur = q.front();
+			q.pop();
+			for (auto& e : Grev[cur]) {
+				int ch = e.to;
+				if (scv[ch] != -1)continue;
+				scv[ch] = next;
+				q.push(ch);
+			}
+		}
+		next++;
+	}
+	return next;
+}

@@ -54,3 +54,83 @@ void multiply(vector<Complex>& A, vector<Complex>& B,vector<Complex>& C) {
 	inv_dft(&C, n);
 	return;
 }
+
+########################################
+########################################
+//®”ŠÂFFT(NTT)
+
+//F(zeta^0),F(zeta^1),...,F(zeta^(N-1))‚ğ‹‚ß‚é
+void convolutionRec(VLL& F, LL zeta, LL mod, VLL& res) {
+	int N = F.size();
+	if (N == 1) {
+		res.resize(1, F[0]);
+		return;
+	}
+	//‹ô”Ÿ‚Ì‚İ‚Ì®F0,Šï”Ÿ‚Ì‚İ‚Ì®F1
+	//F(x) = F0(x^2)+xF1(x^2)
+	VLL F0(N / 2, 0);
+	VLL F1(N / 2, 0);
+	for (int n = 0; n < N; n++) {
+		if (n % 2 == 0) {
+			F0[n / 2] = F[n];
+		}
+		else {
+			F1[n / 2] = F[n];
+		}
+	}
+	VLL res0, res1;
+	convolutionRec(F0, (zeta * zeta) % mod, mod, res0);
+	convolutionRec(F1, (zeta * zeta) % mod, mod, res1);
+	res.resize(N, 0);
+	LL ipow = 1;
+	for (int n = 0; n < N/2; n++) {
+		res[n] = ipow * res1[n];
+		res[n] %= mod;
+		res[n] = (res[n] + res0[n]) % mod;
+		ipow = (ipow * zeta) % mod;
+	}
+	for (int n = 0; n < N / 2; n++) {
+		res[N/2+n] = ipow * res1[n];
+		res[N/2+n] %= mod;
+		res[N/2+n] = (res[N/2+n] + res0[n]) % mod;
+		ipow = (ipow * zeta) % mod;
+	}
+}
+
+LL modpow(LL base, LL p, LL mod) {
+	if (p == 0)return 1;
+	LL ans = modpow(base, p >> 1, mod);
+	ans = (ans * ans) % mod;
+	if (p & 1) {
+		ans = (ans * base) % mod;
+	}
+	return ans;
+}
+
+//G*H=F
+//Ÿ”‚Í‡‚í‚¹‚Ä2^24’ö“xˆÈ‰º
+//998244353,167772161,469762049,1224736769->3,163577857->23
+void convolutionMod(VLL& G, VLL& H, VLL& F, LL mod,LL zeta0) {
+	int n = 1;
+	while (n < (int)G.size() + (int)H.size()) {
+		n *= 2;
+	}
+	LL zeta = modpow(zeta0, (mod - 1) / n,mod);
+	G.resize(n, 0);
+	H.resize(n, 0);
+	F.resize(n, 0);
+	VLL Gres;
+	VLL Hres;
+	convolutionRec(G, zeta, mod, Gres);
+	convolutionRec(H, zeta, mod, Hres);
+	VLL FF(n, 0);
+	for (int nn = 0; nn < n; nn++) {
+		FF[nn] = (Gres[nn] * Hres[nn]) % mod;
+	}
+	LL zetainv = modpow(zeta, mod - 2,mod);
+	convolutionRec(FF, zetainv, mod, F);
+	LL ninv = modpow(n, mod - 2,mod);
+	for (int nn = 0; nn < n; nn++) {
+		F[nn] = (F[nn] * ninv) % mod;
+	}
+}

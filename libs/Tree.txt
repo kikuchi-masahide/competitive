@@ -1,110 +1,69 @@
-//si:頂点数
-//root:根
-//ch:子供の集合
-//pa:親(根の親=-1)
-//no:前提情報
-void treeconstruct(LL si, LL root, vector<vector<LL>>& ch, vector<LL>& pa, vector<vector<LL>>& no) {
-	ch.resize(si, vector<LL>(0));
-	pa.resize(si, -2);
-	queue<PLL> q;
-	q.push(PLL(root, -1));
-	while (!q.empty()) {
-		LL cur = q.front().first;
-		LL p = q.front().second;
-		q.pop();
-		pa[cur] = p;
-		for (LL next : no[cur]) {
-			if (next == p)continue;
-			ch[cur].push_back(next);
-			q.push(PLL(next, cur));
-		}
+template<class T>
+void doublingConstruct(Tree<T>& tree, VVI& doubling) {
+	int N = tree.size();
+	doubling.push_back(VI(N, -1));
+	for (int n = 0; n < N; n++) {
+		doubling[0][n] = tree[n].parent;
 	}
-	return;
-}
-
-void doublingConstruct(LL N, vector<LL>& parents, vector<vector<LL>>& doubling) {
-	doubling.push_back(parents);
+	VI res(N, -1);
 	while (true) {
-		vector<LL> temp(N, -1);
-		vector<LL>& back = doubling.back();
 		bool flag = false;
-		for (LL n = 0; n < N; n++) {
-			if (doubling.back()[n] == -1)continue;
-			temp[n] = back[back[n]];
-			if (temp[n] != -1)flag = true;
-		}
-		if (!flag)break;
-		doubling.push_back(temp);
-	}
-}
-
-//木の各要素の深さ(根からの距離)を求める
-void setDepth(LL N, LL root, vector<vector<LL>>& childs, vector<LL>& rank) {
-	rank.resize(N, -1);
-	queue<PLL> q;
-	q.push(PLL(root, 0));
-	while (!q.empty()) {
-		LL cur = q.front().first;
-		LL dist = q.front().second;
-		rank[cur] = dist;
-		q.pop();
-		for (LL child : childs[cur]) {
-			if (child == -1)continue;
-			if (rank[child] != -1)continue;
-			q.push(PLL(child, dist + 1));
-		}
-	}
-}
-
-//木の各要素の高さ(葉からの距離最大値)を求める
-void setHeight(LL N, LL root, VVLL& childs, VLL& heights, LL cur = -1) {
-	if (cur == -1) {
-		heights.resize(N, -1);
-		setHeight(N, root, childs, heights, root);
-		return;
-	}
-	LL hei = -1;
-	for (LL child : childs[cur]) {
-		if (child == -1)continue;
-		if (heights[child] == -1) {
-			setHeight(N, root, childs, heights, child);
-		}
-		hei = max(hei, heights[child]);
-	}
-	heights[cur] = hei + 1;
-	return;
-}
-
-LL LowestCommonAncestor(LL N, LL root, vector<LL>& parents, vector<LL>& depth, vector<vector<LL>>& doubling, LL c1, LL c2) {
-	if (c1 == c2)return c1;
-	if (depth[c1] > depth[c2])return LowestCommonAncestor(N, root, parents, depth, doubling, c2, c1);
-	if (depth[c1] != depth[c2]) {
-		LL dif = depth[c2] - depth[c1];
-		LL p = 0;
-		while (dif >= (1 << p)) {
-			if ((dif & (1 << p)))c2 = doubling[p][c2];
-			p++;
-		}
-		if (c1 == c2)return c1;
-	}
-	LL log = doubling.size() - 1;
-	for (; log >= 0; log--) {
-		if (c1 == c2)break;
-		if (doubling[log][c1] != doubling[log][c2]) {
-			LL temp1 = doubling[log][c1];
-			LL temp2 = doubling[log][c2];
-			if (temp1 != temp2) {
-				c1 = temp1;
-				c2 = temp2;
+		VI& d = doubling.back();
+		for (int n = 0; n < N; n++)
+		{
+			if (d[n] != -1) {
+				res[n] = d[d[n]];
+				flag = true;
 			}
+			else res[n] = -1;
+		}
+		if (!flag)return;
+		doubling.push_back(res);
+	}
+}
+
+//木の各要素の深さ(各辺重さ1としたときの根からの距離)
+template<class T>
+void setDepth(int root,Tree<T>& tree, VI& depth) {
+	int N = tree.size();
+	depth.resize(N,0);
+	queue<int> q;
+	q.push(root);
+	while(!q.empty()){
+		int cur = q.front();
+		q.pop();
+		int d = depth[cur];
+		for (int ch : tree[cur].childs) {
+			depth[ch] = d + 1;
+			q.push(ch);
 		}
 	}
-	return parents[c1];
 }
-//与えられた木を左部分木、右部分木、根の順で来訪(reserve推奨)
-void postorderTreeWalk(LL N,LL root, VVLL& childs, VLL& order) {
-	if (childs[root][0] != -1)postorderTreeWalk(N, childs[root][0], childs, order);
-	if (childs[root][1] != -1)postorderTreeWalk(N, childs[root][1], childs,order);
-	order.push_back(root);
-	return;
+
+//木の頂点から指定した回数だけ根の側に進む
+template<class T>
+int goRoot(Tree<T>& tree, VVI& doubling, int v,int time) {
+	int N = tree.size();
+	for (int t = 0; t < doubling.size() && v != -1; t++) {
+		if ((time & (1 << t))) {
+			v = doubling[t][v];
+		}
+	}
+	return v;
+}
+
+//LCA
+template<class T>
+int LCA(Tree<T>& tree, VVI& doubling,VI& depth, int u, int v) {
+	if (u == v)return u;
+	if (depth[u] > depth[v])swap(u, v);
+	v = goRoot(tree, doubling, v, depth[v] - depth[u]);
+	//goRoot(u,s) != goRoot(v,s),goRoot(u,e) == goRoot(v,e)
+	int s = -1, e = N;
+	while (e - s > 1) {
+		int m = (e + s) / 2;
+		if (goRoot(tree, doubling, u, m) != goRoot(tree, doubling, v, m))s = m;
+		else e = m;
+	}
+	return goRoot(tree, doubling, u, e);
 }
