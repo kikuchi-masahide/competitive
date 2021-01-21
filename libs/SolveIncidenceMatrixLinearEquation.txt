@@ -1,0 +1,91 @@
+//接続行列AとベクトルBの方程式Ax=Bを解く(Bは変更されることに注意)
+//接続行列:V行E列，始点-1,終点1，グラフGの辺idが0-indexで振ってあるものとする
+//返り値:true->可能 false->不能
+template<class T>
+bool SolveIncidenceMatrixLinearEquation(WeightedGraph<int>& G, vector<T>& B, vector<T>& res)
+{
+	//逆辺でグラフを作る
+	WeightedGraph<int> Ginv(G.size());
+	int V = G.size();
+	int E = 0;
+	for (int n = 0; n < V; n++) {
+		for (auto& edge : G[n])
+		{
+			int src = n;
+			int to = edge.to;
+			int id = edge.id;
+			Ginv[to].push_back(Gedge<int>(to, src, 1, id));
+			E++;
+		}
+	}
+	res.resize(E,T(0));
+	vector<bool> check(V, false);
+	int push = -1;
+	//根から訪れた順を保存
+	VI ord(V, -1);
+	//親
+	VI parent(V, -1);
+	//どの辺を使ってこの頂点に来たか(逆辺を使った場合はidに+Eする)
+	VI edge(V, -1);
+	int look = 0;
+	for (int root=0;root<V;root++)
+	{
+		if (check[root])continue;
+		ord[++push] = root;
+		check[root] = true;
+		look = push;
+		while (look <= push) {
+			int n = ord[look];
+			for (auto& e : G[n])
+			{
+				if (check[e.to])continue;
+				int to = e.to;
+				int id = e.id;
+				edge[to] = id;
+				parent[to] = n;
+				ord[++push] = to;
+				check[to] = true;
+			}
+			for (auto& e : Ginv[n])
+			{
+				if (check[e.to])continue;
+				int to = e.to;
+				int id = e.id + E;
+				edge[to] = id;
+				parent[to] = n;
+				ord[++push] = to;
+				check[to] = true;
+			}
+			look++;
+		}
+	}
+	//後ろ(葉の側)から見ていき方程式を解いていく
+	for (int look = V - 1; look > 0; look--)
+	{
+		int n = ord[look];
+		if (parent[n] == -1)continue;
+		int id = edge[n];
+		int p = parent[n];
+		if (id < E)
+		{
+			res[id] = B[n];
+			B[n] -= res[id];
+			B[p] += res[id];
+		}
+		else
+		{
+			id -= E;
+			res[id] = T(-1)*B[n];
+			B[n] += res[id];
+			B[p] -= res[id];
+		}
+	}
+	//整合性チェック
+	for (int n = 0; n < V; n++) {
+		if (B[n] != T(0))return false;
+	}
+	return true;
+}
+
+
+//https://drive.google.com/file/d/1GYxjvoEIn_j9i9AEWP5zQ4yyCQCLysrn/view

@@ -4,13 +4,10 @@ https://atcoder.jp/contests/agc033/tasks/agc033_d
 https://atcoder.jp/contests/joi2014ho/tasks/joi2014ho4
 #https://atcoder.jp/contests/joisc2016/tasks/joisc2016_a JOI 2016
 https://atcoder.jp/contests/dwacon2018-prelims/tasks/dwacon2018_prelims_c
-https://atcoder.jp/contests/tdpc/tasks/tdpc_game
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2415^
 https://atcoder.jp/contests/atc002/tasks/atc002_c^
-https://atcoder.jp/contests/tdpc/tasks/tdpc_tree
 https://atcoder.jp/contests/tdpc/tasks/tdpc_eel^
 https://atcoder.jp/contests/joi2010yo/tasks/joi2010yo_e
-https://atcoder.jp/contests/cf17-final/tasks/cf17_final_d
 https://community.topcoder.com/stat?c=problem_statement&pm=11357
 https://atcoder.jp/contests/arc081/tasks/arc081_c
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1392
@@ -22,8 +19,6 @@ https://atcoder.jp/contests/joisc2016/tasks/joisc2016_c^
 https://atcoder.jp/contests/tdpc/tasks/tdpc_grid^
 https://atcoder.jp/contests/tdpc/tasks/tdpc_fibonacci^
 https://atcoder.jp/contests/joi2010ho/tasks/joi2010ho_e^
-https://atcoder.jp/contests/abc085/tasks/abc085_b
-https://atcoder.jp/contests/abc091/tasks/abc091_b
 https://atcoder.jp/contests/arc090/tasks/arc090_b^
 https://atcoder.jp/contests/code-thanks-festival-2017-open/tasks/code_thanks_festival_2017_h^
 https://atcoder.jp/contests/joi2012ho/tasks/joi2012ho5^
@@ -36,14 +31,11 @@ http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1350
 https://atcoder.jp/contests/arc093/tasks/arc093_c
 https://atcoder.jp/contests/arc018/tasks/arc018_4^
 https://atcoder.jp/contests/cf17-final-open/tasks/cf17_final_j^
-https://atcoder.jp/contests/agc001/tasks/agc001_b
 https://csacademy.com/contest/round-68/task/integer-coords/
-https://atcoder.jp/contests/joi2007ho/tasks/joi2007ho_e
 https://atcoder.jp/contests/arc067/tasks/arc067_c
 https://community.topcoder.com/stat?c=problem_statement&pm=15557
 https://atcoder.jp/contests/jag2017autumn/tasks/jag2017autumn_c
 https://atcoder.jp/contests/jag2015summer-day4/tasks/icpc2015summer_day4_d^
-https://atcoder.jp/contests/joi2009ho/tasks/joi2009ho_b
 https://atcoder.jp/contests/code-festival-2015-quala/tasks/codefestival_2015_qualA_d
 https://atcoder.jp/contests/joi2017ho/tasks/joi2017ho_c
 #https://atcoder.jp/contests/abc033/tasks/abc033_d
@@ -64,7 +56,6 @@ https://atcoder.jp/contests/yahoo-procon2018-qual/tasks/yahoo_procon2018_qual_c
 https://atcoder.jp/contests/abc025/tasks/abc025_d
 https://atcoder.jp/contests/arc016/tasks/arc016_3^
 https://atcoder.jp/contests/tdpc/tasks/tdpc_ball
-https://atcoder.jp/contests/joi2011yo/tasks/joi2011yo_f
 https://atcoder.jp/contests/code-festival-2014-quala/tasks/code_festival_qualA_d
 https://atcoder.jp/contests/tdpc/tasks/tdpc_concatenation
 https://atcoder.jp/contests/arc058/tasks/arc058_c
@@ -94,7 +85,6 @@ https://community.topcoder.com/stat?c=problem_statement&pm=12808
 https://atcoder.jp/contests/utpc2012/tasks/utpc2012_10
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2903^
 https://atcoder.jp/contests/kupc2017/tasks/kupc2017_h^
-http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=3047
 https://atcoder.jp/contests/tdpc/tasks/tdpc_graph
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2520
 https://atcoder.jp/contests/arc039/tasks/arc039_d^

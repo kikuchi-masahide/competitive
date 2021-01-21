@@ -18,7 +18,7 @@
 #include <stack>
 #include <iomanip>
 #include <cassert>
-//#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
 #include <complex>
 #include <cstdio>
 #include <list>
@@ -33,7 +33,7 @@ const long long MOD = 1e9 + 7;
 const long long INF = 1e18;
 typedef long long LL;
 typedef long double LD;
-//typedef boost::multiprecision::cpp_int bigint;
+typedef boost::multiprecision::cpp_int bigint;
 typedef pair<LL, LL> PLL;
 typedef pair<int, int> PI;
 typedef pair<LD, LL> pdl;

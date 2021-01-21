@@ -7,3 +7,6 @@ https://atcoder.jp/contests/abc065/tasks/arc076_b
 https://atcoder.jp/contests/s8pc-1/tasks/s8pc_1_g
 https://atcoder.jp/contests/abc139/tasks/abc139_f
 http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2895
+https://atcoder.jp/contests/agc013/tasks/agc013_b
+https://atcoder.jp/contests/cf17-final/tasks/cf17_final_d
+https://atcoder.jp/contests/hitachi2020/tasks/hitachi2020_c

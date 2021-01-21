@@ -32,8 +32,8 @@ T LCM(vector<T> v) {
 }
 
 //ax+by=gcd(a,b)‚Ì‰ð
-ll extgcd(ll a, ll b, ll& x, ll& y) {
-	ll d = a;
+LL extgcd(LL a, LL b, LL& x, LL& y) {
+	LL d = a;
 	if (b != 0) {
 		d = extgcd(b, a % b, y, x);
 		y -= (a / b) * x;

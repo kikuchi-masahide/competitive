@@ -1,3 +1,53 @@
+yukicoder No.650 行列木クエリ
+yukicoder No.649 ここでちょっとQK！
+AOJ course Strongly Connected Components
+ABC 179 F - Simplified Reversi
+ABC 179 E - Sequence Sum
+ABC 179 D - Leaping Tak
+ABC 179 C - A x B + C
+ABC 179 B - Go to Jail
+ABC 179 A - Plural Form
+ABC 178 F - Contrast
+ABC 178 E - Dist Max
+ABC 178 D - Redistribution
+ABC 178 C - Ubiquity
+ABC 178 B - Product Max
+ABC 178 A - Not
+ABC 177 E - Coprime
+ABC 177 D - Friends
+ABC 177 C - Sum of product of pairs
+ABC 177 B - Substring
+ABC 177 A - Don't be late
+第１０回日本情報オリンピック 予選（オンライン） F - JOI旗 (JOI Flag)
+AOJ 3047 Shiritori
+ARC 029 C - 高橋君と国家
+ARC 030 C - 有向グラフ
+日立製作所 社会システム事業部 プログラミングコンテスト2020 C - ThREE
+ABC 176 E - Bomber
+ABC 176 D - Wizard in Maze
+ABC 176 C - Step
+ABC 176 B - Multiple of 9
+ABC 176 A - Takoyaki
+WUPC 2012 E - 会場への道
+技術室奥プログラミングコンテスト#4 Day2 E - 引きこもり
+第１０回日本情報オリンピック 本選（オンライン） C - JOI 国の買い物事情 (Shopping in JOI Kingdom)
+ARC 028 C - 高橋王国の分割統治
+ARC 035 C - アットコーダー王国の交通事情
+Mujin Programming Challenge 2018 D - うほょじご
+Code Festival Team Relay (Parallel) B - Evergrowing Tree
+天下一プログラマーコンテスト2016予選A B - PackDrop
+京都大学プログラミングコンテスト2015 C - 最短経路
+CODE FESTIVAL 2017 Final D - Zabuton
+第６回日本情報オリンピック 本選（オンライン） E - 最軽量のモビール
+ABC 030 D - へんてこ辞書
+AGC 013 B - Hamiltonish Path
+AGC 035 B - Even Degrees
+ARC 106 D - Powers
+ARC 098 E - Range Minimum Queries
+ABC 155 F - Perils in Parallel
+ABC 091 B - Two Colors Card Game
+TDPC N - 木
+KUPC 2017 E - Treasure Hunt
 AOJ 2736 Longest Shortest Path
 第１０回日本情報オリンピック 予選（オンライン） D - 1年生 (A First Grader)
 ARC 056 B - 駐車場

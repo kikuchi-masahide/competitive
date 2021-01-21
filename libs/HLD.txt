@@ -1,32 +1,33 @@
+template<class T>
 class HLD {
 public:
-	Tree& tree;
-	LL V;
-	VLL depth;   //各頂点が属するHeavy集合の深さ
-	VLL top;   //各頂点が属するHeavy集合の一番上の頂点
-	VLL in;   //各頂点がEuler-Tourでどこにいるか
-	VLL out;   //各頂点の部分木の終わり
-	HLD(Tree& t, LL root = 0):tree(t) {
+	Tree<T>& tree;
+	int V;
+	VI depth;   //各頂点が属するHeavy集合の深さ
+	VI top;   //各頂点が属するHeavy集合の一番上の頂点
+	VI in;   //各頂点がEuler-Tourでどこにいるか
+	VI out;   //各頂点の部分木の終わり
+	HLD(Tree<T>& t, int root = 0) :tree(t) {
 		V = t.size();
-		VLL subtrees(V, -1);
+		VI subtrees(V, -1);
 		//各部分木のサイズを求める
 		{
-			stack<LL> order;
-			stack<LL> hold;
+			stack<int> order;
+			stack<int> hold;
 			hold.push(root);
 			while (!hold.empty()) {
-				LL cur = hold.top();
+				int cur = hold.top();
 				hold.pop();
 				order.push(cur);
-				for (LL ch : tree[cur].childs) {
+				for (int ch : tree[cur].childs) {
 					hold.push(ch);
 				}
 			}
 			while (!order.empty()) {
-				LL cur = order.top();
+				int cur = order.top();
 				order.pop();
 				subtrees[cur] = 1;
-				for (LL& ch : tree[cur].childs) {
+				for (int ch : tree[cur].childs) {
 					subtrees[cur] += subtrees[ch];
 					if (subtrees[ch] > subtrees[tree[cur].childs[0]]) {
 						swap(ch, tree[cur].childs[0]);
@@ -40,12 +41,12 @@ public:
 			out.resize(V);
 			depth.resize(V);
 			top.resize(V);
-			LL cur = root;
-			LL nextid = 0;
+			int cur = root;
+			int nextid = 0;
 			dfs(cur, nextid);
 		}
 	}
-	void dfs(LL cur,LL& nextind) {
+	void dfs(int cur, int& nextind) {
 		in[cur] = nextind++;
 		for (auto ch : tree[cur].childs) {
 			//0番目の子は同じHeavy集合
@@ -62,7 +63,7 @@ public:
 		}
 		out[cur] = nextind - 1;
 	}
-	LL LCA(LL u, LL v) {
+	int LCA(int u, int v) {
 		//uの属するnode.depth >= vの属するnode.depthにする
 		if (depth[u] < depth[v]) {
 			swap(u, v);
@@ -78,6 +79,7 @@ public:
 		else return u;
 	}
 };
+
 
 
 
