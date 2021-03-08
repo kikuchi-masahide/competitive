@@ -1,3 +1,6 @@
+「みんなのプロコン 2019」 決勝 オープンコンテスト B - Bonsai Grafting
+ARC 004 C - 平均値太郎の憂鬱 ( The melancholy of Taro Heikinchi )
+ARC 003 C - 暗闇帰り道
 yukicoder No.650 行列木クエリ
 yukicoder No.649 ここでちょっとQK！
 AOJ course Strongly Connected Components

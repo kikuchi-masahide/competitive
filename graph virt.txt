@@ -13,7 +13,6 @@ https://atcoder.jp/contests/mujin-pc-2016/tasks/mujin_pc_2016_c
 https://atcoder.jp/contests/arc003/tasks/arc003_3
 https://atcoder.jp/contests/abc140/tasks/abc140_f
 https://atcoder.jp/contests/code-thanks-festival-2017-open/tasks/code_thanks_festival_2017_h
-https://atcoder.jp/contests/yahoo-procon2019-final-open/tasks/yahoo_procon2019_final_b
 https://atcoder.jp/contests/wupc2019/tasks/wupc2019_c
 https://atcoder.jp/contests/arc026/tasks/arc026_4
 https://atcoder.jp/contests/arc052/tasks/arc052_c

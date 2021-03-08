@@ -84,7 +84,60 @@ void input() {
 void daminput() {
 }
 
+class A {
+public:
+	int id;
+	A(int _id)
+		:id(_id)
+	{
+		cout << "A.const:id=";
+		cout << id << "\n";
+	}
+	~A() {
+		cout << "A.dest:id=" << id << "\n";
+	}
+};
+
+class AA :public A {
+public:
+	AA(int _id)
+		:A(_id)
+	{
+		cout << "AA.const\n";
+	}
+	~AA() {
+		cout << "AA.dest\n";
+	}
+};
+
+template<class T>
+class H {
+public:
+	H(T* _t)
+		:t(_t){
+		cout << "const\n";
+	}
+	H(const H<T>& h) {
+		cout << "copy\n";
+		t = h.t;
+	}
+	template<class U>
+	explicit operator H<U>() const noexcept {
+		cout << "cast:left's id:" << t->id << "\n";
+		return H<U>((U*)t);
+	}
+	H<T>& operator=(const H<T>& h) {
+		cout << "=\n";
+		t = h.t;
+	}
+private:
+	T* t;
+};
+
 void solve() {
+	H<A> h1(new A(0));
+	H<AA> h2(new AA(1));
+	h1 = h2;
 }
 
 void naive() {
