@@ -1,0 +1,93 @@
+class LazySegTree:
+    # instance var.
+    # N: 2の冪になるよう調整した要素数
+    # seg: 実要素
+    # lazy: 更新の必要性
+    # TT((T,T)->T)
+    # MT((M,T,int)->M): intは要素数
+    # MM((M,M)->M)
+    # M1: 作用の単位元
+    # T1: 群の単位元
+    # snum(int): 何回シフトで下段から1に行けるか
+    def __init__(self, init, TT, MT, MM, T1, M1):
+        self.N = 1
+        snum = 0
+        while self.N < len(init):
+            self.N *= 2
+            snum += 1
+        self.T1 = copy.deepcopy(T1)
+        self.M1 = copy.deepcopy(M1)
+        self.seg = [self.T1] * (2 * self.N)
+        self.lazy = [self.M1] * (2 * self.N)
+        self.TT = TT
+        self.MT = MT
+        self.MM = MM
+        for n in range(len(init)):
+            self.seg[self.N + n] = copy.deepcopy(init[n])
+        for n in range(self.N - 1, 0, -1):
+            self.seg[n] = self.TT(self.seg[2 * n], self.seg[2 * n + 1])
+
+    def eval(self, k, l, r):
+        if k >= len(self.seg):
+            return
+        if self.lazy[k] == self.M1:
+            return
+        self.seg[k] = self.MT(self.lazy[k], self.seg[k], r - l + 1)
+        if k < len(self.seg) // 2:
+            self.lazy[2 * k] = self.MM(self.lazy[k], self.lazy[2 * k])
+            self.lazy[2 * k + 1] = self.MM(self.lazy[k], self.lazy[2 + k + 1])
+        self.lazy[k] = self.M1
+
+    def applysub(self, a, b, m, k, l, r):
+        self.eval(k, l, r)
+        if r < a or b < l:
+            return
+        if a <= l and r <= b:
+            self.lazy[k] = self.MM(m, self.lazy[k])
+            self.eval(k, l, r)
+        else:
+            self.applysub(a, b, m, 2 * k, l, (l + r) // 2)
+            self.applysub(a, b, m, 2 * k + 1, (l + r) // 2 + 1, r)
+            self.seg[k] = self.TT(self.seg[2 * k], self.seg[2 * k + 1])
+
+    def apply(self, a: int, b: int, m):
+        self.applysub(a, b, m, 1, 0, len(self.seg) // 2 - 1)
+
+    def getsub(self, a, b, k, l, r):
+        if r < a or b < l:
+            return copy.deepcopy(self.T1)
+        self.eval(k, l, r)
+        if a <= l and r <= b:
+            return self.seg[k]
+        else:
+            return self.TT(self.getsub(a, b, 2 * k, l, (l + r) // 2), self.getsub(a, b, 2 * k + 1, (l + r) // 2 + 1, r))
+
+    def get(self, a: int, b: int):
+        return self.getsub(a, b, 1, 0, len(self.seg) // 2 - 1)
+
+    def set(self, n: int, t):
+        RN = len(self.seg) // 2
+        l = 0
+        r = RN - 1
+        for t in range(self.snum, 0, -1):
+            self.eval((n + RN) >> t, l, r)
+            if ((n + RN) >> (t - 1)) & 1:
+                l = ((l + r) >> 1) + 1
+            else:
+                r = (l + r) >> 1
+        self.eval((n + RN), n, n)
+        self.seg[n + RN] = copy.deepcopy(t)
+        l = n
+        r = n
+        n += RN
+        while (n >> 1) > 0:
+            if n & 1:
+                l = 2 * l - r - 1
+            else:
+                r = 2 * r - l + 1
+            n >>= 1
+            self.eval(n * 2, l, (l + r) >> 1)
+            self.eval(n * 2 + 1, ((l + r) >> 1) + 1, r)
+            self.seg[n] = self.TT(self.seg[2 * n], self.seg[2 * n + 1])
+
+

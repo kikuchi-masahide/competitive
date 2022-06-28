@@ -1,0 +1,65 @@
+class SegTree:
+    # instance var.
+    # seg: 値のリスト
+    # N(int): 2のべき乗に調整した要素数
+    # funcTT: 群の乗算
+    # T1: 単位元
+    # !!!!funcTTは新規オブジェクトを返すこと!!!!
+    def __init__(self, arr, funcTT, T1):
+        N = len(arr)
+        self.N = 1
+        while self.N < N:
+            self.N *= 2
+        self.funcTT = funcTT
+        self.T1 = copy.deepcopy(T1)
+        self.seg = [0] * (2 * self.N)
+        for n in range(N):
+            self.seg[self.N + n] = copy.deepcopy(arr[n])
+        for n in range(self.N + N, 2 * self.N):
+            self.seg[n] = self.T1
+        for n in range(self.N - 1, 0, -1):
+            self.seg[n] = funcTT(self.seg[2 * n], self.seg[2 * n + 1])
+
+    # n番目の要素(0-index)をxに変更(deepcopy)
+    def set(self, n: int, x):
+        self.seg[self.N + n] = copy.deepcopy(x)
+        n = (self.N + n) // 2
+        while n >= 1:
+            self.seg[n] = self.funcTT(self.seg[2 * n], self.seg[2 * n + 1])
+            n //= 2
+
+    # n番目の要素pをp*xに変更
+    def addr(self, n: int, x):
+        self.seg[self.N + n] = self.funcTT(self.seg[self.N + n], x)
+        n = (self.N + n) // 2
+        while n >= 1:
+            self.seg[n] = self.funcTT(self.seg[2 * n], self.seg[2 * n + 1])
+            n //= 2
+
+    # n番目の要素pをx*pに変更
+    def addl(self, n: int, x):
+        self.seg[self.N + n] = self.funcTT(x, self.seg[self.N + n])
+        n = (self.N + n) // 2
+        while n >= 1:
+            self.seg[n] = self.funcTT(self.seg[2 * n], self.seg[2 * n + 1])
+            n //= 2
+
+    # seg[l]*...*seg[r]を返す(0-index)
+    def get(self, l: int, r: int):
+        ansl = self.T1
+        ansr = self.T1
+        r += 1
+        l += self.N
+        r += self.N
+        while l < r:
+            if l & 1:
+                ansl = self.funcTT(ansl, self.seg[l])
+                l += 1
+            if r & 1:
+                r -= 1
+                ansr = self.funcTT(self.seg[r], ansr)
+            l >>= 1
+            r >>= 1
+        return self.funcTT(ansl, ansr)
+
+

@@ -1,0 +1,23 @@
+# スライド最大値を求める
+# 返り値max_idx[n] := [n-K+1,n]の範囲の、aが最大値をとる添え字
+def slide_max_index(a, K):
+    N = len(a)
+    max_idx = [0] * N
+    deq = deque()
+
+    for i in range(0, N):
+        while len(deq) > 0:
+            if deq[0] <= i - K:
+                deq.popleft()
+            else:
+                break
+        while len(deq) > 0:
+            if a[deq[-1]] < a[i]:
+                deq.pop()
+            else:
+                break
+        deq.append(i)
+        max_idx[i] = deq[0]
+    return max_idx
+
+

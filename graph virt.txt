@@ -5,13 +5,11 @@ https://atcoder.jp/contests/joi2007ho/tasks/joi2007ho_d
 https://atcoder.jp/contests/tkppc4-2/tasks/tkppc4_2_b
 https://atcoder.jp/contests/arc029/tasks/arc029_3
 https://atcoder.jp/contests/agc001/tasks/agc001_c
-https://atcoder.jp/contests/mujin-pc-2018/tasks/mujin_pc_2018_e
 https://atcoder.jp/contests/tenka1-2012-qualA/tasks/tenka1_2012_qualA_3
 https://atcoder.jp/contests/tenka1-2016-quala/tasks/tenka1_2016_qualA_c
 https://atcoder.jp/contests/s8pc-4/tasks/s8pc_4_d
 https://atcoder.jp/contests/mujin-pc-2016/tasks/mujin_pc_2016_c
-https://atcoder.jp/contests/arc003/tasks/arc003_3
-https://atcoder.jp/contests/abc140/tasks/abc140_f
+#https://atcoder.jp/contests/abc140/tasks/abc140_f
 https://atcoder.jp/contests/code-thanks-festival-2017-open/tasks/code_thanks_festival_2017_h
 https://atcoder.jp/contests/wupc2019/tasks/wupc2019_c
 https://atcoder.jp/contests/arc026/tasks/arc026_4

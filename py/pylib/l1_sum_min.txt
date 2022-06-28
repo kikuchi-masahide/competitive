@@ -1,0 +1,10 @@
+# 数列a[0],...,a[N-1]に対し、min_{a}\sum abs(a[i]-a)を求める
+# aのソートが必要
+def l1_sum_min(arr) -> int:
+    N = len(arr)
+    a = arr[N//2]
+    ans = 0
+    for n in range(N):
+        ans += abs(arr[n]-a)
+    return ans
+

@@ -1,0 +1,19 @@
+# 返り値res[n] := 頂点startからnまでの最短距離
+# 到達不可能 -> -1
+def dijkstra(g: WeightedGraph, start: int):
+    N = g.N
+    res = [-1] * N
+    res[start] = 0
+    q = [(0, start)]
+    heapq.heapify(q)
+    while len(q) != 0:
+        cost, cur = heapq.heappop(q)
+        if res[cur] != -1 and res[cur] < cost:
+            continue
+        for e in g.edge[cur]:
+            if res[e.t] == -1 or res[e.t] > cost + e.c:
+                res[e.t] = cost + e.c
+                heapq.heappush(q, (res[e.t], e.t))
+    return res
+
+

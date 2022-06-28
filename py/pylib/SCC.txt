@@ -1,0 +1,34 @@
+# 強連結成分分解
+# (上流側の強連結成分の番号が小さくなるように番号付けした配列,分解後のDAGの頂点数)のtupleを返す
+def SCC(g: WeightedGraph):
+    N = g.N
+    scv = [-1] * N
+    bfs1 = []
+    bfscheck = [False] * N
+    for n in range(N):
+        if not bfscheck[n]:
+            sccbfs(g, bfs1, n, bfscheck)
+    grev = WeightedGraph(N)
+    for n in range(N):
+        for e in g.edge[n]:
+            grev.add_edge(e.t, n, 1)
+    next = 0
+    for ordi in range(N - 1, -1, -1):
+        if scv[bfs1[ordi]] != -1:
+            continue
+        q = [bfs1[ordi]]
+        heapq.heapify(q)
+        heapq.heappush(q, bfs1[ordi])
+        scv[bfs1[ordi]] = next
+        while len(q) != 0:
+            cur = heapq.heappop(q)
+            for e in grev.edge[cur]:
+                ch = e.t
+                if scv[ch] != -1:
+                    continue
+                scv[ch] = next
+                heapq.heappush(q, ch)
+        next += 1
+    return (next, scv)
+
+

@@ -18,7 +18,7 @@
 #include <stack>
 #include <iomanip>
 #include <cassert>
-#include <boost/multiprecision/cpp_int.hpp>
+//#include <boost/multiprecision/cpp_int.hpp>
 #include <complex>
 #include <cstdio>
 #include <list>
@@ -33,7 +33,8 @@ const long long MOD = 1e9 + 7;
 const long long INF = 1e18;
 typedef long long LL;
 typedef long double LD;
-typedef boost::multiprecision::cpp_int bigint;
+typedef unsigned long long ULL;
+//typedef boost::multiprecision::cpp_int bigint;
 typedef pair<LL, LL> PLL;
 typedef pair<int, int> PI;
 typedef pair<LD, LL> pdl;
@@ -56,6 +57,30 @@ inline void chmax(T& a, T b) {
 	a = max(a, b);
 }
 
+//y/xÇÃfloorÇãÅÇﬂÇÈ
+LL floor_(LL y, LL x) {
+	if (x < 0) {
+		x *= -1;
+		y *= -1;
+	}
+	if (y >= 0) {
+		return y / x;
+	}
+	else {
+		if ((-y) % x == 0) {
+			return y / x;
+		}
+		else {
+			return -((-y) / x) - 1;
+		}
+	}
+}
+
+inline LL mod(LL a, LL m) {
+	LL res = a % m;
+	return res >= 0 ? res : res + m;
+}
+
 void input();
 void solve();
 
@@ -67,6 +92,7 @@ void outputinput();
 int main() {
 	std::cin.tie(0);
 	std::ios::sync_with_stdio(false);
+	cout << fixed << setprecision(12);
 	input();
 	//daminput();
 	solve();
@@ -84,60 +110,7 @@ void input() {
 void daminput() {
 }
 
-class A {
-public:
-	int id;
-	A(int _id)
-		:id(_id)
-	{
-		cout << "A.const:id=";
-		cout << id << "\n";
-	}
-	~A() {
-		cout << "A.dest:id=" << id << "\n";
-	}
-};
-
-class AA :public A {
-public:
-	AA(int _id)
-		:A(_id)
-	{
-		cout << "AA.const\n";
-	}
-	~AA() {
-		cout << "AA.dest\n";
-	}
-};
-
-template<class T>
-class H {
-public:
-	H(T* _t)
-		:t(_t){
-		cout << "const\n";
-	}
-	H(const H<T>& h) {
-		cout << "copy\n";
-		t = h.t;
-	}
-	template<class U>
-	explicit operator H<U>() const noexcept {
-		cout << "cast:left's id:" << t->id << "\n";
-		return H<U>((U*)t);
-	}
-	H<T>& operator=(const H<T>& h) {
-		cout << "=\n";
-		t = h.t;
-	}
-private:
-	T* t;
-};
-
 void solve() {
-	H<A> h1(new A(0));
-	H<AA> h2(new AA(1));
-	h1 = h2;
 }
 
 void naive() {
