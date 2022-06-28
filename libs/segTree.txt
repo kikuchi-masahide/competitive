@@ -2,27 +2,34 @@
 //require Monoid
 template<class T>
 class Segtree {
-private:
+public:
 	vector<T> seg;
-	LL RN;
+	int RN;
 	typedef function<T(T, T)> TT;
 	TT f;
 	T te;
-public:
-	Segtree(LL N, TT _f, T e) :te(e) {
+	Segtree(LL N, TT _f, T e) {
+		build(N, _f, e);
+	}
+	Segtree(vector<T>& V, TT _f, T e) {
+		build(V, _f, e);
+	}
+	void build(int N, TT _f, T e) {
+		te = e;
 		RN = 1;
 		while (RN < N)RN *= 2;
-		seg.resize(2 * RN, te);
+		seg.assign(2 * RN, te);
 		f = _f;
 	}
-	Segtree(vector<T>& V, TT _f, T e) :te(e) {
-		LL N = V.size();
+	void build(vector<T>& V, TT _f, T e) {
+		te = e;
+		int N = V.size();
 		RN = 1;
 		while (RN < N)RN *= 2;
 		seg.resize(2 * RN, te);
 		f = _f;
-		for (LL n = 0; n < N; n++) seg[RN + n] = V[n];
-		for (LL k = RN - 1; k >= 1; k--) {
+		for (int n = 0; n < N; n++) seg[RN + n] = V[n];
+		for (int k = RN - 1; k >= 1; k--) {
 			seg[k] = f(seg[2 * k], seg[2 * k + 1]);
 		}
 	}
@@ -82,6 +89,103 @@ public:
 	}
 };
 
+//sum[l,s] < x <= sum[l,e]なる最大のe
+//Tに比較演算子が定義されsegの要素が非負であるとき有効
+template<class T>
+int upper_bound(Segtree<T>& seg, int l, T x) {
+	//[l,r]を表す区間全体
+	int r = seg.RN;
+	l += seg.RN;
+	r += seg.RN;
+	deque<int> req;
+	while (l < r) {
+		if (l & 1) {
+			req.push_front(l++);
+		}
+		if (r & 1) {
+			req.push_back(--r);
+		}
+		l >>= 1;
+		r >>= 1;
+	}
+	T sum = seg.te;
+	//seg[req.front()]まで足すと和がx以上になるようにする
+	while (!req.empty()) {
+		int c = req.front();
+		if (seg.f(sum,seg.seg[c]) >= x) {
+			break;
+		}
+		sum = seg.f(sum, seg.seg[c]);
+		req.pop_front();
+	}
+	if (req.empty()) {
+		return seg.RN;
+	}
+	//seg.seg[req.front()]全体を足すとx以上になるので子を探す
+	int c = req.front();
+	while (c < seg.RN) {
+		//左の子全体を足すとx以上になる
+		if (seg.f(sum, seg.seg[c << 1]) >= x) {
+			c <<= 1;
+		}
+		else {
+			sum = seg.f(sum, seg.seg[c << 1]);
+			(c <<= 1) |= 1;
+		}
+	}
+	return c - seg.RN;
+}
+
+//sum[l,s] <= x < sum[l,e]なるe
+//Tに比較演算子が定義されsegの要素が非負であるとき有効
+template<class T>
+int lower_bound(Segtree<T>& seg, int l, T x) {
+	//[l.r]を表す区間全体
+	int r = seg.RN;
+	deque<int> req;
+	while (l < r) {
+		if (l & 1) {
+			req.push_front(l++);
+		}
+		if (r & 1) {
+			req.push_back(--r);
+		}
+		l >>= 1;
+		r >>= 1;
+	}
+	T sum = seg.te;
+	//seg[req.front()]まで足すと和がxより大きくなるようにする
+	while (!req.empty()) {
+		int c = req.front();
+		if (seg.f(sum, seg.seg[c]) > x) {
+			break;
+		}
+		sum = seg.f(sum, seg.seg[c]);
+		req.pop_front();
+	}
+	if (req.empty()) {
+		return seg.RN;
+	}
+	//seg.seg[req.front()]全体を足すとxより大きくなるので子を探す
+	int c = req.front();
+	while (c < seg.RN) {
+		//左の子全体を足すとxより大きくなる
+		if (seg.f(sum, seg.seg[c << 1]) > x) {
+			c <<= 1;
+		}
+		else {
+			sum = seg.f(sum, seg.seg[c << 1]);
+			(c <<= 1) &= 1;
+		}
+	}
+	return c;
+}
+
+//seg[n]をnの個数と考え、小さい方からk番目(1-indexed)の値を返す
+//(sum[0,s] < k <= sum[0,e]なるe)
+int getkthnumber(Segtree<LL>& seg, LL k) {
+	return upper_bound(seg, 0, k);
+}
 
 ####################
 template<class T>

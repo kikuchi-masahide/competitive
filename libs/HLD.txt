@@ -27,7 +27,7 @@ public:
 				int cur = order.top();
 				order.pop();
 				subtrees[cur] = 1;
-				for (int ch : tree[cur].childs) {
+				for (int& ch : tree[cur].childs) {
 					subtrees[cur] += subtrees[ch];
 					if (subtrees[ch] > subtrees[tree[cur].childs[0]]) {
 						swap(ch, tree[cur].childs[0]);

@@ -8,26 +8,27 @@ public:
 	static ULL base;
 	static const ULL POS = HMOD * ((1ULL << 3) - 1);
 	static vector<ULL> powmemo;
+	static const int powmemo_maxlen = 2000000;
 	vector<HASH> hash;   //•”•ª—ñ[0,n)‚ÌƒnƒbƒVƒ…‚ğ‚Â
 	//•¶š—ñS,time‰ñŒJ‚è•Ô‚µ
-	RollingHash(vector<LL>& S,LL time = 1) {
+	RollingHash(vector<LL>& S, LL time = 1) {
 		LL N = S.size();
 		if (base == 0) {
 			random_device rnd;
 			mt19937 mt(rnd());
 			uniform_int_distribution<ULL> rand(129, HMOD - 1);
 			RollingHash::base = rand(mt);
-			powmemo.resize(500000, 1);
-			for (LL n = 1; n < 500000; n++) {
+			powmemo.resize(powmemo_maxlen, 1);
+			for (LL n = 1; n < powmemo_maxlen; n++) {
 				powmemo[n] = mod(Mul(powmemo[n - 1], base));
 			}
 		}
-		hash.resize(N*time);
+		hash.resize(N * time);
 		hash[0] = S[0];
 		for (LL t = 0; t < time; t++) {
 			for (LL n = 0; n < N; n++) {
 				if (t == 0 && n == 0)continue;
-				hash[t*N+n] = mod(Mul(hash[t*N+n - 1], base) + S[n]);
+				hash[t * N + n] = mod(Mul(hash[t * N + n - 1], base) + S[n]);
 			}
 		}
 	}
@@ -65,3 +66,4 @@ public:
 };
 ULL RollingHash::base = 0;
 vector<ULL> RollingHash::powmemo = vector<ULL>();
+

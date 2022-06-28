@@ -1,0 +1,32 @@
+//()の文字列Sを木に分解する
+//S:分解する矛盾がない文字列
+//T:木の保存先(根はSを囲む架空の()に対応する頂点)
+//lr:頂点T[n]の(、)の位置
+void BracketsTree(string& S, Tree<int>& T, vector<PI>& lr)
+{
+	int slen = S.size();
+	T.resize(slen / 2 + 1);
+	lr.resize(slen / 2 + 1, PI(-1, slen));
+	//(の位置、nodeid
+	stack<PI> st;
+	int nextnodeid = 1;
+	int p = 0;
+	for (int n = 0; n < slen; n++)
+	{
+		if (S[n] == '(')
+		{
+			T[nextnodeid].parent = p;
+			T[nextnodeid].cost = 1;
+			T[p].childs.push_back(nextnodeid);
+			p = nextnodeid;
+			st.push(PI(n, nextnodeid++));
+		}
+		else {
+			int l = st.top().first;
+			int node = st.top().second;
+			lr[node] = PI(l, n);
+			p = T[node].parent;
+			st.pop();
+		}
+	}
+}

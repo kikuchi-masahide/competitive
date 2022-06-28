@@ -1,0 +1,59 @@
+//区間I_0=[l[0],r[0]),...,I_{N-1}=[l[N-1],r[N-1])を受け取り、以下のようにx_nを選べるか計算する
+//・l[n]<=x_n<r[n]
+//・相異なるi,jに対しx_i != x_j
+//以上の条件を満たすことが可能な場合trueを返し、res[n]にx_nを保存する
+//不可能な場合falseを返す。
+//O(NlogN)
+bool LinearSectionMatching(vector<PI>& secs, VI res)
+{
+	int N = secs.size();
+	res.resize(N,0);
+	VI order(N);
+	for (int n = 0; n < N; n++)
+	{
+		order[n] = n;
+	}
+	sort(order.begin(), order.end(), [&](int a, int b) {
+		if (secs[a].first != secs[b].first)
+		{
+			return secs[a].first < secs[b].first;
+		}
+		return secs[a].second < secs[b].second;
+	});
+	pqueue<int> items([&](int a, int b) {
+		return secs[a].second > secs[b].second;
+	});
+	int index = 0;
+	bool ret = true;
+	int n = 0;
+	while (true)
+	{
+		if (n == N && items.empty())
+		{
+			break;
+		}
+		if (items.empty())
+		{
+			index = secs[order[n]].first;
+		}
+		while (n < N)
+		{
+			if (index ==secs[order[n]].first)
+			{
+				items.push(order[n++]);
+			}
+			else {
+				break;
+			}
+		}
+		int p = items.top();
+		items.pop();
+		if (secs[p].second <= index)
+		{
+			ret = false;
+			break;
+		}
+		res[p] = index++;
+	}
+	return ret;
+}

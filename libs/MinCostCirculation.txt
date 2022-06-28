@@ -1,0 +1,67 @@
+//!!!!! 負辺に流すだけ流してても、もともと負閉路が存在してたらダイクストラではまずいっぽい(なんで?)
+//SCCとかで負閉路を消しても問題ない場合は消しておくのが無難
+template<class F,class C>
+class MinCostCirculation {
+public:
+	using Edge = MinCFEdge<F, C>;
+	MinCostCirculation(int v):V(v),primal(v+2),padding(0){
+		st.resize(v, F(0));
+	};
+	//追加した辺、その逆辺の参照を返す
+	//capmin:最小流量
+	//capmax:最大流量
+	pair<Edge& const, Edge& const> AddEdge(int from, int to, F capmin,F capmax, C cost) {
+		if (cost >= 0) {
+			st[from] -= capmin;
+			st[to] += capmin;
+			padding += cost * capmin;
+			return primal.AddEdge(from, to, capmax - capmin, cost);
+		}
+		else {
+			st[from] -= capmax;
+			st[to] += capmax;
+			padding += cost * capmax;
+			auto res = primal.AddEdge(to, from, capmax - capmin, -cost);
+			return pair<Edge& const, Edge& const>(res.second, res.first);
+		}
+	}
+	//この点にsupの量の供給・湧き出しを追加する(負ならば需要・引き込み)
+	void AddSupply(int n, F sup) {
+		st[n] += sup;
+	}
+	//最小コストを求める(返り値は(最小コスト、可能か否か))
+	pair<C, bool> min_cost_circulation() {
+		//Sから供給点、需要点からTへ
+		int S = V;
+		int T = V + 1;
+		F flow = 0;
+		for (int v = 0; v < V; v++) {
+			if (st[v] > 0) {
+				flow += st[v];
+				primal.AddEdge(S, v, st[v], 0);
+			}
+			else {
+				primal.AddEdge(v, T, -st[v], 0);
+			}
+		}
+		auto res = primal.min_cost_flow(S, T, flow);
+		if (res.second == false) {
+			return pair<C, bool>(0, false);
+		}
+		else {
+			return pair<C, bool>(res.first + padding, true);
+		}
+	}
+private:
+	int V;
+	//0~V-1:頂点
+	//V:超頂点(source)
+	//V+1:超頂点(target)
+	PrimalDual<F, C> primal;
+	//各点の供給量・需要量
+	vector<F> st;
+	//あらかじめ流した分のコスト
+	C padding;
+};
+
+//ref:https://snuke.hatenablog.com/entry/2017/06/07/115821

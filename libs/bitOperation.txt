@@ -1,48 +1,125 @@
-cout << bitset<8>(A) << "," << bitset<8>(B) << endl;
-x = (v >> N) & 1;   //vのNビット目のビット値を取得する
-v |= (1 << N);   //Nビット目を1にする
-v &= ~(1 << N);   //Nビット目を0にする
-v ^= (1 << N);   //Nビット目を反転する
-v = ~v;   //全てのビットの反転
-v <<= N;   //2のN乗倍する
-v >>= N;   //2のN乗で割る
-v = -v & v;   //最も下位に1が立っているビットのみ残した値を抽出する
-//1になっている一番上のけたを求める
-v = v & 0xFFFF0000 ? v & 0xFFFF0000 : v;
-v = v & 0xFF00FF00 ? v & 0xFF00FF00 : v;
-v = v & 0xF0F0F0F0 ? v & 0xF0F0F0F0 : v;
-v = v & 0xCCCCCCCC ? v & 0xCCCCCCCC : v;
-v = v & 0xAAAAAAAA ? v & 0xAAAAAAAA : v;
-//unsigned int vのビット列をぎゃくてんする
-v = ((v & 0x55555555) << 1) | ((v & 0xAAAAAAAA) >> 1);
-v = ((v & 0x33333333) << 2) | ((v & 0xCCCCCCCC) >> 2);
-v = ((v & 0x0F0F0F0F) << 4) | ((v & 0xF0F0F0F0) >> 4);
-v = ((v & 0x00FF00FF) << 8) | ((v & 0xFF00FF00) >> 8);
-v = (v << 16) | (v >> 16);
-//unsigned int vの1になっているビットの数を数える
-v = (v & 0x55555555) + ((v & 0xAAAAAAAA) >> 1);
-v = (v & 0x33333333) + ((v & 0xCCCCCCCC) >> 2);
-v = (v & 0x0F0F0F0F) + ((v & 0xF0F0F0F0) >> 4);
-v = (v & 0x00FF00FF) + ((v & 0xFF00FF00) >> 8);
-v = (v & 0x0000FFFF) + ((v & 0xFFFF0000) >> 16);
-//値を交換する
-a = a ^ b;
-b = a ^ b;
-a = a ^ b;
-//ある自然数集合Sの部分集合を降順に列挙
-int sub = S;
-do {
-	...
-	sub = (sub - 1) & S;
-} while (sub != S);
-//集合{0,1,...,n-1}からサイズkの部分集合を昇順に取り出す
-int comb = (1 << k) - 1;
-while (comb < 1 << n) {
-	...
-	int x = comb & -comb;
-	int y = comb + x;
-	comb = ((comb & ~y) / x >> 1) | y;
+//cout << bitset<8>(A) << "," << bitset<8>(B) << endl;
+//x = (v >> N) & 1;   //vのNビット目のビット値を取得する
+//v |= (1 << N);   //Nビット目を1にする
+//v &= ~(1 << N);   //Nビット目を0にする
+//v ^= (1 << N);   //Nビット目を反転する
+//v = ~v;   //全てのビットの反転
+//v <<= N;   //2のN乗倍する
+//v >>= N;   //2のN乗で割る
+//最も下位の1が立っているビットのみ残した値を抽出する
+unsigned int ExtractLower1Bit(unsigned int v)
+{
+	return -(int)v & v;
 }
+
+//最も下位の1が立っているビットのみ残した値を抽出する
+ULL ExtractLower1Bit(ULL v)
+{
+	return -(LL)v & v;
+}
+
+//最も上位の1が立っているビットのみ残した値を抽出する
+unsigned int ExtractHigher1Bit(unsigned int v)
+{
+	v = v & 0xFFFF0000 ? v & 0xFFFF0000 : v;
+	v = v & 0xFF00FF00 ? v & 0xFF00FF00 : v;
+	v = v & 0xF0F0F0F0 ? v & 0xF0F0F0F0 : v;
+	v = v & 0xCCCCCCCC ? v & 0xCCCCCCCC : v;
+	v = v & 0xAAAAAAAA ? v & 0xAAAAAAAA : v;
+	return v;
+}
+
+//最も上位の1が立っているビットのみ残した値を抽出する
+ULL ExtractHigher1Bit(ULL v)
+{
+	v = v & 0xFFFFFFFF00000000 ? v & 0xFFFFFFFF00000000 : v;
+	v = v & 0xFFFF0000FFFF0000 ? v & 0xFFFF0000FFFF0000 : v;
+	v = v & 0xFF00FF00FF00FF00 ? v & 0xFF00FF00FF00FF00 : v;
+	v = v & 0xF0F0F0F0F0F0F0F0 ? v & 0xF0F0F0F0F0F0F0F0 : v;
+	v = v & 0xCCCCCCCCCCCCCCCC ? v & 0xCCCCCCCCCCCCCCCC : v;
+	v = v & 0xAAAAAAAAAAAAAAAA ? v & 0xAAAAAAAAAAAAAAAA : v;
+	return v;
+}
+
+
+//ビット列を逆転する
+unsigned int InverseBit(unsigned int v) {
+	v = ((v & 0x55555555) << 1) | ((v & 0xAAAAAAAA) >> 1);
+	v = ((v & 0x33333333) << 2) | ((v & 0xCCCCCCCC) >> 2);
+	v = ((v & 0x0F0F0F0F) << 4) | ((v & 0xF0F0F0F0) >> 4);
+	v = ((v & 0x00FF00FF) << 8) | ((v & 0xFF00FF00) >> 8);
+	v = (v << 16) | (v >> 16);
+	return v;
+}
+
+//ビット列を逆転する
+ULL InverseBit(ULL v)
+{
+	v = ((v & 0x5555555555555555) << 1)    | ((v & 0xAAAAAAAAAAAAAAAA) >> 1 );
+	v = ((v & 0x3333333333333333) << 2)    | ((v & 0xCCCCCCCCCCCCCCCC) >> 2 );
+	v = ((v & 0x0F0F0F0F0F0F0F0F) << 4)    | ((v & 0xF0F0F0F0F0F0F0F0) >> 4 );
+	v = ((v & 0x00FF00FF00FF00FF) << 8)    | ((v & 0xFF00FF00FF00FF00) >> 8 );
+	v = ((v & 0x0000FFFF0000FFFF) << 16 )  | ((v & 0xFFFF0000FFFF0000) >> 16);
+	v = (v << 32) | (v >> 32);
+	return v;
+}
+
+//1になっているビットの数を数える
+unsigned int CountStandingBit(unsigned int v)
+{
+	v = (v & 0x55555555) + ((v & 0xAAAAAAAA) >> 1);
+	v = (v & 0x33333333) + ((v & 0xCCCCCCCC) >> 2);
+	v = (v & 0x0F0F0F0F) + ((v & 0xF0F0F0F0) >> 4);
+	v = (v & 0x00FF00FF) + ((v & 0xFF00FF00) >> 8);
+	v = (v & 0x0000FFFF) + ((v & 0xFFFF0000) >> 16);
+	return v;
+}
+
+//1になっているビットの数を数える
+unsigned int CountStandingBit(ULL v)
+{
+	v = (v & 0x5555555555555555) + ((v & 0xAAAAAAAAAAAAAAAA) >> 1 );
+	v = (v & 0x3333333333333333) + ((v & 0xCCCCCCCCCCCCCCCC) >> 2 );
+	v = (v & 0x0F0F0F0F0F0F0F0F) + ((v & 0xF0F0F0F0F0F0F0F0) >> 4 );
+	v = (v & 0x00FF00FF00FF00FF) + ((v & 0xFF00FF00FF00FF00) >> 8 );
+	v = (v & 0x0000FFFF0000FFFF) + ((v & 0xFFFF0000FFFF0000) >> 16);
+	v = (v & 0x00000000FFFFFFFF) + ((v & 0xFFFFFFFF00000000) >> 32);
+	return v;
+}
+
+//(ビット列として表した)自然数集合Sの部分集合を降順に列挙
+void AllBitSubsetOf(unsigned int S, vector<unsigned int>& set)
+{
+	unsigned int sub = S;
+	do {
+		set.push_back(sub);
+		sub = (sub - 1) & S;
+	} while (sub != S);
+}
+
+//(ビット列として表した)自然数集合Sの部分集合を降順に列挙
+void AllBitSubsetOf(ULL S, vector<ULL>& set)
+{
+	ULL sub = S;
+	do {
+		set.push_back(sub);
+		sub = (sub - 1) & S;
+	} while (sub != S);
+}
+
+//集合{0,1,...,n-1}からサイズkの部分集合を昇順に取り出す
+void AllSizedBitSubset(unsigned int n, unsigned int k, vector<LL>& set)
+{
+	LL comb = ((LL)1 << k) - 1;
+	while (comb < ((LL)1 << n))
+	{
+		set.push_back(comb);
+		LL x = comb & (-comb);
+		LL y = comb + x;
+		comb = ((comb & ~y) / x >> 1) | y;
+	}
+}
+
 //Xorshift
 unsigned int Xorshift() {
 	static unsigned int tx = 123456789, ty = 362436069, tz = 521288629, tw = 88675123;

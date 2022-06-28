@@ -59,7 +59,7 @@ int LCA(Tree<T>& tree, VVI& doubling,VI& depth, int u, int v) {
 	if (depth[u] > depth[v])swap(u, v);
 	v = goRoot(tree, doubling, v, depth[v] - depth[u]);
 	//goRoot(u,s) != goRoot(v,s),goRoot(u,e) == goRoot(v,e)
-	int s = -1, e = N;
+	int s = -1, e = tree.size();
 	while (e - s > 1) {
 		int m = (e + s) / 2;
 		if (goRoot(tree, doubling, u, m) != goRoot(tree, doubling, v, m))s = m;

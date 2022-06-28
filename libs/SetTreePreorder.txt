@@ -1,0 +1,21 @@
+template<class T>
+void SetTreePreorder(int root, Tree<T>& tree, VI& order)
+{
+	int N = tree.size();
+	order.resize(N);
+	int next = 0;
+	stack<int> st;
+	st.push(root);
+	while (!st.empty())
+	{
+		int cur = st.top();
+		st.pop();
+		order[cur] = next;
+		next++;
+		for (int ch : tree[cur].childs)
+		{
+			st.push(ch);
+		}
+	}
+}
+

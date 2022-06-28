@@ -1,85 +1,42 @@
-//class TotalOrder {
-//public:
-//	static const TotalOrder maximum;
-//};
-//bool operator<(TotalOrder a, TotalOrder b) {};
-
-//each node of skew heap or a skew heap
-template<class TO>
-class node_SH {
+template<class T>
+struct SkewHeap {
 public:
-	TO val;
-	node_SH<TO>* ch[2];
-	static int node_count;
-	static const int MAX_N = 4000000 + 10;
-	node_SH<TO>* par;
-	void* operator new(std::size_t) {
-		static node_SH<TO> pool[MAX_N];
-		return pool + node_count++;
+	struct Node {
+		T key;
+		Node* l;
+		Node* r;
+	};
+	Node* merge(Node* x, Node* y) {
+		if (!x || !y) {
+			return x ? x : y;
+		}
+		if (x->key > y->key) {
+			swap(x, y);
+		}
+		x->r = merge(y, x->r);
+		swap(x->l, x->r);
+		return x;
 	}
-	static void delete_all() {
-		node_count = 0;
+	void push(Node*& root, const T& key) {
+		root = merge(root, new Node({ key,nullptr,nullptr }));
 	}
-	node_SH(TO v) {
-		val = v;
-		ch[0] = nullptr;
-		ch[1] = nullptr;
-		par = nullptr;
+	T top(Node* root) {
+		return root->key;
 	}
-	node_SH() {
-		val = TO::maximum;
-		ch[0] = nullptr;
-		ch[1] = nullptr;
-		par = nullptr;
+	T pop(Node*& root) {
+		T top = root->key;
+		auto* temp = root;
+		root = merge(root->l, root->r);
+		delete temp;
+		return top;
+	}
+	bool empty(Node* root) const {
+		return !root;
+	}
+	Node* makeheap() {
+		return nullptr;
 	}
 };
-template<class TO>
-int node_SH<TO>::node_count = 0;
 
-//meld(marge) two skew heaps
-//input a,b:heaps to be marged together
-template<class TO>
-node_SH<TO>* meld(node_SH<TO>* a, node_SH<TO>* b) {
-	if (a == nullptr)return b;
-	if (b == nullptr)return a;
-	if (b->val < a->val)swap(a, b);
-	//meld b into a's right child
-	a->ch[1] = meld(a->ch[1], b);
-	a->ch[1]->par = a;
-	swap(a->ch[0], a->ch[1]);
-	return a;
-}
-
-//erase a node from its skew heap
-//input node:the node to be erased from its heap
-template<class TO>
-void erase(node_SH<TO>* node) {
-	if (node->ch[0])node->ch[0]->par = nullptr;
-	if (node->ch[1])node->ch[1]->par = nullptr;
-	node_SH<TO>* newchild = meld(node->ch[0], node->ch[1]);
-	node->ch[0] = nullptr;
-	node->ch[1] = nullptr;
-	if (node->par) {
-		if (!node->par->ch[0]) {
-			node->par->ch[0] = newchild;
-		}
-		else {
-			node->par->ch[1] = newchild;
-		}
-		if (newchild)newchild->par = node->par;
-		node->par = nullptr;
-	}
-}
-
-//pop the minimum node from a skew heap
-//input heap:target heap
-//return:the heap without minimum node
-template<class TO>
-node_SH<TO>* pop(node_SH<TO>* heap) {
-	if (heap->ch[0])heap->ch[0]->par = nullptr;
-	if (heap->ch[1])heap->ch[1]->par = nullptr;
-	node_SH<TO>* newchild = meld(heap->ch[0], heap->ch[1]);
-	heap->ch[0] = nullptr;
-	heap->ch[1] = nullptr;
-	return newchild;
-}
+//ref:https://ei1333.github.io/luzhiled/snippets/dp/hu-tucker.html
+//遅延評価を除いた

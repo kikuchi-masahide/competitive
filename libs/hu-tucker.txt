@@ -1,0 +1,95 @@
+//need SkewHeap
+//最適二分木(葉のコストvs[i]が与えられたとき、sum of vs[i]*depth[i]を最小化する順序付二分木)の重みを計算する
+//(vsは変更されることに注意)
+template<class T>
+T hu_tucker(vector<T>& vs, T INF = numeric_limits<T>::max()/2) {
+	int N = vs.size();
+	SkewHeap<T> heap;
+	//iがexternalのとき、iの右のinternalな要素たちのヒープ
+	vector<typename SkewHeap<T>::Node*> hs(N - 1,heap.makeheap());
+	//iに最も近い左右のexternal
+	VI ls(N), rs(N);
+	//externalな要素iとその1つ右のexternalな要素の間の要素組で、最小の重み
+	vector<T> cs(N - 1);
+	//重み和、組の左の要素より左の、最右のexternal
+	using pi = pair<T, int>;
+	priority_queue<pi, vector<pi>, greater<pi>> que;
+	for (int i = 0; i < N - 1; i++) {
+		ls[i] = i - 1;
+		rs[i] = i + 1;
+		cs[i] = vs[i] + vs[i + 1];
+		que.emplace(cs[i], i);
+	}
+	T ret = 0;
+	for (int k = 0; k + 1 < N; k++) {
+		T c;
+		int i;
+		//過去に追加した今の状況に合わない最小値を削除
+		do {
+			tie(c, i) = que.top();
+			que.pop();
+		} while (rs[i] < 0 || cs[i] != c);
+		//この要素組の、左の要素がexternalならばml=true
+		bool ml = false;
+		//この要素組の、右の要素がexternalならばmr=true
+		bool mr = false;
+		//重み最小の組が(i,(iの右のinternalな要素のどれか))の場合
+		if (!heap.empty(hs[i]) && vs[i] +heap.top(hs[i]) == c) {
+			ml = true;
+			heap.pop(hs[i]);
+		}
+		//重み最小の組が(i,(iの1つ右のexternalな要素))の場合
+		else if (vs[i] + vs[rs[i]] == c) {
+			ml = mr = true;
+		}
+		else {
+			auto top = heap.pop(hs[i]);
+			//internalな要素から2つ取る場合
+			if (!heap.empty(hs[i]) && heap.top(hs[i]) + top == c) {
+				heap.pop(hs[i]);
+			}
+			else {
+				mr = true;
+			}
+		}
+		ret += c;
+		heap.push(hs[i], c);
+		//vs[i]がINFであるとき、その要素はinternal
+		if (ml) {
+			vs[i] = INF;
+		}
+		if (mr) {
+			vs[rs[i]] = INF;
+		}
+		//左がexternalな要素で、それが全体で最左のexternalでない場合
+		if (ml && i > 0) {
+			//その左のinternalたちと自分をmerge
+			int j = ls[i];
+			hs[j] = heap.merge(hs[j], hs[i]);
+			rs[j] = rs[i];
+			rs[i] = -1;
+			ls[rs[j]] = j;
+			i = j;
+		}
+		if (mr && rs[i] + 1 < N) {
+			int j = rs[i];
+			hs[i] = heap.merge(hs[i], hs[j]);
+			rs[i] = rs[j];
+			rs[j] = -1;
+			ls[rs[i]] = i;
+		}
+		cs[i] = vs[i] + vs[rs[i]];
+		if (!heap.empty(hs[i])) {
+			T top = heap.pop(hs[i]);
+			chmin(cs[i], min(vs[i], vs[rs[i]]) + top);
+			if (!heap.empty(hs[i])) {
+				chmin(cs[i], top + heap.top(hs[i]));
+			}
+			heap.push(hs[i], top);
+		}
+		que.emplace(cs[i], i);
+	}
+	return ret;
+}
+//ref:https://scholarworks.rit.edu/theses/6484/
+//https://ei1333.github.io/luzhiled/snippets/dp/hu-tucker.html

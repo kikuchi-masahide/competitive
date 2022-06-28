@@ -3,22 +3,22 @@ class Matrix {
 public:
 	vector<vector<K>> v;
 	int H, W;
-	Matrix(int h,int w):H(h),W(w){
-		v.resize(h, vector<K>(w,K(0)));
+	Matrix(int h, int w) :H(h), W(w) {
+		v.resize(h, vector<K>(w, K(0)));
 	}
 	Matrix(vector<K>& v0) {
 		H = v0.size();
 		W = 1;
-		v.resize(H,vector<K>(1,T(0)));
+		v.resize(H, vector<K>(1, K(0)));
 		for (int y = 0; y < H; y++) {
 			v[y][0] = v0[y];
 		}
 	}
-	Matrix():H(0),W(0) {}
+	Matrix() :H(0), W(0) {}
 	void resize(int h, int w) {
 		H = h;
 		W = w;
-		v.resize(H, vector<K>(W,K(0)));
+		v.resize(H, vector<K>(W, K(0)));
 	}
 	vector<K>& operator[](int y) {
 		return v[y];
@@ -31,11 +31,13 @@ public:
 	Matrix<K>& operator*=(Matrix<K>& B);
 	Matrix<K>& operator*=(K k);
 	Matrix<K>& operator/=(K k);
+	template<class T>
+	friend ostream& operator<<(ostream& st, const Matrix<T>& m);
 };
 
 template<class K>
 Matrix<K> operator+(Matrix<K>& A, Matrix<K>& B) {
-	assert(A.H==B.H && A.W==B.W);
+	assert(A.H == B.H && A.W == B.W);
 	int H = A.H;
 	int W = A.W;
 	Matrix<K> C(H, W);
@@ -91,7 +93,7 @@ Matrix<K> operator*(Matrix<K>& A, K k) {
 }
 
 template<class K>
-Matrix<K> operator*(K k,Matrix<K>& A) {
+Matrix<K> operator*(K k, Matrix<K>& A) {
 	int H = A.H;
 	int W = A.W;
 	Matrix<K> C(H, W);
@@ -181,12 +183,26 @@ bool operator!=(Matrix<K>& A, Matrix<K>& B) {
 }
 
 template<class K>
+ostream& operator<<(ostream& st, const Matrix<K>& m)
+{
+	for (int y = 0; y < m.H; y++)
+	{
+		for (int x = 0; x < m.W; x++)
+		{
+			st << m.v[y][x] << " ";
+		}
+		if(y != m.H-1)st << "\n";
+	}
+	return st;
+}
+
+template<class K>
 Matrix<K> pow(Matrix<K>& A, LL p) {
 	assert(A.H == A.W);
 	if (p == 1)return A;
 	Matrix<K> temp = pow(A, p >> 1);
 	temp *= temp;
-	if (p == 1) {
+	if (p % 2 == 1) {
 		temp *= A;
 	}
 	return temp;
@@ -461,3 +477,102 @@ bool SolveLinearEquations(Matrix<K>& A, vector<K>& B, vector<K>& particular) {
 	}
 	return true;
 }
+
+//正則行列Aを，LU分解できるよう行入れ替えしながらLU分解(Aは変更される)
+//L対角要素は1
+//sigma[i] := 変更後のA第i行が，変更前のAの何行目であるか
+//O(N^3)
+template<class T>
+void LUDecomposition(Matrix<T>& A, Matrix<T>& L, Matrix<T>& U, VI& sigma)
+{
+	int N = A.v.size();
+	L.resize(N, N);
+	U.resize(N, N);
+	sigma.resize(N);
+	for (int n = 0; n < N; n++)
+	{
+		sigma[n] = n;
+	}
+	for (int k = 0; k < N; k++)
+	{
+		//Uのk行目を求める
+		//u[k][k] != 0となるよう入れ替え
+		int s = k;
+		while (s < N)
+		{
+			T ukk = A[s][k];
+			for (int t = 0; t < k; t++)
+			{
+				ukk -= L[s][t] * U[t][k];
+			}
+			//u[k][k]!=0となる要素が見つかった
+			if (ukk != T(0))
+			{
+				break;
+			}
+			else {
+				s++;
+			}
+		}
+		if (s != k) {
+			swap(sigma[k], sigma[s]);
+			//AとLの行入れ替え
+			for (int n = 0; n < N; n++)
+			{
+				swap(A[k][n], A[s][n]);
+				swap(L[k][n], L[s][n]);
+			}
+		}
+		L[k][k] = T(1);
+		//U[k][i]を求める
+		for (int i = k; i < N; i++)
+		{
+			U[k][i] = A[k][i];
+			for (int j = 0; j < k; j++)
+			{
+				U[k][i] -= L[k][j] * U[j][i];
+			}
+		}
+		T ukkinv = T(1) / U[k][k];
+		//L[k+1][k]~L[N-1][k]を求める
+		for (int i = k + 1; i < N; i++)
+		{
+			L[i][k] = A[i][k];
+			for (int j = 0; j < k; j++)
+			{
+				L[i][k] -= L[i][j] * U[j][k];
+			}
+			L[i][k] *= ukkinv;
+		}
+	}
+}
+
+//N×N行列AのLU分解が完了した状態で，方程式Ax=yを解く
+template<class T>
+Matrix<T> SolveEquation(Matrix<T>& L, Matrix<T>& U, VI& sigma, Matrix<T>& y)
+{
+	int N = L.v.size();
+	//Lb=y'なるbを求める(y'はyの要素をsigmaで入れ替えたもの)
+	Matrix<T> b(N,1);
+	for (int i = 0; i < N; i++)
+	{
+		b[i][0] = y[sigma[i]][0];
+		for (int t = 0; t < i; t++)
+		{
+			b[i][0] -= L[i][t] * b[t][0];
+		}
+	}
+	//Ux=bなるxを求める
+	Matrix<T> x(N,1);
+	for (int i = N - 1; i >= 0; i--)
+	{
+		x[i][0] = b[i][0];
+		for (int j = i + 1; j < N; j++)
+		{
+			x[i][0] -= U[i][j] * x[j][0];
+		}
+		x[i][0] /= U[i][i];
+	}
+	return x;
+}
+

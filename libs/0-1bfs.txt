@@ -1,0 +1,34 @@
+//辺のコストが0または1の有向グラフにおいて、0-1bfsを行う。
+//O(E)
+void bfs01(WeightedGraph<int>& G, int start, VI& res)
+{
+	int N = G.size();
+	res.resize(N, 1e9);
+	res[start] = 0;
+	//point,cost
+	deque<PI> l;
+	l.push_back(PI(start,0));
+	while (!l.empty())
+	{
+		int point = l.front().first;
+		int cost = l.front().second;
+		l.pop_front();
+		if (res[point] < cost)continue;
+		for (Gedge<int>& e : G[point])
+		{
+			if (res[e.to] <= cost + e.cost)
+			{
+				continue;
+			}
+			if (e.cost == 0)
+			{
+				res[e.to] = cost;
+				l.push_front(PI(e.to,cost));
+			}
+			else {
+				res[e.to] = cost + 1;
+				l.push_back(PI(e.to,cost+1));
+			}
+		}
+	}
+}

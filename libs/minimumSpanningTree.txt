@@ -1,93 +1,33 @@
-//最小全域木クラス版:
-//最小全域木問題(クラスカル法)
-//最小全域木自体と、重み和
-//wGraphに追加する感じで
-//O( ElogV )
-	T minimumSpanningTree() {
-		typedef pair<T, pii> ldii;
-		priority_queue<ldii, vector<ldii>, greater<ldii> >* q;
-		q = new priority_queue<ldii, vector<ldii>, greater<ldii> >;
-		for (int i = 0; i < this->N; i++) {
-			for (auto itr = this->E->at(i).begin(); itr != this->E->at(i).end(); itr++) {
-				q->push(ldii((*itr).second, pii(i, (*itr).first)));
-			}
+//重み付きグラフGを受け取り、最小全域木の重みを返す
+//E:最小全域木に含まれる辺
+//need:UnionFind
+template<class T>
+T minimumSpanningTree(WeightedGraph<T>& G, vector<Gedge<T>>& E)
+{
+	int N = G.size();
+	vector<Gedge<T>> edges;
+	for (int n = 0; n < N; n++)
+	{
+		for (auto& e : G[n])
+		{
+			edges.push_back(e);
 		}
-		wGraph<T>* g = new wGraph<T>(this->N);
-		unionFind* u = new unionFind(this->N);
-		T ans = 0;
-		while (!q->empty()) {
-			ldii e = q->top();
-			q->pop();
-			int s = e.second.first, t = e.second.second;
-			if (u->parent(s) != u->parent(t)) {
-				u->unit(s, t);
-				ans += e.first;
-			}
-		}
-		delete u;
-		delete g;
-		return ans;
 	}
-
-
-//一般版?unionfind必要 ただし無向辺
-int V,E;   //それぞれ頂点数、辺数
-struct edge {
-	int u, v, w;
-};   //無向辺管理のクラス(u,v:頂点、w:重み) この場合、(u,v)と(v,u)両方を登録、みたいなことはない
-vector<edge> Edges;   //辺集合
-
-####################
-
-
-sort(Edges.begin(), Edges.end(), [](edge a, edge b) {return a.w < b.w; });
-int res = 0;   //結果
-unionFind uf(V);
-for (int e = 0; e < E; e++) {
-	if (uf[Edges[e].u] == uf[Edges[e].v])continue;
-	uf.unit(Edges[e].u, Edges[e].v);
-	res += Edges[e].w;
-}
-
-
-
-####################
-Kruscal法(by eiさん)
-struct UnionFind {
-  vector< int > data;
- 
-  UnionFind(int sz) {
-    data.assign(sz, -1);
-  }
- 
-  bool unite(int x, int y) {
-    x = find(x), y = find(y);
-    if(x == y) return (false);
-    if(data[x] > data[y]) swap(x, y);
-    data[x] += data[y];
-    data[y] = x;
-    return (true);
-  }
- 
-  int find(int k) {
-    if(data[k] < 0) return (k);
-    return (data[k] = find(data[k]));
-  }
- 
-  int size(int k) {
-    return (-data[find(k)]);
-  }
-};
-
-template< typename T >
-T kruskal(Edges< T > &edges, int V) {
-  sort(begin(edges), end(edges), [](const edge< T > &a, const edge< T > &b) {
-    return (a.cost < b.cost);
-  });
-  UnionFind tree(V);
-  T ret = 0;
-  for(auto &e : edges) {
-    if(tree.unite(e.src, e.to)) ret += e.cost;
-  }
-  return (ret);
+	sort(edges.begin(), edges.end(), [](Gedge<T>& a, Gedge<T>& b) {
+		return a.cost < b.cost;
+	});
+	unionFind UF(N);
+	T ans = 0;
+	for (Gedge<T>& e : edges)
+	{
+		int s = e.src;
+		int t = e.to;
+		if (UF.parent(s) != UF.parent(t))
+		{
+			ans += e.cost;
+			UF.unit(s, t);
+			E.push_back(e);
+		}
+	}
+	return ans;
 }

@@ -1,0 +1,163 @@
+template<class T>
+class CPSegmentTree {
+public:
+	CPSegmentTree(){}
+	void build(int n, function<T(T, T)> tt, T t0)
+	{
+		TT = tt;
+		T0 = t0;
+		height = 1;
+		//2の累乗化
+		int rn = 1;
+		while (rn < n)
+		{
+			rn *= 2;
+			height++;
+		}
+		N = rn;
+		ar.resize(2 * N - 1, t0);
+		cl.resize(2 * N - 1, -1);
+		cr.resize(2 * N - 1, -1);
+		time.resize(2 * N - 1, 0);
+		for (int n = 0; n < N - 1; n++)
+		{
+			cl[n] = 2 * n + 1;
+			cr[n] = 2 * n + 2;
+		}
+		roots.push_back(0);
+	}
+	void build(vector<T>& ar0, function<T(T, T)> tt, T t0)
+	{
+		TT = tt;
+		T0 = t0;
+		N = ar0.size();
+		int rn = 1;
+		while (rn < N)
+		{
+			rn *= 2;
+			height++;
+		}
+		N = rn;
+		cl.resize(2 * N - 1, -1);
+		cr.resize(2 * N - 1, -1);
+		time.resize(2 * N - 1, 0);
+		for (int n = 0; n < N - 1; n++)
+		{
+			cl[n] = 2 * n + 1;
+			cr[n] = 2 * n + 2;
+		}
+		ar.resize(2 * N - 1, t0);
+		for (int n = 0; n < ar0.size(); n++)
+		{
+			ar[N - 1 + n] = ar0[n];
+		}
+		for (int n = N - 2; n >= 0; n--)
+		{
+			ar[n] = TT(ar[cl[n]], ar[cr[n]]);
+		}
+		roots.push_back(0);
+	}
+	//時間tの木のコピーを作る この木を表す時間を返す
+	//(コピー元の木をこの後いじると壊れる)
+	int copy(int t)
+	{
+		int oldr = roots[t];
+		int newt = roots.size();
+		roots.push_back(ar.size());
+		ar.push_back(ar[oldr]);
+		cl.push_back(cl[oldr]);
+		cr.push_back(cr[oldr]);
+		time.push_back(newt);
+		return newt;
+	}
+	//時間tの頂点nをxに更新
+	void set(int t, int n, T x)
+	{
+		set_node(t, roots[t], 0, N, n, x);
+	}
+	//時刻tにおける、[l,r)の範囲の積を返す
+	T get(int t, int l, int r)
+	{
+		return get_node(l, r, roots[t], 0, N);
+	}
+	//時間tにおける、葉nの値
+	T get(int t, int n)
+	{
+		return get(t, n, n + 1);
+	}
+private:
+	//要素数(2の累乗化済み)
+	int N;
+	//要素
+	vector<T> ar;
+	//左右の子は何か
+	VI cl, cr;
+	//積
+	function<T(T, T)> TT;
+	//単位元
+	T T0;
+	//時刻tにおける根のid(はじめの時刻は0)
+	VI roots;
+	//この木の高さ
+	int height;
+	//各頂点の属する時間
+	VI time;
+	//時間tの頂点pに対する更新処理
+	//範囲[l,r)を持つ
+	//更新処理をした結果の自分の頂点番号を返す(新しく時間tに頂点を登録した場合)
+	int set_node(int t, int p, int l, int r, int n, T x)
+	{
+		//頂点pが時間tの頂点でなければ、新しい頂点を作ったうえで変更
+		if (time[p] != t)
+		{
+			int newp = ar.size();
+			ar.push_back(ar[p]);
+			cl.push_back(cl[p]);
+			cr.push_back(cr[p]);
+			time.push_back(t);
+			p = newp;
+		}
+		//この頂点が頂点n自身の場合
+		if (l == n && r == n + 1)
+		{
+			ar[p] = x;
+			return p;
+		}
+		//左の子は[l,m)、右の子は[m,r)を持つ
+		int m = (r - l) / 2 + l;
+		//頂点nが左の子に含まれる場合
+		if (n < m)
+		{
+			cl[p] = set_node(t, cl[p], l, m, n, x);
+		}
+		//頂点nが右の子に含まれる場合
+		else
+		{
+			cr[p] = set_node(t, cr[p], m, r, n, x);
+		}
+		ar[p] = TT(ar[cl[p]], ar[cr[p]]);
+		return p;
+	}
+	//再帰用 n:=見る頂点、頂点nの表す範囲は[s,e)
+	T get_node(int l, int r, int n, int s, int e)
+	{
+		if (l <= s && e <= r)
+		{
+			return ar[n];
+		}
+		//左の子は[s,m)、右の子は[m,e)を持つ
+		int m = (e - s) / 2 + s;
+		T res = T0;
+		//左の子が[l,r)とかぶる
+		if (r > s && m > l)
+		{
+			res = get_node(l, r, cl[n], s, m);
+		}
+		//右の子が[l,r)とかぶる
+		if (r > m && e > l)
+		{
+			res = TT(res, get_node(l, r, cr[n], m, e));
+		}
+		return res;
+	}
+};

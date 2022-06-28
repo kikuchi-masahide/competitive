@@ -1,0 +1,104 @@
+# unionfind
+# justified
+class union_find:
+    # interface var.
+    # instance var.
+    # p([]): p[n]はnの親を表す
+    # rank([])
+    # N(int): 要素数
+    # check([]): 同値な要素の数
+    def __init__(self, n: int):
+        self.N = n
+        self.p = list(range(0, self.N))
+        self.rank = [0] * self.N
+        self.check = [1] * self.N
+
+    # 要素nの親を返す
+    def parent(self, n: int) -> int:
+        if self.p[n] == n:
+            return n
+        self.p[n] = self.parent(self.p[n])
+        return self.p[n]
+
+    # 要素xの同値類とyの同値類を結合する
+    def unit(self, x: int, y: int):
+        x = self.parent(x)
+        y = self.parent(y)
+        if x == y:
+            return
+        s = self.check[x] + self.check[y]
+        if self.rank[x] < self.rank[y]:
+            self.p[x] = y
+        else:
+            self.p[y] = x
+            if self.rank[x] == self.rank[y]:
+                self.rank[x] += 1
+        self.check[x] = s
+        self.check[y] = s
+
+    # 要素nの同値類のサイズを返す
+    def size(self, n: int) -> int:
+        return self.check[self.parent(n)]
+
+
+class WeightedUnionFind:
+    # instance var.
+    # p: 配列
+    # rank
+    # N(int): 要素数
+    # check: 同値な要素の数
+    # diff_weight: 差分
+    def weight(self, n: int):
+        self.parent(n)
+        return self.diff_weight[n]
+
+    def __init__(self, N: int):
+        self.N = N
+        self.p = list(range(self.N))
+        self.rank = [0] * N
+        self.check = [1] * N
+        self.diff_weight = [0] * N
+
+    # 親要素を返す
+    def parent(self, n: int):
+        if self.p[n] == n:
+            return n
+        par = self.parent(self.p[n])
+        self.diff_weight[n] += self.diff_weight[self.p[n]]
+        self.p[n] = par
+        return par
+
+    # 差分(weight(y)-weight(x))を返す xとyが同じグループであることが必要
+    def diff(self, x: int, y: int) -> int:
+        return self.weight(y) - self.weight(x)
+
+    # weight(y)-weight(x)=wとなるようにマージ 既に同じグループならばFalse
+    def merge(self, x: int, y: int, w):
+        w += self.weight(x)
+        w -= self.weight(y)
+        x = self.parent(x)
+        y = self.parent(y)
+        if x == y:
+            return False
+        if self.rank[x] < self.rank[y]:
+            t = y
+            y = x
+            x = t
+            w *= -1
+        groupsum = self.check[x] + self.check[y]
+        if self.rank[x] == self.rank[y]:
+            self.rank[x] += 1
+        self.p[y] = x
+        self.diff_weight[y] = w
+        self.check[x] = groupsum
+        return True
+
+    # 同じグループか判定する
+    def issame(self, x: int, y: int) -> bool:
+        return self.parent(x) == self.parent(y)
+
+    # 自分のグループの要素数を返す
+    def size(self, n: int) -> int:
+        return self.check[self.parent(n)]
+
+

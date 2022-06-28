@@ -1,0 +1,96 @@
+//DAGになっている場合のMinCostFlow(負コストの辺も扱える)
+//グラフでは番号が小さい方から大きい方へ辺が張られているとする
+template<class F, class C>
+class MinCostFlow_DAG {
+public:
+	using Edge = MinCFEdge<F, C>;
+	MinCostFlow_DAG(int v_):V(v_),INF(numeric_limits<C>::max()){
+		edges.resize(V);
+	}
+	//辺を追加する 追加した辺、その逆辺の参照を返す
+	pair<const Edge&, const Edge&> AddEdge(int from, int to, F cap, C cost) {
+		edges[from].push_back(Edge(to,cap,cost,edges[to].size()));
+		edges[to].push_back(Edge(from, 0, -cost, edges[from].size() - 1));
+		return pair<const Edge&, const Edge&>(edges[from].back(), edges[to].back());
+	}
+	//(最小コスト、fだけ流せるか否か)を返す
+	pair<C, bool> min_cost_flow(int S, int T,F f) {
+		if (S > T) {
+			return pair<C, bool>(0, false);
+		}
+		//DAG上で最短経路を求める
+		potential.assign(V, INF);
+		potential[S] = 0;
+		for (int n = S; n < V; n++) {
+			if (potential[n] == INF) {
+				continue;
+			}
+			for (auto& edge : edges[n]) {
+				if (edge.cap != 0) {
+					chmin(potential[edge.to], potential[n] + edge.cost);
+				}
+			}
+		}
+		using ci = pair<C, int>;
+		pqueue<ci> que([](ci a, ci b) {
+			return a.first > b.first;
+		});
+		preve.assign(V, -1);
+		prevv.assign(V, -1);
+		C res(0);
+		while (f > 0) {
+			mincost.assign(V, INF);
+			que.emplace(0, S);
+			mincost[S] = 0;
+			while (!que.empty()) {
+				C cost;
+				int cur;
+				tie(cost, cur) = que.top();
+				que.pop();
+				if (mincost[cur] < cost) {
+					continue;
+				}
+				for (int i = 0; i < edges[cur].size(); i++) {
+					Edge& e = edges[cur][i];
+					C next = mincost[cur] + e.cost + potential[cur] - potential[e.to];
+					if (e.cap > 0 && mincost[e.to] > next) {
+						mincost[e.to] = next;
+						prevv[e.to] = cur;
+						preve[e.to] = i;
+						que.emplace(mincost[e.to], e.to);
+					}
+				}
+			}
+			if (mincost[T] == INF) {
+				return pair<C, bool>(0, false);
+			}
+			for (int v = 0; v < V; v++) {
+				potential[v] += mincost[v];
+			}
+			F flow = INF;
+			int v = T;
+			while (v != S) {
+				chmin(flow, edges[prevv[v]][preve[v]].cap);
+				v = prevv[v];
+			}
+			chmin(flow, f);
+			f -= flow;
+			res += flow * potential[T];
+			v = T;
+			while (v != S) {
+				Edge& e = edges[prevv[v]][preve[v]];
+				e.cap -= flow;
+				edges[e.to][e.rev].cap += flow;
+				v = prevv[v];
+			}
+		}
+		return pair<C, bool>(res, true);
+	}
+private:
+	int V;
+	vector<vector<Edge>> edges;
+	vector<C> potential;
+	vector<C> mincost;
+	VI prevv, preve;
+	const C INF;
+};

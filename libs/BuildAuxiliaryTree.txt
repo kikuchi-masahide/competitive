@@ -1,0 +1,116 @@
+//木treeの頂点の部分集合vertsから、treeの親子構造を保存した新しい木auxを構築する
+//O(|verts|logN)
+//aft2bef[n] := 木auxでの番号nの頂点がもとの木treeで何番の頂点に相当するか
+//order,depth,doubling:元の木treeでのpreorder,depth,doubling
+//返り値:新しい木auxの根(aux内のインデックス)
+template<class T>
+int BuildAuxiliaryTree(Tree<T>& tree, VI& verts, VI& order, VI& depth, VVI& doubling, Tree<T>& aux, VI& aft2bef)
+{
+	int N = tree.size();
+	sort(verts.begin(), verts.end(), [&](int a, int b) {
+		return order[a] < order[b];
+	});
+	stack<int> st;
+	st.push(verts[0]);
+	VI temp;
+	//元の頂点番号が新しい木のどの頂点にあたるか
+	VI bef2aft(N, -1);
+	for (int itr = 1;itr < verts.size();itr++)
+	{
+		int cur = verts[itr];
+		int w = LCA(tree, doubling, depth, verts[itr-1], verts[itr]);
+		temp.clear();
+		while (!st.empty())
+		{
+			int v = st.top();
+			if (depth[w] > depth[v] || w == v) {
+				break;
+			}
+			temp.push_back(v);
+			st.pop();
+		}
+		//tempは取り出した頂点たち
+		if (temp.size() != 0) {
+			//tempの全ての頂点を先に木に追加しておく
+			for (int n = 0; n < temp.size(); n++)
+			{
+				if (bef2aft[temp[n]] == -1)
+				{
+					aux.push_back(TNode<int>());
+					aft2bef.push_back(temp[n]);
+					bef2aft[temp[n]] = aux.size() - 1;
+				}
+			}
+			//temp[n+1]がtemp[n]の親
+			for (int n = 0; n < (int)temp.size() - 1; n++)
+			{
+				int chold = temp[n];
+				int pold = temp[n + 1];
+				int ch = bef2aft[chold];
+				int p = bef2aft[pold];
+				aux[ch].parent = p;
+				aux[p].childs.push_back(ch);
+			}
+			//wはtemp.back()の親になる
+			if (bef2aft[w] == -1)
+			{
+				aux.push_back(TNode<int>());
+				aft2bef.push_back(w);
+				bef2aft[w] = aux.size() - 1;
+			}
+			int p = bef2aft[w];
+			int ch = bef2aft[temp.back()];
+			aux[ch].parent = p;
+			aux[p].childs.push_back(ch);
+		}
+		if (st.empty())
+		{
+			st.push(w);
+		}
+		else if (st.top() != w) {
+			st.push(w);
+		}
+		st.push(cur);
+	}
+	//最後にstに残った頂点を並べる
+	temp.clear();
+	while (!st.empty())
+	{
+		temp.push_back(st.top());
+		st.pop();
+	}
+	//tempの全ての頂点を先に木に追加しておく
+	for (int n = 0; n < temp.size(); n++)
+	{
+		if (bef2aft[temp[n]] == -1)
+		{
+			aux.push_back(TNode<int>());
+			aft2bef.push_back(temp[n]);
+			bef2aft[temp[n]] = aux.size() - 1;
+		}
+	}
+	//temp[n+1]がtemp[n]の親
+	//temp.back()は木全体の親
+	for (int n = 0; n < (int)temp.size() - 1; n++)
+	{
+		int chold = temp[n];
+		int pold = temp[n + 1];
+		if (bef2aft[chold] == -1)
+		{
+			aux.push_back(TNode<int>());
+			aft2bef.push_back(chold);
+			bef2aft[chold] = aux.size() - 1;
+		}
+		if (bef2aft[pold] == -1)
+		{
+			aux.push_back(TNode<int>());
+			aft2bef.push_back(pold);
+			bef2aft[pold] = aux.size() - 1;
+		}
+		int ch = bef2aft[chold];
+		int p = bef2aft[pold];
+		aux[ch].parent = p;
+		aux[p].childs.push_back(ch);
+	}
+	return bef2aft[temp.back()];
+}

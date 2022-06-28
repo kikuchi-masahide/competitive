@@ -3,7 +3,7 @@
 template<class T>
 T GCD(T a, T b) {
 	if (b == 0)return a;
-	return GCD(b,(T)(a%b));
+	return GCD(b, (T)(a % b));
 }
 
 //最大公約数(複数)
@@ -11,9 +11,9 @@ T GCD(T a, T b) {
 template<class T>
 T GCD(vector<T> v) {
 	for (int n = 1; n < v.size(); n++) {
-		v[n] = GCD(v[n],v[n-1]);
+		v[n] = GCD(v[n], v[n - 1]);
 	}
-	return v[v.size()-1];
+	return v[v.size() - 1];
 }
 
 //最小公倍数
@@ -26,9 +26,9 @@ T LCM(T a, T b) {
 template<class T>
 T LCM(vector<T> v) {
 	for (int n = 1; n < v.size(); n++) {
-		v[n] = LCM(v[n],v[n-1]);
+		v[n] = LCM(v[n], v[n - 1]);
 	}
-	return v[v.size()-1];
+	return v[v.size() - 1];
 }
 
 //ax+by=gcd(a,b)の解
@@ -43,3 +43,83 @@ LL extgcd(LL a, LL b, LL& x, LL& y) {
 	}
 	return d;
 }
+
+//ax=gcd(a,m) mod mなるxを返す
+LL ModInv(LL a, LL m) {
+	LL x, y;
+	extgcd(a, m, x, y);
+	return x;
+}
+
+//x = b1 mod m1
+//x = b2 mod m2
+//なる連立合同式を解く mod lcm(m1,m2)において解が存在するならば(x,lcm(m1,m2))を、存在しないならば(0,-1)を返す
+PLL SimCongruence(LL b1, LL m1, LL b2, LL m2) {
+	LL p, q;
+	LL d = extgcd(m1, m2, p, q);
+	if ((b1 - b2) % d != 0) {
+		return PLL(0, -1);
+	}
+	else {
+		//?
+		LL m = m1 / d * m2;
+		LL tmp = (b2 - b1) / d * p % (m2 / d);
+		LL r = mod(b1 + m1 * tmp, m);
+		return PLL(r, m);
+	}
+}
+
+//garnerのアルゴリズム x=b[k] mod m[k] (0 < k < K) の解xをmod Mで求める(ただしm[-]は互いに素)
+//O(K^2log(max(m[k])))
+LL Garner(VLL& b, VLL& m, LL M) {
+	int K = m.size();
+	//番兵
+	m.push_back(M);
+	//const[k] := t0+t1m0+...+tkm0m1...m{k-1} mod mk
+	VLL con(K + 1, 0);
+	//coeff[k] := m0...m{k-1} mod mk
+	VLL coeff(K + 1, 1);
+	for (int k = 0; k < K; k++) {
+		//solve t*coeff[k]=b[k]-const[k] mod mk
+		LL t = mod((b[k] - con[k]) * ModInv(coeff[k], m[k]), m[k]);
+		for (int i = k + 1; i <= K; i++) {
+			con[i] = mod(con[i] + t * coeff[i], m[i]);
+			coeff[i] = mod(coeff[i] * m[k], m[i]);
+		}
+	}
+	return con.back();
+}
+
+//garnerのアルゴリズムでx=b[k] mod m[k] (0 < k < K) の解xをmod Mで求める際、m[-]が互いに素でないならば実行する
+//そもそも解が存在しないならば-1を返す
+//O(K^2log(max(m[k])))
+LL PreGarner(VLL& b, VLL& m, LL M) {
+	LL res = 1;
+	int K = b.size();
+	for (int i = 0; i < K; i++) {
+		for (int j = 0; j < i; j++) {
+			LL g = GCD(m[i], m[j]);
+			if ((b[i] - b[j]) % g != 0) {
+				return -1;
+			}
+			m[i] /= g;
+			m[j] /= g;
+			LL gi = GCD(m[i], g);
+			LL gj = g / gi;
+			do {
+				g = GCD(gi, gj);
+				gi *= g, gj /= g;
+			} while (g != 1);
+			m[i] *= gi;
+			m[j] *= gj;
+			b[i] %= m[i];
+			b[j] %= m[j];
+		}
+	}
+	for (int i = 0; i < K; i++) {
+		res = mod(res * m[i], M);
+	}
+	return res;
+}
+
+//ref:https://qiita.com/drken/items/ae02240cd1f8edfc86fd

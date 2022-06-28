@@ -1,0 +1,53 @@
+//木になっている無向グラフGの直径を求める
+//(NEED:SetTree)
+template<class T>
+pair<int,int> GetDiameterPair(WeightedGraph<T>& G)
+{
+	//頂点数
+	int N = G.size();
+	Tree<T> T1;
+	SetTree(G, T1, 0);
+	//根0からの距離
+	vector<T> V1(N, 0);
+	//親から順に求める
+	queue<int> q;
+	q.push(0);
+	//次の根
+	int root = 0;
+	while (!q.empty())
+	{
+		int n = q.front();
+		q.pop();
+		for (int ch : T1[n].childs)
+		{
+			V1[ch] = V1[n] + T1[ch].cost;
+			if (V1[ch] >= V1[root])
+			{
+				root = ch;
+			}
+			q.push(ch);
+		}
+	}
+	//新しい根で再整理
+	Tree<T> T2;
+	vector<T> V2(N,0);
+	SetTree(G, T2, root);
+	q.push(root);
+	//最も遠い点
+	int far = root;
+	while (!q.empty())
+	{
+		int n = q.front();
+		q.pop();
+		for (int ch : T2[n].childs)
+		{
+			V2[ch] = V2[n] + T2[ch].cost;
+			if (V2[ch] >= V2[far])
+			{
+				far = ch;
+			}
+			q.push(ch);
+		}
+	}
+	return pair<int,int>(root,far);
+}

@@ -1,0 +1,76 @@
+//座圧
+class CoordComp
+{
+public:
+	int N;
+	VI new2old;
+	map<LL, int> old2new;
+	CoordComp() :N(0) {};
+	//vに含まれる数に昇順で添え字(0-index)を設定する(vは変更しない)
+	void build(VLL& v)
+	{
+		set<LL> all;
+		for (LL t : v)
+		{
+			all.insert(t);
+		}
+		N = all.size();
+		new2old.reserve(N);
+		int i = 0;
+		for (LL t : all)
+		{
+			old2new.insert(pair<LL,int>(t, i++));
+			new2old.push_back(t);
+		}
+	}
+	//tを圧縮した座標を返す
+	LL conv(int t)
+	{
+		return old2new[t];
+	}
+	//[l,r)が含む登録点の集合を変換後の座標の区間[s,e)で返す(登録点が存在しなければ[-1,-1)を返す)
+	PI conv(LL l, LL r)
+	{
+		//new2old[s1] < l <= new2old[s2]
+		int s1 = -1, s2 = N;
+		while (s2 - s1 > 1)
+		{
+			int m = (s1 + s2) / 2;
+			if (new2old[m] < l)
+			{
+				s1 = m;
+			}
+			else {
+				s2 = m;
+			}
+		}
+		//new2old[e1] < r <= new2old[e2]
+		int e1 = -1, e2 = N;
+		while (e2 - e1 > 1)
+		{
+			int m = (e2 + e1) / 2;
+			if (new2old[m] < r)
+			{
+				e1 = m;
+			}
+			else {
+				e2 = m;
+			}
+		}
+		if (s2 >= e2)
+		{
+			return PI(-1, -1);
+		}
+		return PI(s2, e2);
+	}
+	//圧縮済みの座標から、元の数を返す
+	LL revconv(int i)
+	{
+		return new2old[i];
+	}
+	//登録点の個数
+	int size()
+	{
+		return N;
+	}
+};
