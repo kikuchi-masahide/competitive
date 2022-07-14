@@ -1,6 +1,6 @@
 //到達不可能->INF
 template<class T>
-void dijkstra(WeightedGraph<T>& G, int start, vector<T>& res) {
+void dijkstra(WeightedGraph<T>& G, int start, vector<T>& res, INF=numeric_limits<T>::max()) {
 	res.resize(G.size(), INF);
 	res[start] = 0;
 	typedef pair<T, int> P;
@@ -26,7 +26,7 @@ void dijkstra(WeightedGraph<T>& G, int start, vector<T>& res) {
 //mincost[n] := 頂点nまでの最短距離
 //res[n] := 頂点nに来るのに使った、nに入る辺
 template<class T>
-void dijkstrapath(WeightedGraph<T>& G, LL start,vector<T>& mincost, vector<Gedge<T>>& res) {
+void dijkstrapath(WeightedGraph<T>& G, LL start,vector<T>& mincost, vector<Gedge<T>>& res, INF=numeric_limits<T>::max()) {
 	mincost.resize(G.size(), -1);
 	res.resize(G.size(),Gedge<T>(-1,-1,-1,-1));
 	mincost[start] = 0;

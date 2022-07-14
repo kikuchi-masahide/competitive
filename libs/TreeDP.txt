@@ -1,0 +1,20 @@
+//木Tの葉から順にfuncを実行する
+template<class Type>
+void TreeDP(Tree<Type>& T, function<void(int)> func, int root) {
+	queue<int> que;
+	stack<int> st;
+	que.push(root);
+	while (!que.empty()) {
+		int n = que.front();
+		que.pop();
+		st.push(n);
+		for (int ch : T[n].childs) {
+			que.push(ch);
+		}
+	}
+	while (!st.empty()) {
+		int n = st.top();
+		st.pop();
+		func(n);
+	}
+}

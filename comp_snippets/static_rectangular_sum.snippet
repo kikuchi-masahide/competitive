@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>static_rectangular_sum</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="cpp" Delimiter="$"><![CDATA[//二次元領域[0,W)×[0,H)のアーベル群重み付き格子点の範囲和、x座標方向のupper/lower boundを求める
+//need CPSegmentTree
+template<class T>
+class StaticRectangleSum {
+private:
+	int W, H;
+	CPSegmentTree<T> seg;
+	//Tの演算
+	function<T(T, T)> tt;
+	//逆元
+	function<T(T)> neg;
+	//単位元
+	T t0;
+public:
+	StaticRectangleSum() :W(0), H(0) {}
+	StaticRectangleSum(int w, int h, vector<tuple<int, int, T>> points, T t0_ = T(0), function<T(T, T)> tt_ = [](T a, T b) {return a + b; }, function<T(T)> neg_ = [](T a) {return -a; }) {
+		build(w, h, points, t0_, tt_, neg_);
+	}
+	//points:(x座標,y座標,重み)の配列 0≦x座標<W、0≦y座標<Hである必要がある
+	void build(int w, int h, vector<tuple<int, int, T>> points, T t0_ = T(0), function<T(T, T)> tt_ = [](T a, T b) {return a + b; }, function<T(T)> neg_ = [](T a) {return -a; }) {
+		W = w;
+		H = h;
+		tt = tt_;
+		neg = neg_;
+		t0 = t0_;
+		seg.build(W, tt, t0);
+		//upper/lower boundのために、時間tをy座標H-yと同一視
+		sort(points.begin(), points.end(), [](tuple<int, int, T>& p1, tuple<int, int, T>& p2) {
+			return (std::get<1>(p1) > std::get<1>(p2));
+		});
+		//今見てる時間t(y=H-t)
+		int curt = 0;
+		for (tuple<int, int, T>& p : points) {
+			int x, y;
+			T w;
+			tie(x, y, w) = p;
+			while (H - curt != y) {
+				seg.copy(curt++);
+			}
+			seg.addl(curt, x, w);
+		}
+		while (H - curt != 0) {
+			seg.copy(curt++);
+		}
+	}
+	//[x=l,r)×[y=b,u)の範囲の重み和を求める
+	T get(int l, int r, int b, int u) {
+		//y座標[b,u)を時間(u,b]に変換
+		b = H - b;
+		u = H - u;
+		T sum = seg.get(b, l, r);
+		sum = tt(sum, neg(seg.get(u, l, r)));
+		return sum;
+	}
+	//[l,e-1)×[d,u)の和 < x <= [l,e)×[d,u)の和となるe(l<=e<=W+1)を求める(単調増加性を仮定)
+	//less(a,b) := a<bならばtrue
+	int lower_bound(int l, int d, int u, T x, function<bool(T, T)> less = [](T a, T b) {return a < b; }) {
+		//y座標を[d,u)から時間(u,d]に変換
+		d = H - d;
+		u = H - u;
+		struct nodebfs {
+			//時間u,dにおける見てる頂点
+			int nu, nd;
+			//頂点nは[a,b)を表す
+			int a, b;
+		};
+		//[l,W)を覆うようなノードの集合
+		vector<nodebfs> nodes;
+		queue<nodebfs> nodebfsq;
+		int RN = seg.size();
+		nodebfsq.push({ seg.roots[u],seg.roots[d],0,RN });
+		while (!nodebfsq.empty()) {
+			int nu = nodebfsq.front().nu;
+			int nd = nodebfsq.front().nd;
+			int a = nodebfsq.front().a;
+			int b = nodebfsq.front().b;
+			nodebfsq.pop();
+			if (W <= a || b <= l) {
+				continue;
+			}
+			if (l <= a && b <= W) {
+				nodes.push_back({ nu,nd,a,b });
+			}
+			else {
+				nodebfsq.push({ seg.cl[nu],seg.cl[nd],a,(a + b) / 2 });
+				nodebfsq.push({ seg.cr[nu],seg.cr[nd],(a + b) / 2,b });
+			}
+		}
+		//nodes[0,nn]の和 < x <= nodes[0,nn + 1]の和
+		int nn = -1;
+		//nodes[0,nn]の和
+		T sum = t0;
+		while (nn + 1 < nodes.size()) {
+			T next = tt(seg.ar[nodes[nn + 1].nd], neg(seg.ar[nodes[nn + 1].nu]));
+			next = tt(sum, next);
+			//nodes[0,nn+1]の和 >= xのとき
+			if (!less(next, x)) {
+				break;
+			}
+			else {
+				nn++;
+				sum = next;
+			}
+		}
+		//全部とっても<x
+		if (nn == nodes.size() - 1 && less(sum, x)) {
+			return W;
+		}
+		nn++;
+		//nodes[nn]をバラす
+		//[l,r) < x
+		int r = l;
+		if (nn - 1 >= 0) {
+			r = nodes[nn - 1].b;
+		}
+		nodebfs cur = nodes[nn];
+		int a = nodes[nn].a;
+		int b = nodes[nn].b;
+		while (b - a > 1) {
+			//左の子の和
+			int chl_d = seg.cl[cur.nd];
+			int chl_u = seg.cl[cur.nu];
+			T suml = tt(seg.ar[chl_d], neg(seg.ar[chl_u]));
+			if (!less(tt(sum, suml), x)) {
+				b = (a + b) / 2;
+				cur = { chl_u,chl_d,a,b };
+			}
+			else {
+				sum = tt(sum, suml);
+				int chr_d = seg.cr[cur.nd];
+				int chr_u = seg.cr[cur.nu];
+				r = (a + b) / 2;
+				a = (a + b) / 2;
+				cur = { chr_u,chr_d,a,b };
+			}
+		}
+		return r + 1;
+	}
+	//[l,e-1)×[d,u)の和 <= x < [l,e)×[d,u)の和となるe(l<=e<=W+1)を求める(単調増加性を仮定)
+	//less(a,b) := a<bならばtrue
+	int upper_bound(int l, int d, int u, T x, function<bool(T, T)> less = [](T a, T b) {return a < b; }) {
+		//y座標を[d,u)から時間(u,d]に変換
+		d = H - d;
+		u = H - u;
+		struct nodebfs {
+			//時間u,dにおける見てる頂点
+			int nu, nd;
+			//頂点nは[a,b)を表す
+			int a, b;
+		};
+		//[l,W)を覆うようなノードの集合
+		vector<nodebfs> nodes;
+		queue<nodebfs> nodebfsq;
+		int RN = seg.size();
+		nodebfsq.push({ seg.roots[u],seg.roots[d],0,RN });
+		while (!nodebfsq.empty()) {
+			int nu = nodebfsq.front().nu;
+			int nd = nodebfsq.front().nd;
+			int a = nodebfsq.front().a;
+			int b = nodebfsq.front().b;
+			nodebfsq.pop();
+			if (W <= a || b <= l) {
+				continue;
+			}
+			if (l <= a && b <= W) {
+				nodes.push_back({ nu,nd,a,b });
+			}
+			else {
+				nodebfsq.push({ seg.cl[nu],seg.cl[nd],a,(a + b) / 2 });
+				nodebfsq.push({ seg.cr[nu],seg.cr[nd],(a + b) / 2,b });
+			}
+		}
+		//nodes[0,nn]の和 <= x < nodes[0,nn + 1]の和
+		int nn = -1;
+		//nodes[0,nn]の和
+		T sum = t0;
+		while (nn + 1 < nodes.size()) {
+			T next = tt(seg.ar[nodes[nn + 1].nd], neg(seg.ar[nodes[nn + 1].nu]));
+			next = tt(sum, next);
+			//nodes[0,nn+1]の和 > xのとき
+			if (less(x, next)) {
+				break;
+			}
+			else {
+				nn++;
+				sum = next;
+			}
+		}
+		//全部とっても<=x
+		if (nn == nodes.size() - 1 && !less(x, sum)) {
+			return W;
+		}
+		nn++;
+		//nodes[nn]をバラす
+		//[l,r) <= x
+		int r = l;
+		if (nn - 1 >= 0) {
+			r = nodes[nn - 1].b;
+		}
+		nodebfs cur = nodes[nn];
+		int a = nodes[nn].a;
+		int b = nodes[nn].b;
+		while (b - a > 1) {
+			//左の子の和
+			int chl_d = seg.cl[cur.nd];
+			int chl_u = seg.cl[cur.nu];
+			T suml = tt(seg.ar[chl_d], neg(seg.ar[chl_u]));
+			if (less(x, tt(sum, suml))) {
+				b = (a + b) / 2;
+				cur = { chl_u,chl_d,a,b };
+			}
+			else {
+				sum = tt(sum, suml);
+				int chr_d = seg.cr[cur.nd];
+				int chr_u = seg.cr[cur.nu];
+				r = (a + b) / 2;
+				a = (a + b) / 2;
+				cur = { chr_u,chr_d,a,b };
+			}
+		}
+		return r + 1;
+	}
+};
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

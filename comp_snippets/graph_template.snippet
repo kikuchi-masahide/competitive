@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>graph_template</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="cpp" Delimiter="$"><![CDATA[template<class T>
+struct Gedge {
+	int src, to;
+	T cost;
+	int id;
+	Gedge(int s, int t, T c,int i = -1) :src(s), to(t), cost(c),id(i) {}
+	Gedge(int t, T c) :src(-1), to(t), cost(c),id(-1) {}
+};
+
+template<class T>
+using WeightedGraph = vector<vector<Gedge<T>>>;
+using UnweightedGraph = vector<vector<LL>>;
+template<class T>
+using Gedges = vector<Gedge<T>>;
+
+template<class T>
+struct TNode {
+	int parent;
+	VI childs;
+	T cost;
+	int id;
+	TNode() :parent(-1),cost(0),id(-1) {};
+};
+template<class T>
+using Tree = vector<TNode<T>>;
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

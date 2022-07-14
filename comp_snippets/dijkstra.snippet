@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>dijkstra</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="cpp" Delimiter="$"><![CDATA[//到達不可能->INF
+template<class T>
+void dijkstra(WeightedGraph<T>& G, int start, vector<T>& res, T INF=numeric_limits<T>::max()) {
+	res.resize(G.size(), INF);
+	res[start] = 0;
+	typedef pair<T, int> P;
+	priority_queue<P, vector<P>, greater<P>> q;
+	q.emplace(0, start);
+	while (!q.empty()) {
+		int cur;
+		T cost;
+		tie(cost, cur) = q.top();
+		q.pop();
+		if (res[cur] < cost)continue;
+		for (Gedge<T>& e : G[cur]) {
+			if (res[e.to] > cost + e.cost) {
+				res[e.to] = cost + e.cost;
+				q.emplace(res[e.to], e.to);
+			}
+		}
+	}
+	return;
+}
+
+//直前の頂点を保存するdijkstra
+//mincost[n] := 頂点nまでの最短距離
+//res[n] := 頂点nに来るのに使った、nに入る辺
+template<class T>
+void dijkstrapath(WeightedGraph<T>& G, LL start,vector<T>& mincost, vector<Gedge<T>>& res, T INF=numeric_limits<T>::max()) {
+	mincost.resize(G.size(), -1);
+	res.resize(G.size(),Gedge<T>(-1,-1,-1,-1));
+	mincost[start] = 0;
+	typedef pair<T, LL> P;
+	priority_queue<P, vector<P>, function<bool(P, P)>> q(
+		[](P a, P b) {
+		return a.first > b.first;
+	}
+	);
+	q.push(P(0, start));
+	while (!q.empty()) {
+		LL cur = q.top().second;
+		T cost = q.top().first;
+		q.pop();
+		if (mincost[cur] != -1 && mincost[cur] < cost)continue;
+		for (Gedge<T>& e : G[cur]) {
+			if (mincost[e.to] == -1 || mincost[e.to] > cost + e.cost) {
+				mincost[e.to] = cost + e.cost;
+				res[e.to] = e;
+				q.push(P(mincost[e.to], e.to));
+			}
+		}
+	}
+	return;
+}
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

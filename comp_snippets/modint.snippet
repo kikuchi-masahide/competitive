@@ -1,4 +1,22 @@
-template<int mod, bool isprime = false>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>modint</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="cpp" Delimiter="$"><![CDATA[template<int mod, bool isprime = false>
 class Modint {
 public:
 	LL v;
@@ -121,3 +139,7 @@ template<int mod>
 Modint<mod, false> operator/(const Modint<mod, false>& t1, const Modint<mod, false>& t2) {
 	return Modint<mod, false>(t1) /= t2;
 }
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

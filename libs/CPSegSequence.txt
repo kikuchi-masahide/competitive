@@ -1,0 +1,39 @@
+//各項が0以上M未満の静的整数列のRange Kth SmallestやRange Countを求める
+//(x座標が要素、y座標は添え字)
+class CPSegSequence {
+private:
+	StaticRectangleSum<LL> rec;
+	int N;
+	int M;
+public:
+	CPSegSequence() {};
+	CPSegSequence(int m, VLL& seq) {
+		build(m, seq);
+	}
+	void build(int m, VLL& seq) {
+		M = m;
+		N = seq.size();
+		vector<tuple<int, int, LL>> points;
+		points.reserve(N);
+		for (int n = 0; n < N; n++) {
+			points.emplace_back(seq[n], n, 1);
+		}
+		rec.build(M, N, points);
+	}
+	//A[l]からA[r-1]のうち、s以上e未満の要素の数を求める
+	int get(int l, int r, int s, int e) {
+		return rec.get(max(s, 0), min(e, M), l, r);
+	}
+	//A[l]からA[r-1]のうち、[d,u-1)の要素の数 < x <= [d,u)の要素の数なるuを求める
+	int lower_bound(int l, int r, int d, int x) {
+		return rec.lower_bound(d, l, r, x);
+	}
+	//A[l]からA[r-1]のうち、[d,u-1)の要素の数 <= x < [d,u)の要素の数なるuを求める
+	int upper_bound(int l, int r, int d, int x) {
+		return rec.upper_bound(d, l, r, x);
+	}
+	//A[l]からA[r-1]のうち、k番目(1-indexed)に小さい数を求める
+	int kthnumber(int l, int r, int k) {
+		return rec.lower_bound(0, l, r, k) - 1;
+	}
+};

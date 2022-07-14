@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>prime</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="cpp" Delimiter="$"><![CDATA[//素数判定
+//O(√n)
+bool isPrime(int n) {
+	for (int i = 2; i <= floor(sqrt(n)); i++) {
+		if (n % i == 0)return false;
+	}
+	return true;
+}
+
+//n以下の自然数のでのエラトステネスの篩
+//O(nlog(logn)) , 実質O(n)
+bool* eratosthenes(int n) {
+	bool* array = new bool[n + 1];
+	for (int i = 0; i <= n; i++)array[i] = true;
+	for (int i = 2; i <= n; i++) {
+		if (!array[i])continue;
+		int t = 2 * i;
+		while (t <= n) {
+			array[t] = false;
+			t += i;
+		}
+	}
+	return array;
+}
+
+//Osa_k法
+//arr[n] := nの最小の素因数を0からnまで
+//素因数分解がO(ln(N))でできるっぽい
+void Osa_k(int N, vector<int>& vect) {
+	vect.resize(N + 1);
+	for (int n = 0; n <= N; n++)vect[n] = n;
+	for (int n = 2; n <= N; n++) {
+		if (vect[n] != n)continue;   //素数じゃない場合
+		int t = 2 * n;
+		while (t <= N) {
+			if (vect[t] == t)vect[t] = n;
+			t += n;
+		}
+	}
+	return;
+}
+
+//約数列挙(重複分も個数回追加)
+void enumerateFactors(LL N, VLL& V) {
+	LL p = 2;
+	while (N > 1) {
+		if (p * p > N) {
+			V.push_back(N);
+			return;
+		}
+		if (N % p == 0) {
+			V.push_back(p);
+			N /= p;
+		}
+		else p++;
+	}
+	return;
+}
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

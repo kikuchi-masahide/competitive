@@ -29,7 +29,8 @@
 using namespace std;
 //std::ios::sync_with_stdio(false);
 //std::cin.tie(0);
-const long long MOD = 1e9 + 7;
+const long long mod1e9 = 1000000000 + 7;
+const long long mod998244353 = 998244353;
 const long long INF = 1e18;
 typedef long long LL;
 typedef long double LD;
@@ -46,6 +47,7 @@ typedef vector<vector<int>> VVI;
 typedef unsigned long long ULL;
 template<class T>
 using pqueue = priority_queue<T, vector<T>, function<bool(T, T)>>;
+string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 template<class T>
 inline void chmin(T& a, T b) {
