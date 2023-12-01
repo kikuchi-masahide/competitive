@@ -1,0 +1,39 @@
+{
+    "shakutori": {
+        "prefix": "shakutori",
+        "body": [
+            "fn shakutori<Memo>(",
+            "    n: usize,",
+            "    judge: impl Fn(usize, usize, &Memo) -> bool,",
+            "    mut append: impl FnMut(usize, &mut Memo),",
+            "    mut remove: impl FnMut(usize, &mut Memo),",
+            "    memo: &mut Memo,",
+            ") -> usize {",
+            "    let mut answer = 0;",
+            "    let mut s = 0;",
+            "    let mut e = 0;",
+            "    append(0, memo);",
+            "    while e < n {",
+            "        if judge(s, e, memo) {",
+            "            answer = max(answer, e - s + 1);",
+            "            e += 1;",
+            "            if e == n {",
+            "                break;",
+            "            }",
+            "            append(e, memo);",
+            "        } else {",
+            "            remove(s, memo);",
+            "            s += 1;",
+            "            if s > e {",
+            "                e += 1;",
+            "                if e == n {",
+            "                    break;",
+            "                }",
+            "            }",
+            "        }",
+            "    }",
+            "    return answer;",
+            "}"
+        ]
+    }
+}

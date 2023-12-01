@@ -1,0 +1,20 @@
+{
+    "bisearch_longlong": {
+        "prefix": "bisearch_longlong",
+        "body": [
+            "fn longlong_bisearch(f: impl Fn(LongLong) -> bool, n: &LongLong) -> LongLong {",
+            "    let mut s = -1;",
+            "    let mut e = *n;",
+            "    while e - s > 1 {",
+            "        let m = (s + e) / 2;",
+            "        if f(m) {",
+            "            s = m;",
+            "        } else {",
+            "            e = m;",
+            "        }",
+            "    }",
+            "    return e;",
+            "}"
+        ]
+    }
+}

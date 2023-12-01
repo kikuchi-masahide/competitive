@@ -1,0 +1,20 @@
+{
+    "bisearch_int": {
+        "prefix": "bisearch_int",
+        "body": [
+            "fn int_bisearch(f: impl Fn(Int) -> bool, n: &Int) -> Int {",
+            "    let mut s = -1;",
+            "    let mut e = *n;",
+            "    while e - s > 1 {",
+            "        let m = (s + e) / 2;",
+            "        if f(m) {",
+            "            s = m;",
+            "        } else {",
+            "            e = m;",
+            "        }",
+            "    }",
+            "    return e;",
+            "}"
+        ]
+    }
+}
